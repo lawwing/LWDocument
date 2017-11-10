@@ -1,5 +1,6 @@
 package com.lawwing.lwdocument;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.lawwing.lwdocument.adapter.HomeAdapter;
 import com.lawwing.lwdocument.model.CommentInfoModel;
@@ -20,12 +22,15 @@ import com.lawwing.lwdocument.utils.FileManager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class AppMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener
+        implements NavigationView.OnNavigationItemSelectedListener,
+        EasyPermissions.PermissionCallbacks
 {
     
     @BindView(R.id.homeRecyclerView)
@@ -55,9 +60,23 @@ public class AppMainActivity extends AppCompatActivity
                 R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         datas = new ArrayList<>();
-        initRecyclerView();
         
-        getLocalCommentPicture();
+        String[] perms = new String[] {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        if (!EasyPermissions.hasPermissions(AppMainActivity.this, perms))
+        {
+            EasyPermissions.requestPermissions(AppMainActivity.this,
+                    "需要访问手机存储权限！",
+                    10086,
+                    perms);
+        }
+        else
+        {
+            initRecyclerView();
+            
+            getLocalCommentPicture();
+        }
     }
     
     private void getLocalCommentPicture()
@@ -98,7 +117,6 @@ public class AppMainActivity extends AppCompatActivity
                         }
                     }
                     
-                    Log.e("test", datas.get(0).getPath());
                     handler.sendMessage(new Message());
                 }
             }
@@ -158,5 +176,51 @@ public class AppMainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms)
+    {
+        // 成功
+        if (requestCode == 10086)
+        {
+            if (perms.size() == 2)
+            {
+                initRecyclerView();
+                
+                getLocalCommentPicture();
+            }
+        }
+    }
+    
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms)
+    {
+        
+        // 失败
+        if (requestCode == 10086)
+        {
+            showLongToast("请务必打开全部权限才能查看首页");
+        }
+    }
+    
+    public void showLongToast(String content)
+    {
+        Toast.makeText(this, content, Toast.LENGTH_LONG).show();
+    }
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+            String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
+        
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults,
+                this);
     }
 }
