@@ -33,7 +33,7 @@ public class LWDApp extends Application
         // QbSdk.initX5Environment(getApplicationContext(), cb);
         
         CrashReport
-                .initCrashReport(getApplicationContext(), "9d5501966c", false);
+                .initCrashReport(getApplicationContext(), "7f85e93995", false);
     }
     
     private static LWDApp _instance;
