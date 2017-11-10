@@ -11,24 +11,29 @@ import com.lawwing.lwdocument.R;
  * Created by lawwing on 2017/11/9.
  */
 
-public class TitleBarUtils {
+public class TitleBarUtils
+{
     private Activity activity;
-
-    public TitleBarUtils(Activity activity) {
+    
+    public TitleBarUtils(Activity activity)
+    {
         this.activity = activity;
     }
-
-    public void initTitle(String title) {
+    
+    public void initTitle(String title)
+    {
         TextView titleText = (TextView) activity.findViewById(R.id.title_text);
         ImageView back_btn = (ImageView) activity.findViewById(R.id.back_btn);
-
+        
         titleText.setText(title);
-        back_btn.setOnClickListener(new View.OnClickListener() {
+        back_btn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 activity.finish();
             }
         });
     }
-
+    
 }

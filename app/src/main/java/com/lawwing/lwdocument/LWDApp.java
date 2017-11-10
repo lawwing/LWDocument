@@ -8,9 +8,11 @@ import com.tencent.bugly.crashreport.CrashReport;
  * Created by lawwing on 2017/11/10.
  */
 
-public class LWDApp extends Application {
+public class LWDApp extends Application
+{
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
         // QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
         //
@@ -28,7 +30,7 @@ public class LWDApp extends Application {
         // };
         // //x5内核初始化接口
         // QbSdk.initX5Environment(getApplicationContext(), cb);
-
+        
         CrashReport
                 .initCrashReport(getApplicationContext(), "9d5501966c", false);
     }
