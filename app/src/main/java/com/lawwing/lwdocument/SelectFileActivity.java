@@ -1,28 +1,28 @@
 package com.lawwing.lwdocument;
 
-import android.Manifest;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.lawwing.lwdocument.adapter.OfficeFileAdapter;
+import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.model.FileBean;
 import com.lawwing.lwdocument.utils.FileUtils;
 import com.lawwing.lwdocument.utils.TitleBarUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class SelectFileActivity extends AppCompatActivity
+public class SelectFileActivity extends BaseActivity
         implements EasyPermissions.PermissionCallbacks
 {
     private RecyclerView recyclerView;
@@ -34,6 +34,12 @@ public class SelectFileActivity extends AppCompatActivity
     private ArrayList<FileBean> datas;
     
     private TitleBarUtils titleBarUtils;
+    
+    public static Intent newInstance(Activity activity)
+    {
+        Intent intent = new Intent(activity, SelectFileActivity.class);
+        return intent;
+    }
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -107,7 +113,6 @@ public class SelectFileActivity extends AppCompatActivity
         // 成功
         if (requestCode == 10086)
         {
-            Log.e("test", perms.size() + "success size");
             if (perms.size() == 2)
             {
                 getLocalOffice();
@@ -122,10 +127,7 @@ public class SelectFileActivity extends AppCompatActivity
         // 失败
         if (requestCode == 10086)
         {
-            Log.e("test", perms.size() + "faild size");
-            Toast.makeText(SelectFileActivity.this,
-                    "请务必打开全部权限才能扫描文档",
-                    Toast.LENGTH_LONG).show();
+            showLongToast("请务必打开全部权限才能扫描文档");
         }
     }
     

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_check_alldoc"
+            android:title="查看全部文档" />
+        <item
+            android:id="@+id/nav_check_comment"
+            android:title="查看批注图片" />
+        <item
+            android:id="@+id/nav_setting"
+            android:title="设置" />
+    </group>
+
+</menu>

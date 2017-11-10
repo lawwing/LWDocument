@@ -3,23 +3,23 @@ package com.lawwing.lwdocument;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import com.lawwing.lwdocument.base.BaseActivity;
+import com.lawwing.lwdocument.widget.OfficeView;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.TextView;
 
-import com.lawwing.lwdocument.widget.OfficeView;
-
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
 {
     private OfficeView mOfficeView;
     

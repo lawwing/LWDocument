@@ -1,8 +1,8 @@
 package com.lawwing.lwdocument;
 
-import android.app.Application;
-
 import com.tencent.bugly.crashreport.CrashReport;
+
+import android.app.Application;
 
 /**
  * Created by lawwing on 2017/11/10.
@@ -14,6 +14,7 @@ public class LWDApp extends Application
     public void onCreate()
     {
         super.onCreate();
+        _instance = (LWDApp) getApplicationContext();
         // QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
         //
         // @Override
@@ -34,4 +35,23 @@ public class LWDApp extends Application
         CrashReport
                 .initCrashReport(getApplicationContext(), "9d5501966c", false);
     }
+    
+    private static LWDApp _instance;
+    
+    public static LWDApp get()
+    {
+        if (_instance == null)
+        {
+            synchronized (LWDApp.class)
+            {
+                if (_instance == null)
+                {
+                    _instance = new LWDApp();
+                }
+            }
+        }
+        return _instance;
+        
+    }
+    
 }

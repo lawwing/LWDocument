@@ -22,7 +22,7 @@ public class FileManager
     /**
      * 应用程序在SD卡上的主目录名称
      */
-    private final static String APP_FOLDER_NAME = "OfficeDemo";
+    private final static String APP_FOLDER_NAME = "LWDocument";
     
     /**
      * 存放图片目录名

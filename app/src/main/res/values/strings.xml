@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">LW文档</string>
+    <string name="title_activity_app_main">首页</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

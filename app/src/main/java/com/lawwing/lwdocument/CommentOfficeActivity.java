@@ -1,5 +1,11 @@
 package com.lawwing.lwdocument;
 
+import com.lawwing.lwdocument.base.BaseActivity;
+import com.lawwing.lwdocument.utils.FileManager;
+import com.lawwing.lwdocument.utils.ImageUtils;
+import com.lawwing.lwdocument.utils.TimeUtils;
+import com.lawwing.lwdocument.widget.PaintView;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +14,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,18 +25,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.lawwing.lwdocument.utils.FileManager;
-import com.lawwing.lwdocument.utils.ImageUtils;
-import com.lawwing.lwdocument.utils.TimeUtils;
-import com.lawwing.lwdocument.widget.PaintView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CommentOfficeActivity extends AppCompatActivity
+public class CommentOfficeActivity extends BaseActivity
         implements PaintView.IPaintViewListener
 {
     @BindView(R.id.pv)
@@ -239,22 +238,16 @@ public class CommentOfficeActivity extends AppCompatActivity
                                         // 保存
                                         if (!TextUtils.isEmpty(path))
                                         {
-                                            showShortToast("保存成功");
+                                            showLongToast("保存成功");
                                         }
                                         else
                                         {
-                                            showShortToast("保存失败");
+                                            showLongToast("保存失败");
                                         }
                                         break;
                                 }
                             }
                         })
-                .show();
-    }
-    
-    private void showShortToast(String content)
-    {
-        Toast.makeText(CommentOfficeActivity.this, content, Toast.LENGTH_LONG)
                 .show();
     }
     
@@ -558,13 +551,13 @@ public class CommentOfficeActivity extends AppCompatActivity
         {
             long time = TimeUtils.getCurTimeMills();
             if (ImageUtils.save(bitmap,
-                    FileManager.getPhotoFolder().getPath() + "/lawwing/" + time
+                    FileManager.getPhotoFolder().getPath() + "/" + time
                             + ".jpg",
                     Bitmap.CompressFormat.JPEG))
             {
                 // showShortToast("保存图片成功");
-                return FileManager.getPhotoFolder().getPath() + "/lawwing/"
-                        + time + ".jpg";
+                return FileManager.getPhotoFolder().getPath() + "/" + time
+                        + ".jpg";
             }
             else
             {
