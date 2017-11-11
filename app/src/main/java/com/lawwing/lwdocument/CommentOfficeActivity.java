@@ -420,27 +420,27 @@ public class CommentOfficeActivity extends BaseActivity
                 mText.setImageResource(R.mipmap.comment_text_unselect);
                 mRectangle
                         .setImageResource(R.mipmap.comment_rectangle_unselect);
-                mFreedom.setImageResource(R.drawable.ic_menu_share);
+                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
                 break;
             case PaintView.COMMENT_TEXT:
                 mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
                 mText.setImageResource(R.mipmap.comment_text_select);
                 mRectangle
                         .setImageResource(R.mipmap.comment_rectangle_unselect);
-                mFreedom.setImageResource(R.drawable.ic_menu_share);
+                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
                 break;
             case PaintView.COMMENT_RECTANGLE:
                 mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
                 mText.setImageResource(R.mipmap.comment_text_unselect);
                 mRectangle.setImageResource(R.mipmap.comment_rectangle_select);
-                mFreedom.setImageResource(R.drawable.ic_menu_share);
+                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
                 break;
             case PaintView.COMMENT_FREEDOM:
                 mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
                 mText.setImageResource(R.mipmap.comment_text_unselect);
                 mRectangle
                         .setImageResource(R.mipmap.comment_rectangle_unselect);
-                mFreedom.setImageResource(R.drawable.ic_menu_camera);
+                mFreedom.setImageResource(R.mipmap.comment_freedom_select);
                 break;
         }
     }
