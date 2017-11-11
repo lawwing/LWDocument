@@ -4,7 +4,7 @@ package com.lawwing.lwdocument.model;
  * Created by lawwing on 2017/11/11.
  */
 
-public class CommentInfoModel
+public class CommentInfoModel extends HomeBaseModel
 {
     private Long id;
     

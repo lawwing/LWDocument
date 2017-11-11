@@ -1,78 +1,65 @@
 package com.lawwing.lwdocument.adapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import com.lawwing.lwdocument.CheckCommentPicActivity;
-import com.lawwing.lwdocument.R;
-import com.lawwing.lwdocument.model.CommentInfoModel;
-import com.lawwing.lwdocument.utils.GlideUtils;
+import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager;
+import com.lawwing.lwdocument.itemdelagate.HomeItemDelagate;
+import com.lawwing.lwdocument.itemdelagate.HomeMoreDelagate;
+import com.lawwing.lwdocument.model.HomeBaseModel;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 /**
  * Created by lawwing on 2017/11/11.
  */
 
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeHolder>
+public class HomeAdapter extends RecyclerView.Adapter
 {
-    private ArrayList<CommentInfoModel> datas;
     
-    private Activity activity;
+    private AdapterDelegatesManager<List<HomeBaseModel>> delegatesManager;
     
-    private LayoutInflater inflater;
+    private List<HomeBaseModel> items;
     
-    public HomeAdapter(Activity activity, ArrayList<CommentInfoModel> datas)
+    public HomeAdapter(Activity activity, List<HomeBaseModel> items)
     {
-        this.datas = datas;
-        this.activity = activity;
-        this.inflater = LayoutInflater.from(activity);
+        this.items = items;
+        delegatesManager = new AdapterDelegatesManager<>();
+        delegatesManager.addDelegate(new HomeItemDelagate(activity));
+        delegatesManager.addDelegate(new HomeMoreDelagate(activity));
     }
     
     @Override
-    public HomeHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent,
+            int viewType)
     {
-        return new HomeHolder(
-                inflater.inflate(R.layout.item_home_layout, parent, false));
+        return delegatesManager.onCreateViewHolder(parent, viewType);
     }
     
     @Override
-    public void onBindViewHolder(HomeHolder holder, int position)
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        final CommentInfoModel model = datas.get(position);
-        if (model != null)
-        {
-            GlideUtils.loadNormalPicture(model.getPath(), holder.commentImage);
-            holder.commentImage.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    activity.startActivity(CheckCommentPicActivity
-                            .newInstance(activity, model.getPath()));
-                }
-            });
-        }
+        delegatesManager.onBindViewHolder(items, position, holder);
     }
     
     @Override
     public int getItemCount()
     {
-        return datas != null ? datas.size() : 0;
+        return (items.size()) > 0 ? items.size() : 0;
     }
     
-    public class HomeHolder extends RecyclerView.ViewHolder
+    @Override
+    public int getItemViewType(int position)
     {
-        ImageView commentImage;
-        
-        public HomeHolder(View itemView)
-        {
-            super(itemView);
-            commentImage = (ImageView) itemView.findViewById(R.id.commentImage);
-        }
+        return delegatesManager.getItemViewType(items, position);
     }
+    
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position,
+            List payloads)
+    {
+        delegatesManager.onBindViewHolder(items, position, holder, payloads);
+    }
+    
 }
