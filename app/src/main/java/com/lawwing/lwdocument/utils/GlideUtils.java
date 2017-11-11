@@ -16,8 +16,8 @@ public class GlideUtils
     {
         Glide.with(LWDApp.get().getApplicationContext())
                 .load(path)
-                .error(R.mipmap.ic_launcher)
-                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.loadding_file)
+                .placeholder(R.mipmap.loadding_file)
                 .into(view);
     }
     
