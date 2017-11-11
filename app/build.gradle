@@ -5,7 +5,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId "cn.lawwing.tencentx5demo"
+        applicationId "cn.lawwing.lwdocument"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
