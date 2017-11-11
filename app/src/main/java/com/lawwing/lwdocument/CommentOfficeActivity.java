@@ -68,6 +68,9 @@ public class CommentOfficeActivity extends BaseActivity
     @BindView(R.id.iv_comment_rectangle)
     ImageView mRectangle;
     
+    @BindView(R.id.iv_comment_freedom)
+    ImageView mFreedom;
+    
     @BindView(R.id.iv_cancle)
     ImageView mCancleIV;
     
@@ -370,7 +373,8 @@ public class CommentOfficeActivity extends BaseActivity
      * @param view
      */
     @OnClick({ R.id.iv_comment_loadmorerightmenu, R.id.iv_comment_arrow,
-            R.id.iv_comment_rectangle, R.id.iv_comment_text })
+            R.id.iv_comment_rectangle, R.id.iv_comment_text,
+            R.id.iv_comment_freedom })
     public void onRightMenuClick(View view)
     {
         switch (view.getId())
@@ -394,6 +398,11 @@ public class CommentOfficeActivity extends BaseActivity
                 initRMenuView(mode);
                 pv.setColorOrType();
                 break;
+            case R.id.iv_comment_freedom:
+                mode = PaintView.COMMENT_FREEDOM;
+                initRMenuView(mode);
+                pv.setColorOrType();
+                break;
         }
     }
     
@@ -411,17 +420,27 @@ public class CommentOfficeActivity extends BaseActivity
                 mText.setImageResource(R.mipmap.comment_text_unselect);
                 mRectangle
                         .setImageResource(R.mipmap.comment_rectangle_unselect);
+                mFreedom.setImageResource(R.drawable.ic_menu_share);
                 break;
             case PaintView.COMMENT_TEXT:
                 mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
                 mText.setImageResource(R.mipmap.comment_text_select);
                 mRectangle
                         .setImageResource(R.mipmap.comment_rectangle_unselect);
+                mFreedom.setImageResource(R.drawable.ic_menu_share);
                 break;
             case PaintView.COMMENT_RECTANGLE:
                 mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
                 mText.setImageResource(R.mipmap.comment_text_unselect);
                 mRectangle.setImageResource(R.mipmap.comment_rectangle_select);
+                mFreedom.setImageResource(R.drawable.ic_menu_share);
+                break;
+            case PaintView.COMMENT_FREEDOM:
+                mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
+                mText.setImageResource(R.mipmap.comment_text_unselect);
+                mRectangle
+                        .setImageResource(R.mipmap.comment_rectangle_unselect);
+                mFreedom.setImageResource(R.drawable.ic_menu_camera);
                 break;
         }
     }

@@ -1,5 +1,15 @@
 package com.lawwing.lwdocument.widget;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import com.lawwing.lwdocument.CommentOfficeActivity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,16 +22,6 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.lawwing.lwdocument.CommentOfficeActivity;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 /***
  * author lawwing time 2017/3/21 15:27 describe
  **/
@@ -33,6 +33,8 @@ public class PaintView extends View
     public static final int COMMENT_TEXT = 1;
     
     public static final int COMMENT_RECTANGLE = 2;
+    
+    public static final int COMMENT_FREEDOM = 3;
     
     public static final String COLOR_RED = "#ff4351";
     
@@ -492,6 +494,13 @@ public class PaintView extends View
                         touch_start(x, y);
                         invalidate(); // 清屏
                         break;
+                    
+                    case COMMENT_FREEDOM:
+                        mPath = new Path();
+                        
+                        touch_start(x, y);
+                        invalidate(); // 清屏
+                        break;
                 }
                 
                 break;
@@ -509,6 +518,11 @@ public class PaintView extends View
                     case COMMENT_TEXT:
                         
                         break;
+                    
+                    case COMMENT_FREEDOM:
+                        touch_move(x, y);
+                        invalidate();
+                        break;
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -525,10 +539,42 @@ public class PaintView extends View
                     case COMMENT_TEXT:
                         listener.onClickText(x, y);
                         break;
+                    
+                    case COMMENT_FREEDOM:
+                        touch_up(x, y);
+                        invalidate();
+                        break;
                 }
                 break;
         }
         return true;
+    }
+    
+    private void touch_move(float x, float y)
+    {
+        float dx = Math.abs(x - mX);
+        float dy = Math.abs(y - mY);
+        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE)
+        {
+            // mPath.quadTo(mX, mY, x, y);
+            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
+            mX = x;
+            mY = y;
+        }
+    }
+    
+    private void touch_up(float x, float y)
+    {
+        dp = new DrawPath(mPath, mPaint,
+                Color.parseColor(CommentOfficeActivity.color),
+                COMMENT_RECTANGLE, "", mX, mY, x, y);
+        dp.setDtype(COMMENT_RECTANGLE);
+        mPath.lineTo(mX, mY);
+        mCanvas.drawPath(mPath, mPaint);
+        savePath.add(dp);
+        listener.onRefluse(savePath.size(), deletePath.size());
+        mPath = null;
+        
     }
     
     /**
