@@ -16,11 +16,11 @@
     <!-- 顶部菜单栏-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="90px"
+        android:layout_height="48dp"
         android:layout_alignParentTop="true"
         android:background="@color/black"
-        android:paddingLeft="30px"
-        android:paddingRight="30px">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <TextView
             android:id="@+id/exit"
@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:text="取消"
             android:textColor="#8b8b8b"
-            android:textSize="32px" />
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,20 +40,20 @@
 
             <ImageView
                 android:id="@+id/iv_cancle"
-                android:layout_width="90px"
-                android:layout_height="90px"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:contentDescription="@null"
-                android:padding="20px"
+                android:padding="4dp"
                 android:scaleType="centerInside"
                 android:src="@mipmap/comment_cancle_cannot" />
 
             <ImageView
                 android:id="@+id/iv_redo"
-                android:layout_width="90px"
-                android:layout_height="90px"
-                android:layout_marginLeft="10px"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="4dp"
                 android:contentDescription="@null"
-                android:padding="20px"
+                android:padding="4dp"
                 android:scaleType="centerInside"
                 android:src="@mipmap/comment_redo_cannot" />
         </LinearLayout>
@@ -66,7 +66,7 @@
             android:layout_centerVertical="true"
             android:text="完成"
             android:textColor="#32b4ff"
-            android:textSize="32px" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <!-- 左边颜色选择 -->
@@ -87,32 +87,32 @@
 
             <ImageView
                 android:id="@+id/iv_comment_redcolor"
-                android:layout_width="68px"
-                android:layout_height="68px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginBottom="20px"
                 android:contentDescription="@null"
                 android:src="@mipmap/comment_red_select" />
 
             <ImageView
                 android:id="@+id/iv_comment_bluecolor"
-                android:layout_width="68px"
-                android:layout_height="68px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginBottom="20px"
                 android:contentDescription="@null"
                 android:src="@mipmap/comment_blue_unselect" />
 
             <ImageView
                 android:id="@+id/iv_comment_greencolor"
-                android:layout_width="68px"
-                android:layout_height="68px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginBottom="20px"
                 android:contentDescription="@null"
                 android:src="@mipmap/comment_green_unselect" />
 
             <ImageView
                 android:id="@+id/iv_comment_blackcolor"
-                android:layout_width="68px"
-                android:layout_height="68px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginBottom="20px"
                 android:contentDescription="@null"
                 android:src="@mipmap/comment_black_unselect" />
@@ -120,8 +120,8 @@
 
         <ImageView
             android:id="@+id/iv_comment_loadmorecolor"
-            android:layout_width="68px"
-            android:layout_height="68px"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@null"
             android:src="@mipmap/comment_colour_back" />
     </LinearLayout>
@@ -144,24 +144,24 @@
 
             <ImageView
                 android:id="@+id/iv_comment_arrow"
-                android:layout_width="68px"
-                android:layout_height="68px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginBottom="20px"
                 android:contentDescription="@null"
                 android:src="@mipmap/comment_arrow_select" />
 
             <ImageView
                 android:id="@+id/iv_comment_text"
-                android:layout_width="68px"
-                android:layout_height="68px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginBottom="20px"
                 android:contentDescription="@null"
                 android:src="@mipmap/comment_text_unselect" />
 
             <ImageView
                 android:id="@+id/iv_comment_rectangle"
-                android:layout_width="68px"
-                android:layout_height="68px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginBottom="20px"
                 android:contentDescription="@null"
                 android:src="@mipmap/comment_rectangle_unselect" />
@@ -169,8 +169,8 @@
 
         <ImageView
             android:id="@+id/iv_comment_loadmorerightmenu"
-            android:layout_width="68px"
-            android:layout_height="68px"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@null"
             android:src="@mipmap/comment_closetools" />
     </LinearLayout>

@@ -19,8 +19,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.lawwing.lwdocument.adapter.HomeAdapter;
+import com.lawwing.lwdocument.event.SaveCommentEvent;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.utils.FileManager;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -82,7 +85,6 @@ public class AppMainActivity extends AppCompatActivity
                 R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         datas = new ArrayList<>();
-        
         String[] perms = new String[] {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE };
@@ -99,6 +101,27 @@ public class AppMainActivity extends AppCompatActivity
             
             getLocalCommentPicture();
         }
+        LWDApp.getEventBus().register(this);
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        LWDApp.getEventBus().unregister(this);
+    }
+    
+    @Subscribe
+    public void onEventMainThread(SaveCommentEvent event)
+    {
+        if (event != null)
+        {
+            String flag = event.getFlag();
+            if ("批注".equals(flag))
+            {
+                getLocalCommentPicture();
+            }
+        }
     }
     
     private void getLocalCommentPicture()
@@ -109,9 +132,9 @@ public class AppMainActivity extends AppCompatActivity
             public void run()
             {
                 File file = FileManager.getPhotoFolder();
+                datas.clear();
                 if (file.list().length > 0)
                 {
-                    datas.clear();
                     for (File file1 : file.listFiles())
                     {
                         if (!file1.isDirectory())

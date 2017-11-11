@@ -1,6 +1,7 @@
 package com.lawwing.lwdocument;
 
 import com.lawwing.lwdocument.base.BaseActivity;
+import com.lawwing.lwdocument.event.SaveCommentEvent;
 import com.lawwing.lwdocument.utils.FileManager;
 import com.lawwing.lwdocument.utils.ImageUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
@@ -239,6 +240,9 @@ public class CommentOfficeActivity extends BaseActivity
                                         if (!TextUtils.isEmpty(path))
                                         {
                                             showLongToast("保存成功");
+                                            LWDApp.getEventBus().post(
+                                                    new SaveCommentEvent("批注"));
+                                            finish();
                                         }
                                         else
                                         {

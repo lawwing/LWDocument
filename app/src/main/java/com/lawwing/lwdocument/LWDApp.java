@@ -4,6 +4,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import android.app.Application;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created by lawwing on 2017/11/10.
  */
@@ -54,4 +56,8 @@ public class LWDApp extends Application
         
     }
     
+    public static EventBus getEventBus()
+    {
+        return EventBus.getDefault();
+    }
 }
