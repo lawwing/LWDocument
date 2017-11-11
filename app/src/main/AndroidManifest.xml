@@ -16,19 +16,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SelectFileActivity" />
-        <activity android:name=".CommentOfficeActivity" />
+        <activity android:name=".MainActivity">
+
+        </activity>
+        <activity android:name=".SelectFileActivity" ></activity>
+        <activity android:name=".CommentOfficeActivity"></activity>
         <activity
             android:name=".AppMainActivity"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme">
+
+        </activity>
+        <activity android:name=".CheckCommentPicActivity" />
+        <activity android:name=".GuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.doc" />
+                <data android:pathPattern=".*\\.docx" />
+                <data android:pathPattern=".*\\.xls" />
+                <data android:pathPattern=".*\\.xlsx" />
+                <data android:pathPattern=".*\\.ppt" />
+                <data android:pathPattern=".*\\.pptx" />
+                <data android:pathPattern=".*\\.pdf" />
+            </intent-filter>
         </activity>
-        <activity android:name=".CheckCommentPicActivity"></activity>
     </application>
 
 </manifest>

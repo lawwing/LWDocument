@@ -2,6 +2,8 @@ package com.lawwing.lwdocument;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.widget.OfficeView;
@@ -11,11 +13,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -148,7 +153,7 @@ public class MainActivity extends BaseActivity
         this.filePath = fileUrl;
     }
     
-    String filePath = "/storage/emulated/0/test.docx";
+    String filePath = "";
     
     private String getFilePath()
     {
@@ -171,4 +176,5 @@ public class MainActivity extends BaseActivity
             mOfficeView.onStopDisplay();
         }
     }
+    
 }
