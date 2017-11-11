@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId "cn.lawwing.lwdocument"
+        applicationId "com.lawwing.lwdocument"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
@@ -48,9 +49,17 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     apt 'org.greenrobot:eventbus-annotation-processor:3.0.1'
+    compile 'org.greenrobot:greendao:3.0.1'
+    compile 'org.greenrobot:greendao-generator:3.0.0'
 }
+
 apt {
     arguments {
         eventBusIndex "com.bandeng.MyEventBusIndex"
     }
+}
+greendao {
+    schemaVersion 1
+    daoPackage 'com.lawwing.lwdocument.gen'
+    targetGenDir 'src/main/java'
 }

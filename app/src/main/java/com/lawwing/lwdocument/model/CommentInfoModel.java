@@ -6,9 +6,17 @@ package com.lawwing.lwdocument.model;
 
 public class CommentInfoModel
 {
+    private Long id;
+    
     private String name;
     
+    private String docname;
+    
     private String path;
+    
+    private String docpath;
+    
+    private long time;
     
     public String getName()
     {
@@ -28,5 +36,45 @@ public class CommentInfoModel
     public void setPath(String path)
     {
         this.path = path;
+    }
+    
+    public Long getId()
+    {
+        return id;
+    }
+    
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+    
+    public String getDocname()
+    {
+        return docname;
+    }
+    
+    public void setDocname(String docname)
+    {
+        this.docname = docname;
+    }
+    
+    public String getDocpath()
+    {
+        return docpath;
+    }
+    
+    public void setDocpath(String docpath)
+    {
+        this.docpath = docpath;
+    }
+    
+    public long getTime()
+    {
+        return time;
+    }
+    
+    public void setTime(long time)
+    {
+        this.time = time;
     }
 }

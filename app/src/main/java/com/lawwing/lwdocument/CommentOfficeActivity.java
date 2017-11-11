@@ -1,7 +1,11 @@
 package com.lawwing.lwdocument;
 
+import java.io.File;
+
 import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.event.SaveCommentEvent;
+import com.lawwing.lwdocument.gen.CommentInfoDb;
+import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.utils.FileManager;
 import com.lawwing.lwdocument.utils.ImageUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
@@ -99,10 +103,19 @@ public class CommentOfficeActivity extends BaseActivity
     // 保存图片的bitmap
     private Bitmap bitmap;
     
-    public static Intent newIntance(Activity activity, byte[] bitmapByte)
+    private CommentInfoDbDao mCommentInfoDao;
+    
+    private String docname;
+    
+    private String docpath;
+    
+    public static Intent newIntance(Activity activity, byte[] bitmapByte,
+            String docname, String docpath)
     {
         Intent intent = new Intent(activity, CommentOfficeActivity.class);
         intent.putExtra("bitmap", bitmapByte);
+        intent.putExtra("docname", docname);
+        intent.putExtra("docpath", docpath);
         return intent;
     }
     
@@ -116,6 +129,7 @@ public class CommentOfficeActivity extends BaseActivity
         ButterKnife.bind(this);
         pv.drawBackground(bm);
         pv.setListener(this);
+        mCommentInfoDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
         // initView();
     }
     
@@ -140,6 +154,15 @@ public class CommentOfficeActivity extends BaseActivity
         {
             byte[] bis = intent.getByteArrayExtra("bitmap");
             bm = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+            
+            if (intent.hasExtra("docname"))
+            {
+                docname = intent.getStringExtra("docname");
+            }
+            if (intent.hasExtra("docpath"))
+            {
+                docpath = intent.getStringExtra("docpath");
+            }
         }
         
     }
@@ -239,6 +262,16 @@ public class CommentOfficeActivity extends BaseActivity
                                         // 保存
                                         if (!TextUtils.isEmpty(path))
                                         {
+                                            File file = new File(path);
+                                            CommentInfoDb model = new CommentInfoDb();
+                                            model.setName(file.getName());
+                                            model.setPath(path);
+                                            model.setDocname(docname);
+                                            model.setDocpath(docpath);
+                                            model.setTime(file.lastModified());
+                                            mCommentInfoDao
+                                                    .insertOrReplace(model);
+                                            
                                             showLongToast("保存成功");
                                             LWDApp.getEventBus().post(
                                                     new SaveCommentEvent("批注"));
