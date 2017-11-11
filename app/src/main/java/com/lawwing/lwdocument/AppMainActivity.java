@@ -131,6 +131,10 @@ public class AppMainActivity extends AppCompatActivity
             {
                 getLocalCommentPicture();
             }
+            else if ("列表删除".equals(flag))
+            {
+                getLocalCommentPicture();
+            }
         }
     }
     
@@ -258,7 +262,13 @@ public class AppMainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_check_comment)
         {
-            
+            startActivity(CheckCommentPicListActivity
+                    .newInstance(AppMainActivity.this));
+        }
+        else if (id == R.id.nav_aboutus)
+        {
+            // 进入关于我们的页面
+            startActivity(AboutUsActivity.newInstance(AppMainActivity.this));
         }
         
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -373,7 +383,6 @@ public class AppMainActivity extends AppCompatActivity
                 if (event.getModel() != null)
                 {
                     mCommentInfoDao.deleteByKey(event.getModel().getId());
-                    showLongToast(event.getPosition() + "");
                     datas.remove(event.getPosition());
                     // 删除卡片操作
                     adapter.notifyItemRemoved(event.getPosition());

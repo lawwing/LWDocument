@@ -16,17 +16,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-
-        </activity>
-        <activity android:name=".SelectFileActivity" ></activity>
-        <activity android:name=".CommentOfficeActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SelectFileActivity" />
+        <activity android:name=".CommentOfficeActivity" />
         <activity
             android:name=".AppMainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity android:name=".CheckCommentPicActivity" />
         <activity android:name=".GuideActivity">
             <intent-filter>
@@ -53,6 +49,8 @@
                 <data android:pathPattern=".*\\.pdf" />
             </intent-filter>
         </activity>
+        <activity android:name=".CheckCommentPicListActivity" />
+        <activity android:name=".AboutUsActivity"></activity>
     </application>
 
 </manifest>
