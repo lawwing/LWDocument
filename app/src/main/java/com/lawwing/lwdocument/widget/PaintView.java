@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.lawwing.lwdocument.CommentOfficeActivity;
+import com.lawwing.lwdocument.base.StaticDatas;
 
 import android.app.Activity;
 import android.content.Context;
@@ -85,7 +85,7 @@ public class PaintView extends View
         bitmapWidth = dm.widthPixels;
         bitmapHeight = dm.heightPixels;
         
-        initCanvas(Color.parseColor(CommentOfficeActivity.color), width);
+        initCanvas(Color.parseColor(StaticDatas.color), width);
         savePath = new ArrayList<DrawPath>();
         deletePath = new ArrayList<DrawPath>();
         
@@ -100,7 +100,7 @@ public class PaintView extends View
         
         bitmapWidth = dm.widthPixels;
         bitmapHeight = dm.heightPixels;
-        initCanvas(Color.parseColor(CommentOfficeActivity.color), width);
+        initCanvas(Color.parseColor(StaticDatas.color), width);
         savePath = new ArrayList<DrawPath>();
         deletePath = new ArrayList<DrawPath>();
     }
@@ -136,8 +136,8 @@ public class PaintView extends View
     
     public void setColorOrType()
     {
-        mPaint.setColor(Color.parseColor(CommentOfficeActivity.color));
-        type = CommentOfficeActivity.mode;
+        mPaint.setColor(Color.parseColor(StaticDatas.color));
+        type = StaticDatas.mode;
         // 字体用实心画，矩形和箭头用空心
         if (type == COMMENT_TEXT)
         {
@@ -170,9 +170,8 @@ public class PaintView extends View
      */
     public void setTextArea(String text, float x, float y)
     {
-        dp = new DrawPath(mPath, mPaint,
-                Color.parseColor(CommentOfficeActivity.color), COMMENT_TEXT,
-                text, x, y, 0, 0);
+        dp = new DrawPath(mPath, mPaint, Color.parseColor(StaticDatas.color),
+                COMMENT_TEXT, text, x, y, 0, 0);
         dp.setDtype(COMMENT_TEXT);
         mPaint.setTextSize(42);
         mPaint.setStrokeWidth(3);
@@ -320,7 +319,7 @@ public class PaintView extends View
         if (savePath != null && savePath.size() > 0)
         {
             // 调用初始化画布函数以清空画布
-            initCanvas(Color.parseColor(CommentOfficeActivity.color), width);
+            initCanvas(Color.parseColor(StaticDatas.color), width);
             drawBackground(bm);
             // 将路径保存列表中的最后一个元素删除 ,并将其保存在路径删除列表中
             DrawPath drawPath = savePath.get(savePath.size() - 1);
@@ -403,7 +402,7 @@ public class PaintView extends View
     public void removeAllPaint()
     {
         // 调用初始化画布函数以清空画布
-        initCanvas(Color.parseColor(CommentOfficeActivity.color), width);
+        initCanvas(Color.parseColor(StaticDatas.color), width);
         drawBackground(bm);
         invalidate();// 刷新
         savePath.clear();
@@ -565,10 +564,9 @@ public class PaintView extends View
     
     private void touch_up(float x, float y)
     {
-        dp = new DrawPath(mPath, mPaint,
-                Color.parseColor(CommentOfficeActivity.color),
-                COMMENT_RECTANGLE, "", mX, mY, x, y);
-        dp.setDtype(COMMENT_RECTANGLE);
+        dp = new DrawPath(mPath, mPaint, Color.parseColor(StaticDatas.color),
+                COMMENT_FREEDOM, "", mX, mY, x, y);
+        dp.setDtype(COMMENT_FREEDOM);
         mPath.lineTo(mX, mY);
         mCanvas.drawPath(mPath, mPaint);
         savePath.add(dp);
@@ -640,8 +638,7 @@ public class PaintView extends View
      */
     private void toach_up_rectangle(float x, float y)
     {
-        dp = new DrawPath(mPath, mPaint,
-                Color.parseColor(CommentOfficeActivity.color),
+        dp = new DrawPath(mPath, mPaint, Color.parseColor(StaticDatas.color),
                 COMMENT_RECTANGLE, "", mX, mY, x, y);
         dp.setDtype(COMMENT_RECTANGLE);
         mCanvas.drawPath(mPath, mPaint);
@@ -655,9 +652,8 @@ public class PaintView extends View
      */
     private void toach_up_arrow(float ex, float ey)
     {
-        dp = new DrawPath(mPath, mPaint,
-                Color.parseColor(CommentOfficeActivity.color), COMMENT_ARROW,
-                "", mX, mY, ex, ey);
+        dp = new DrawPath(mPath, mPaint, Color.parseColor(StaticDatas.color),
+                COMMENT_ARROW, "", mX, mY, ex, ey);
         dp.setDtype(COMMENT_ARROW);
         mCanvas.drawPath(mPath, mPaint);
         savePath.add(dp);

@@ -3,6 +3,7 @@ package com.lawwing.lwdocument;
 import java.io.File;
 
 import com.lawwing.lwdocument.base.BaseActivity;
+import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.event.SaveCommentEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
@@ -20,6 +21,7 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -91,14 +93,8 @@ public class CommentOfficeActivity extends BaseActivity
     
     private Bitmap bm;
     
-    // 选择的颜色
-    public static String color;
-    
     // 画笔的粗细
     //
-    
-    // 当前的类型，箭头，文字，矩形框
-    public static int mode;
     
     // 保存图片的路径
     private String path = "";
@@ -133,6 +129,7 @@ public class CommentOfficeActivity extends BaseActivity
         pv.drawBackground(bm);
         pv.setListener(this);
         mCommentInfoDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
+        Log.e("test", StaticDatas.color + " -- " + StaticDatas.mode);
         // initView();
     }
     
@@ -141,10 +138,17 @@ public class CommentOfficeActivity extends BaseActivity
      */
     private void initData()
     {
-        color = PaintView.COLOR_RED;
-        mode = PaintView.COMMENT_ARROW;
+        StaticDatas.color = PaintView.COLOR_RED;
+        StaticDatas.mode = PaintView.COMMENT_ARROW;
+        PaintView.type = PaintView.COMMENT_ARROW;
     }
     
+    @Override
+    protected void onDestroy()
+    {
+        initData();
+        super.onDestroy();
+    }
     // private void initView()
     // {
     // mBackgroundIV.setImageBitmap(bm);
@@ -155,8 +159,11 @@ public class CommentOfficeActivity extends BaseActivity
         Intent intent = getIntent();
         if (intent != null)
         {
-            byte[] bis = intent.getByteArrayExtra("bitmap");
-            bm = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+            if (intent.hasExtra("bitmap"))
+            {
+                byte[] bis = intent.getByteArrayExtra("bitmap");
+                bm = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+            }
             
             if (intent.hasExtra("docname"))
             {
@@ -308,23 +315,23 @@ public class CommentOfficeActivity extends BaseActivity
                 changeColorPanal();
                 break;
             case R.id.iv_comment_bluecolor:
-                color = PaintView.COLOR_BLUE;
-                initColorView(color);
+                StaticDatas.color = PaintView.COLOR_BLUE;
+                initColorView(StaticDatas.color);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_redcolor:
-                color = PaintView.COLOR_RED;
-                initColorView(color);
+                StaticDatas.color = PaintView.COLOR_RED;
+                initColorView(StaticDatas.color);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_greencolor:
-                color = PaintView.COLOR_GREEN;
-                initColorView(color);
+                StaticDatas.color = PaintView.COLOR_GREEN;
+                initColorView(StaticDatas.color);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_blackcolor:
-                color = PaintView.COLOR_BLACK;
-                initColorView(color);
+                StaticDatas.color = PaintView.COLOR_BLACK;
+                initColorView(StaticDatas.color);
                 pv.setColorOrType();
                 break;
         }
@@ -384,23 +391,23 @@ public class CommentOfficeActivity extends BaseActivity
                 changeRightPanal();
                 break;
             case R.id.iv_comment_arrow:
-                mode = PaintView.COMMENT_ARROW;
-                initRMenuView(mode);
+                StaticDatas.mode = PaintView.COMMENT_ARROW;
+                initRMenuView(StaticDatas.mode);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_rectangle:
-                mode = PaintView.COMMENT_RECTANGLE;
-                initRMenuView(mode);
+                StaticDatas.mode = PaintView.COMMENT_RECTANGLE;
+                initRMenuView(StaticDatas.mode);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_text:
-                mode = PaintView.COMMENT_TEXT;
-                initRMenuView(mode);
+                StaticDatas.mode = PaintView.COMMENT_TEXT;
+                initRMenuView(StaticDatas.mode);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_freedom:
-                mode = PaintView.COMMENT_FREEDOM;
-                initRMenuView(mode);
+                StaticDatas.mode = PaintView.COMMENT_FREEDOM;
+                initRMenuView(StaticDatas.mode);
                 pv.setColorOrType();
                 break;
         }
