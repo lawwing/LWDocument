@@ -9,6 +9,12 @@
             android:id="@+id/nav_check_comment"
             android:title="查看批注图片" />
         <item
+            android:id="@+id/nav_paint"
+            android:title="瞎鸡巴画" />
+        <item
+            android:id="@+id/nav_paint_gallery"
+            android:title="瞎鸡巴画廊" />
+        <item
             android:id="@+id/nav_aboutus"
             android:title="关于我们" />
     </group>

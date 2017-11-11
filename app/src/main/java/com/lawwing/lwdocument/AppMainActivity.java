@@ -266,6 +266,17 @@ public class AppMainActivity extends AppCompatActivity
             startActivity(CheckCommentPicListActivity
                     .newInstance(AppMainActivity.this));
         }
+        else if (id == R.id.nav_paint)
+        {
+            // 进入瞎几把画
+            startActivity(XjbPaintActivity.newInstance(AppMainActivity.this));
+        }
+        else if (id == R.id.nav_paint_gallery)
+        {
+            // 进入瞎几把画廊
+            startActivity(
+                    XjbPaintGalleryActivity.newInstance(AppMainActivity.this));
+        }
         else if (id == R.id.nav_aboutus)
         {
             // 进入关于我们的页面
