@@ -9,6 +9,7 @@ import java.util.TimerTask;
 import org.greenrobot.eventbus.Subscribe;
 
 import com.lawwing.lwdocument.adapter.HomeAdapter;
+import com.lawwing.lwdocument.event.HomeDeleteEvent;
 import com.lawwing.lwdocument.event.SaveCommentEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
@@ -16,6 +17,7 @@ import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.model.HomeBaseModel;
 import com.lawwing.lwdocument.model.HomeBottomModel;
 import com.lawwing.lwdocument.utils.FileManager;
+import com.tubb.smrv.SwipeMenuRecyclerView;
 
 import android.Manifest;
 import android.os.Bundle;
@@ -27,7 +29,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -44,7 +45,7 @@ public class AppMainActivity extends AppCompatActivity
 {
     
     @BindView(R.id.homeRecyclerView)
-    RecyclerView homeRecyclerView;
+    SwipeMenuRecyclerView homeRecyclerView;
     
     private HomeAdapter adapter;
     
@@ -225,7 +226,8 @@ public class AppMainActivity extends AppCompatActivity
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         homeRecyclerView.setLayoutManager(manager);
         
-        adapter = new HomeAdapter(AppMainActivity.this, datas);
+        adapter = new HomeAdapter(AppMainActivity.this, datas,
+                "homecommentList");
         homeRecyclerView.setAdapter(adapter);
     }
     
@@ -359,4 +361,26 @@ public class AppMainActivity extends AppCompatActivity
             System.exit(0);
         }
     }
+    
+    @Subscribe
+    public void onEventMainThread(HomeDeleteEvent event)
+    {
+        if (event != null)
+        {
+            String flag = event.getFlag();
+            if ("homecommentList".equals(flag))
+            {
+                if (event.getModel() != null)
+                {
+                    mCommentInfoDao.deleteByKey(event.getModel().getId());
+                    showLongToast(event.getPosition() + "");
+                    datas.remove(event.getPosition());
+                    // 删除卡片操作
+                    adapter.notifyItemRemoved(event.getPosition());
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
+    
 }

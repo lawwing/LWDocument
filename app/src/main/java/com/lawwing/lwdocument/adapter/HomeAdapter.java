@@ -22,11 +22,14 @@ public class HomeAdapter extends RecyclerView.Adapter
     
     private List<HomeBaseModel> items;
     
-    public HomeAdapter(Activity activity, List<HomeBaseModel> items)
+    private String flag;
+    
+    public HomeAdapter(Activity activity, List<HomeBaseModel> items,
+            String flag)
     {
         this.items = items;
         delegatesManager = new AdapterDelegatesManager<>();
-        delegatesManager.addDelegate(new HomeItemDelagate(activity));
+        delegatesManager.addDelegate(new HomeItemDelagate(activity, flag));
         delegatesManager.addDelegate(new HomeMoreDelagate(activity));
     }
     
