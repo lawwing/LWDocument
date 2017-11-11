@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -65,6 +66,7 @@ public class HomeItemDelagate extends AdapterDelegate<List<HomeBaseModel>>
         final HomeHolder holder = (HomeHolder) oldholder;
         if (model != null)
         {
+            holder.docName.setText(model.getDocname());
             holder.bossLayout.setSwipeEnable(true);
             GlideUtils.loadNormalPicture(model.getPath(), holder.commentImage);
             holder.commentImage.setOnClickListener(new View.OnClickListener()
@@ -110,6 +112,8 @@ public class HomeItemDelagate extends AdapterDelegate<List<HomeBaseModel>>
         
         ImageView deleteBtn;
         
+        TextView docName;
+        
         SwipeHorizontalMenuLayout bossLayout;
         
         public HomeHolder(View itemView)
@@ -121,6 +125,7 @@ public class HomeItemDelagate extends AdapterDelegate<List<HomeBaseModel>>
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             bossLayout = (SwipeHorizontalMenuLayout) itemView
                     .findViewById(R.id.bossLayout);
+            docName = (TextView) itemView.findViewById(R.id.docName);
         }
     }
     

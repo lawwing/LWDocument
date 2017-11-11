@@ -258,7 +258,8 @@ public class AppMainActivity extends AppCompatActivity
         if (id == R.id.nav_check_alldoc)
         {
             // 进入查看全部文档页面
-            startActivity(SelectFileActivity.newInstance(AppMainActivity.this));
+            startActivity(
+                    ShowDocumentListActivity.newInstance(AppMainActivity.this));
         }
         else if (id == R.id.nav_check_comment)
         {
