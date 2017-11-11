@@ -10,10 +10,10 @@
             android:title="查看批注图片" />
         <item
             android:id="@+id/nav_paint"
-            android:title="瞎鸡巴画" />
+            android:title="瞎鸡巴涂" />
         <item
             android:id="@+id/nav_paint_gallery"
-            android:title="瞎鸡巴画廊" />
+            android:title="瞎鸡巴涂廊" />
         <item
             android:id="@+id/nav_aboutus"
             android:title="关于我们" />

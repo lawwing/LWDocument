@@ -23,6 +23,6 @@ public class XjbPaintGalleryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xjb_paint_gallery);
         titleBarUtils = new TitleBarUtils(XjbPaintGalleryActivity.this);
-        titleBarUtils.initTitle("欢迎来到瞎鸡巴画廊");
+        titleBarUtils.initTitle("欢迎来到瞎鸡巴涂廊");
     }
 }

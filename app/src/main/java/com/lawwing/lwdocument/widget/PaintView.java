@@ -70,6 +70,8 @@ public class PaintView extends View
     
     private Bitmap bm;
     
+    private int bgcolor;
+    
     // 画笔的粗细
     public static int width = 10;
     
@@ -132,6 +134,12 @@ public class PaintView extends View
     {
         this.bm = bm;
         mCanvas.drawBitmap(bm, 0, 0, mPaint);
+    }
+    
+    public void drawBackgroundColor(int bgcolor)
+    {
+        this.bgcolor = bgcolor;
+        mCanvas.drawColor(Color.parseColor("#ffffff"));
     }
     
     public void setColorOrType()
@@ -320,7 +328,14 @@ public class PaintView extends View
         {
             // 调用初始化画布函数以清空画布
             initCanvas(Color.parseColor(StaticDatas.color), width);
-            drawBackground(bm);
+            if (bm != null)
+            {
+                drawBackground(bm);
+            }
+            else
+            {
+                drawBackgroundColor(bgcolor);
+            }
             // 将路径保存列表中的最后一个元素删除 ,并将其保存在路径删除列表中
             DrawPath drawPath = savePath.get(savePath.size() - 1);
             deletePath.add(drawPath);
@@ -364,7 +379,14 @@ public class PaintView extends View
         {
             // 将删除的路径列表中的最后一个，也就是最顶端路径取出（栈）,并加入路径保存列表中
             DrawPath dp1 = deletePath.get(deletePath.size() - 1);
-            drawBackground(bm);
+            if (bm != null)
+            {
+                drawBackground(bm);
+            }
+            else
+            {
+                drawBackgroundColor(bgcolor);
+            }
             savePath.add(dp1);
             // 将路径保存列表中的路径重绘在画布上
             for (DrawPath dp : savePath)
@@ -403,7 +425,14 @@ public class PaintView extends View
     {
         // 调用初始化画布函数以清空画布
         initCanvas(Color.parseColor(StaticDatas.color), width);
-        drawBackground(bm);
+        if (bm != null)
+        {
+            drawBackground(bm);
+        }
+        else
+        {
+            drawBackgroundColor(bgcolor);
+        }
         invalidate();// 刷新
         savePath.clear();
         deletePath.clear();

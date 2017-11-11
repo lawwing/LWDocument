@@ -4,9 +4,8 @@ import java.io.File;
 
 import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.base.StaticDatas;
-import com.lawwing.lwdocument.event.SaveCommentEvent;
-import com.lawwing.lwdocument.gen.CommentInfoDb;
-import com.lawwing.lwdocument.gen.CommentInfoDbDao;
+import com.lawwing.lwdocument.gen.PaintInfoDb;
+import com.lawwing.lwdocument.gen.PaintInfoDbDao;
 import com.lawwing.lwdocument.utils.FileManager;
 import com.lawwing.lwdocument.utils.ImageUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
@@ -18,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -97,7 +97,7 @@ public class XjbPaintActivity extends BaseActivity
     // 保存图片的bitmap
     private Bitmap bitmap;
     
-    private CommentInfoDbDao mCommentInfoDao;
+    private PaintInfoDbDao mPaintInfoDbDao;
     
     private String docname;
     
@@ -125,10 +125,9 @@ public class XjbPaintActivity extends BaseActivity
         
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
-        pv.drawBackground(
-                Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888));
+        pv.drawBackgroundColor(Color.WHITE);
         pv.setListener(this);
-        mCommentInfoDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
+        mPaintInfoDbDao = LWDApp.get().getDaoSession().getPaintInfoDbDao();
     }
     
     /**
@@ -224,46 +223,43 @@ public class XjbPaintActivity extends BaseActivity
      */
     private void showMyDialog()
     {
-        new AlertDialog.Builder(this).setTitle("菜单")
-                .setItems(new String[] { "保存到本地相册" },
-                        new DialogInterface.OnClickListener()
+        final EditText editText = new EditText(this);
+        new AlertDialog.Builder(this).setTitle("给你的瞎鸡巴涂起个名字吧！")
+                .setView(editText)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        if (!TextUtils.isEmpty(editText.getText().toString()))
                         {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which)
+                            bitmap = getBitmapFromView(pv);
+                            path = saveImageFile(editText.getText().toString());
+                            if ("-1".equals(path))
                             {
-                                switch (which)
-                                {
-                                    case 0:
-                                        // 保存到本地相册
-                                        bitmap = getBitmapFromView(pv);
-                                        path = saveImageFile();
-                                        // 保存
-                                        if (!TextUtils.isEmpty(path))
-                                        {
-                                            File file = new File(path);
-                                            CommentInfoDb model = new CommentInfoDb();
-                                            model.setName(file.getName());
-                                            model.setPath(path);
-                                            model.setDocname(docname);
-                                            model.setDocpath(docpath);
-                                            model.setTime(file.lastModified());
-                                            mCommentInfoDao
-                                                    .insertOrReplace(model);
-                                            
-                                            showLongToast("保存成功");
-                                            LWDApp.getEventBus().post(
-                                                    new SaveCommentEvent("批注"));
-                                            finish();
-                                        }
-                                        else
-                                        {
-                                            showLongToast("保存失败");
-                                        }
-                                        break;
-                                }
+                                return;
                             }
-                        })
+                            // 保存
+                            if (!TextUtils.isEmpty(path))
+                            {
+                                File file = new File(path);
+                                PaintInfoDb model = new PaintInfoDb();
+                                model.setName(file.getName());
+                                model.setPath(path);
+                                model.setTime(TimeUtils.getCurTimeMills());
+                                mPaintInfoDbDao.insertOrReplace(model);
+                                
+                                showLongToast("保存成功");
+                                finish();
+                            }
+                            else
+                            {
+                                showLongToast("保存失败");
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("取消", null)
                 .show();
     }
     
@@ -577,24 +573,33 @@ public class XjbPaintActivity extends BaseActivity
      *
      * @return
      */
-    private String saveImageFile()
+    private String saveImageFile(String picname)
     {
         if (null != bitmap)
         {
-            long time = TimeUtils.getCurTimeMills();
-            if (ImageUtils.save(bitmap,
-                    FileManager.getPhotoFolder().getPath() + "/" + time
-                            + ".jpg",
-                    Bitmap.CompressFormat.JPEG))
+            File file = new File(FileManager.getPaintFolder().getPath() + "/"
+                    + picname + ".jpg");
+            if (file.exists())
             {
-                // showShortToast("保存图片成功");
-                return FileManager.getPhotoFolder().getPath() + "/" + time
-                        + ".jpg";
+                showShortToast("已有相同的文件名，请重新命名");
+                return "-1";
             }
             else
             {
-                // showShortToast("保存图片失败");
-                return "";
+                if (ImageUtils.save(bitmap,
+                        FileManager.getPaintFolder().getPath() + "/" + picname
+                                + ".jpg",
+                        Bitmap.CompressFormat.JPEG))
+                {
+                    // showShortToast("保存图片成功");
+                    return FileManager.getPaintFolder().getPath() + "/"
+                            + picname + ".jpg";
+                }
+                else
+                {
+                    // showShortToast("保存图片失败");
+                    return "";
+                }
             }
         }
         else

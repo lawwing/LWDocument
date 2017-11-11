@@ -29,6 +29,11 @@ public class FileManager
      */
     private final static String PHOTO_FOLDER_NAME = "Photos";
     
+    /**
+     * 存放paint目录名
+     */
+    private final static String PAINT_FOLDER_NAME = "Paint";
+    
     private final static String EDIT_PHOTO_FOLDER_NAME = "EditPhotos";
     
     /**
@@ -115,6 +120,27 @@ public class FileManager
         {
             
             File photoFolder = new File(appFolder, PHOTO_FOLDER_NAME);
+            return createOnNotFound(photoFolder);
+            
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    /**
+     * 获取应用存放图片的目录
+     *
+     * @return 成功则返回目录名，失败则返回null
+     */
+    public static File getPaintFolder()
+    {
+        File appFolder = getAppFolder();
+        if (appFolder != null)
+        {
+            
+            File photoFolder = new File(appFolder, PAINT_FOLDER_NAME);
             return createOnNotFound(photoFolder);
             
         }
