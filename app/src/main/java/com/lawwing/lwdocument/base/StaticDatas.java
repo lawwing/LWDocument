@@ -9,6 +9,12 @@ public class StaticDatas
     // 选择的颜色
     public static String color;
     
-    // / 当前的类型，箭头，文字，矩形框
+    // 当前的类型，箭头，文字，矩形框
     public static int mode;
+    
+    // 纯颜色背景涂鸦模式
+    public final static int COLOR_BACKGROUND_MODE = 0;
+    
+    // 图片背景涂鸦模式
+    public final static int IMAGE_BACKGROUND_MODE = 1;
 }

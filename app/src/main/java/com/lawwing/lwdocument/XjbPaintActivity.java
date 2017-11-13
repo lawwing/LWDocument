@@ -107,9 +107,12 @@ public class XjbPaintActivity extends BaseActivity
     
     private int height;
     
-    public static Intent newInstance(Activity activity)
+    private int color;
+    
+    public static Intent newInstance(Activity activity, int color)
     {
         Intent intent = new Intent(activity, XjbPaintActivity.class);
+        intent.putExtra("color", color);
         return intent;
     }
     
@@ -125,7 +128,8 @@ public class XjbPaintActivity extends BaseActivity
         
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
-        pv.drawBackgroundColor(Color.WHITE);
+        
+        pv.drawBackgroundColor(color);
         pv.setListener(this);
         mPaintInfoDbDao = LWDApp.get().getDaoSession().getPaintInfoDbDao();
     }
@@ -138,6 +142,11 @@ public class XjbPaintActivity extends BaseActivity
         StaticDatas.color = PaintView.COLOR_RED;
         StaticDatas.mode = PaintView.COMMENT_ARROW;
         PaintView.type = PaintView.COMMENT_ARROW;
+        Intent intent = getIntent();
+        if (intent != null)
+        {
+            color = intent.getIntExtra("color", Color.WHITE);
+        }
     }
     
     // private void initView()

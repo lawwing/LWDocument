@@ -139,7 +139,7 @@ public class PaintView extends View
     public void drawBackgroundColor(int bgcolor)
     {
         this.bgcolor = bgcolor;
-        mCanvas.drawColor(Color.parseColor("#ffffff"));
+        mCanvas.drawColor(bgcolor);
     }
     
     public void setColorOrType()

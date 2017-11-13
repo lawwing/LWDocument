@@ -20,6 +20,8 @@ import com.lawwing.lwdocument.utils.FileManager;
 import com.tubb.smrv.SwipeMenuRecyclerView;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +29,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -269,7 +272,50 @@ public class AppMainActivity extends AppCompatActivity
         else if (id == R.id.nav_paint)
         {
             // 进入瞎几把画
-            startActivity(XjbPaintActivity.newInstance(AppMainActivity.this));
+            // startActivity(XjbPaintActivity.newInstance(AppMainActivity.this));
+            new AlertDialog.Builder(this).setTitle("选择背景颜色")
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setSingleChoiceItems(
+                            new String[] { "红色", "黑色", "白色", "绿色", "蓝色" },
+                            0,
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                        int which)
+                                {
+                                    int color = Color.WHITE;
+                                    switch (which)
+                                    {
+                                        case 0:
+                                            // 红色
+                                            color = Color.RED;
+                                            break;
+                                        case 1:
+                                            // 黑色
+                                            color = Color.BLACK;
+                                            break;
+                                        case 2:
+                                            // 白色
+                                            color = Color.WHITE;
+                                            break;
+                                        case 3:
+                                            // 绿色
+                                            color = Color.GREEN;
+                                            break;
+                                        case 4:
+                                            // 蓝色
+                                            color = Color.BLUE;
+                                            break;
+                                    }
+                                    startActivity(XjbPaintActivity.newInstance(
+                                            AppMainActivity.this,
+                                            color));
+                                    dialog.dismiss();
+                                }
+                            })
+                    .setNegativeButton("取消", null)
+                    .show();
         }
         else if (id == R.id.nav_paint_gallery)
         {
