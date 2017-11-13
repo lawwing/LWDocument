@@ -1,6 +1,8 @@
 package com.lawwing.lwdocument.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -82,4 +84,18 @@ public class ImageUtils
         return src == null || src.getWidth() == 0 || src.getHeight() == 0;
     }
     
+    /**
+     * 获取bitmap
+     *
+     * @param filePath 文件路径
+     * @return bitmap
+     */
+    public static Bitmap getBitmap(String filePath)
+    {
+        if (TextUtils.isEmpty(filePath))
+        {
+            return null;
+        }
+        return BitmapFactory.decodeFile(filePath);
+    }
 }

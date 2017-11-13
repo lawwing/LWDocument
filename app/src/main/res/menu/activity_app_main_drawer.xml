@@ -15,6 +15,9 @@
             android:id="@+id/nav_paint_gallery"
             android:title="瞎鸡巴涂廊" />
         <item
+            android:id="@+id/nav_edit_pic"
+            android:title="编辑图片" />
+        <item
             android:id="@+id/nav_aboutus"
             android:title="关于我们" />
     </group>

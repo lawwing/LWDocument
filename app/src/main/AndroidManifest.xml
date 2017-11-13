@@ -52,7 +52,9 @@
         <activity android:name=".AboutUsActivity" />
         <activity android:name=".ShowDocumentListActivity" />
         <activity android:name=".XjbPaintActivity" />
-        <activity android:name=".XjbPaintGalleryActivity"></activity>
+        <activity android:name=".XjbPaintGalleryActivity" />
+        <activity android:name=".EditPictureActivity" />
+        <activity android:name=".SelectPictureActivity"></activity>
     </application>
 
 </manifest>

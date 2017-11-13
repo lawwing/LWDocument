@@ -3,7 +3,9 @@ package com.lawwing.lwdocument.adapter;
 import java.util.ArrayList;
 
 import com.lawwing.lwdocument.CheckCommentPicActivity;
+import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
+import com.lawwing.lwdocument.event.SelectPictureEvent;
 import com.lawwing.lwdocument.model.PaintInfoModel;
 import com.lawwing.lwdocument.utils.GlideUtils;
 
@@ -22,16 +24,26 @@ import android.widget.TextView;
 public class PaintListAdapter
         extends RecyclerView.Adapter<PaintListAdapter.PaintListHolder>
 {
+    // 选择图片模式
+    public final static String SELECT_MODE = "0";
+    
+    // 查看大图模式
+    public final static String CHECK_MODE = "1";
+    
     private Activity activity;
     
     private ArrayList<PaintInfoModel> datas;
     
     private LayoutInflater inflater;
     
-    public PaintListAdapter(Activity activity, ArrayList<PaintInfoModel> datas)
+    private String mode;
+    
+    public PaintListAdapter(Activity activity, ArrayList<PaintInfoModel> datas,
+            String mode)
     {
         this.activity = activity;
         this.datas = datas;
+        this.mode = mode;
         inflater = LayoutInflater.from(activity);
     }
     
@@ -55,8 +67,16 @@ public class PaintListAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    activity.startActivity(CheckCommentPicActivity
-                            .newInstance(activity, model.getPath()));
+                    if (CHECK_MODE.equals(mode))
+                    {
+                        activity.startActivity(CheckCommentPicActivity
+                                .newInstance(activity, model.getPath()));
+                    }
+                    else if (SELECT_MODE.equals(mode))
+                    {
+                        LWDApp.getEventBus()
+                                .post(new SelectPictureEvent(model));
+                    }
                 }
             });
         }

@@ -323,6 +323,12 @@ public class AppMainActivity extends AppCompatActivity
             startActivity(
                     XjbPaintGalleryActivity.newInstance(AppMainActivity.this));
         }
+        else if (id == R.id.nav_edit_pic)
+        {
+            // 进入选择图片
+            startActivity(
+                    SelectPictureActivity.newInstance(AppMainActivity.this));
+        }
         else if (id == R.id.nav_aboutus)
         {
             // 进入关于我们的页面
