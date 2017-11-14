@@ -45,4 +45,13 @@
         android:text="作者：晓晓罗"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:text="本软件可以选择office文件进行批注，并进行查看批注图！！\n附加功能：涂鸦板"
+        android:textColor="#333333"
+        android:textSize="16sp" />
 </LinearLayout>

@@ -36,6 +36,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
@@ -49,6 +50,9 @@ public class AppMainActivity extends AppCompatActivity
     
     @BindView(R.id.homeRecyclerView)
     SwipeMenuRecyclerView homeRecyclerView;
+    
+    @BindView(R.id.nullTips)
+    TextView nullTips;
     
     private HomeAdapter adapter;
     
@@ -97,6 +101,17 @@ public class AppMainActivity extends AppCompatActivity
                 R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         datas = new ArrayList<>();
+        nullTips.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // 进入查看全部文档页面
+                startActivity(ShowDocumentListActivity
+                        .newInstance(AppMainActivity.this));
+            }
+        });
+        
         String[] perms = new String[] {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE };
@@ -223,12 +238,21 @@ public class AppMainActivity extends AppCompatActivity
         public void handleMessage(Message msg)
         {
             super.handleMessage(msg);
+            if (datas.size() > 0)
+            {
+                nullTips.setVisibility(View.GONE);
+            }
+            else
+            {
+                nullTips.setVisibility(View.VISIBLE);
+            }
             adapter.notifyDataSetChanged();
         }
     };
     
     private void initRecyclerView()
     {
+        nullTips.setVisibility(View.VISIBLE);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         homeRecyclerView.setLayoutManager(manager);
@@ -236,6 +260,7 @@ public class AppMainActivity extends AppCompatActivity
         adapter = new HomeAdapter(AppMainActivity.this, datas,
                 "homecommentList");
         homeRecyclerView.setAdapter(adapter);
+        
     }
     
     @Override

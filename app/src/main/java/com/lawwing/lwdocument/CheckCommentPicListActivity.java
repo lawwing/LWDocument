@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +35,9 @@ public class CheckCommentPicListActivity extends BaseActivity
 {
     @BindView(R.id.commentRecyclerView)
     SwipeMenuRecyclerView commentRecyclerView;
+    
+    @BindView(R.id.nullTips)
+    TextView nullTips;
     
     private HomeAdapter adapter;
     
@@ -59,6 +64,16 @@ public class CheckCommentPicListActivity extends BaseActivity
         
         titleBarUtils = new TitleBarUtils(CheckCommentPicListActivity.this);
         titleBarUtils.initTitle("批注列表");
+        nullTips.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // 进入查看全部文档页面
+                startActivity(ShowDocumentListActivity
+                        .newInstance(CheckCommentPicListActivity.this));
+            }
+        });
         LWDApp.getEventBus().register(this);
         String[] perms = new String[] {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -88,6 +103,7 @@ public class CheckCommentPicListActivity extends BaseActivity
     
     private void initRecyclerView()
     {
+        nullTips.setVisibility(View.VISIBLE);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         commentRecyclerView.setLayoutManager(manager);
@@ -135,6 +151,14 @@ public class CheckCommentPicListActivity extends BaseActivity
         public void handleMessage(Message msg)
         {
             super.handleMessage(msg);
+            if (datas.size() > 0)
+            {
+                nullTips.setVisibility(View.GONE);
+            }
+            else
+            {
+                nullTips.setVisibility(View.VISIBLE);
+            }
             adapter.notifyDataSetChanged();
         }
     };

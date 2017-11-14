@@ -11,8 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="48dp" />
 
-    <com.tubb.smrv.SwipeMenuRecyclerView
-        android:id="@+id/commentRecyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.tubb.smrv.SwipeMenuRecyclerView>
+        android:layout_height="match_parent">
+
+        <com.tubb.smrv.SwipeMenuRecyclerView
+            android:id="@+id/commentRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></com.tubb.smrv.SwipeMenuRecyclerView>
+
+        <TextView
+            android:id="@+id/nullTips"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="没有内容，点击试试批注吧！"
+            android:textSize="16sp"
+            android:visibility="gone" />
+    </RelativeLayout>
 </LinearLayout>
