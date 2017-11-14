@@ -82,7 +82,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
-                <data android:scheme="tencent1105479631" />
+                <data android:scheme="tencent1106460925" />
 
                 <action android:name="android.intent.action.VIEW" />
 

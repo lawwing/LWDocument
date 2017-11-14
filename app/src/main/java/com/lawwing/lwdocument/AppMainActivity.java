@@ -2,7 +2,6 @@ package com.lawwing.lwdocument;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,7 +17,6 @@ import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.model.HomeBaseModel;
 import com.lawwing.lwdocument.model.HomeBottomModel;
 import com.lawwing.lwdocument.utils.FileManager;
-import com.lawwing.lwdocument.utils.ShareUtils;
 import com.tubb.smrv.SwipeMenuRecyclerView;
 
 import android.Manifest;
@@ -43,9 +41,6 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.tencent.qq.QQ;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class AppMainActivity extends AppCompatActivity
@@ -362,43 +357,13 @@ public class AppMainActivity extends AppCompatActivity
         else if (id == R.id.nav_aboutus)
         {
             // 进入关于我们的页面
-            // startActivity(AboutUsActivity.newInstance(AppMainActivity.this));
-            ShareUtils.showShare(true,
-                    QQ.NAME,
-                    "QQ邀请",
-                    "QQ邀请",
-                    "www.lawwing.cn",
-                    "http://pc.surfond.com/static/images/logo.50d77a4.png",
-                    listener);
+            startActivity(AboutUsActivity.newInstance(AppMainActivity.this));
         }
         
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    
-    private PlatformActionListener listener = new PlatformActionListener()
-    {
-        
-        @Override
-        public void onComplete(Platform platform, int i,
-                HashMap<String, Object> hashMap)
-        {
-            
-        }
-        
-        @Override
-        public void onError(Platform platform, int i, Throwable throwable)
-        {
-            
-        }
-        
-        @Override
-        public void onCancel(Platform platform, int i)
-        {
-            
-        }
-    };
     
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms)

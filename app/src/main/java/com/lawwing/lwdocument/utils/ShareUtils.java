@@ -10,28 +10,24 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 /**
  * author lawwing time 2017/4/6 10:33 describe
  **/
-public class ShareUtils
-{
+public class ShareUtils {
     /**
-     * 
-     * @param silent 暂时填true
+     * @param silent   暂时填true
      * @param platform 平台
-     * @param title 标题
-     * @param content 内容
-     * @param url 分享的链接
+     * @param title    标题
+     * @param content  内容
+     * @param url      分享的链接
      * @param imageUrl 分享的头像路径
      * @param listener 监听器，用来监听分享成功或者失败后进行的操作
      */
     public static void showShare(boolean silent, String platform, String title,
-            String content, String url, String imageUrl,
-            PlatformActionListener listener)
-    {
+                                 String content, String url, String imageUrl,
+                                 PlatformActionListener listener) {
         final OnekeyShare oks = new OnekeyShare();
         ShareSDK.initSDK(LWDApp.get().getApplicationContext());
         oks.disableSSOWhenAuthorize();
-        
-        if (platform != null)
-        {
+
+        if (platform != null) {
             oks.setPlatform(platform);
         }
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
@@ -51,11 +47,34 @@ public class ShareUtils
         oks.setImageUrl(imageUrl);
         // 启动分享GUI
         oks.show(LWDApp.get().getApplicationContext());
-        
+
         Platform platform1 = ShareSDK
                 .getPlatform(LWDApp.get().getApplicationContext(), platform);
-        
+
         platform1.setPlatformActionListener(listener);
     }
-    
+
+    /**
+     * @param silent
+     * @param platform
+     * @param title
+     * @param content
+     * @param path
+     * @param listener
+     */
+    public static void showImageShare(boolean silent, String platform, String title, String content, String path, PlatformActionListener listener) {
+        final OnekeyShare oks = new OnekeyShare();
+        ShareSDK.initSDK(LWDApp.get().getApplicationContext());
+        oks.disableSSOWhenAuthorize();
+
+        if (platform != null) {
+            oks.setPlatform(platform);
+        }
+        oks.setImagePath(path);
+        oks.show(LWDApp.get().getApplicationContext());
+        Platform platform1 = ShareSDK
+                .getPlatform(LWDApp.get().getApplicationContext(), platform);
+
+        platform1.setPlatformActionListener(listener);
+    }
 }
