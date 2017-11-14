@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LawwingDocument</string>
+    <string name="app_name">批涂</string>
     <string name="title_activity_app_main">首页</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
