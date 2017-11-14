@@ -233,7 +233,7 @@ public class XjbPaintActivity extends BaseActivity
     private void showMyDialog()
     {
         final EditText editText = new EditText(this);
-        new AlertDialog.Builder(this).setTitle("给你的瞎鸡巴涂起个名字吧！")
+        new AlertDialog.Builder(this).setTitle("给你的涂鸦起个名字吧！")
                 .setView(editText)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener()
                 {

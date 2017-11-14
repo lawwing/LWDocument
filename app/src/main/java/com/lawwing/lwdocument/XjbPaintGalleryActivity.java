@@ -49,7 +49,7 @@ public class XjbPaintGalleryActivity extends BaseActivity
         setContentView(R.layout.activity_xjb_paint_gallery);
         ButterKnife.bind(this);
         titleBarUtils = new TitleBarUtils(XjbPaintGalleryActivity.this);
-        titleBarUtils.initTitle("欢迎来到瞎鸡巴涂廊");
+        titleBarUtils.initTitle("欢迎来到涂鸦画廊");
         mPaintInfoDbDao = LWDApp.get().getDaoSession().getPaintInfoDbDao();
         datas = new ArrayList<>();
         initRecyclerView();

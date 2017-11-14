@@ -273,7 +273,7 @@ public class AppMainActivity extends AppCompatActivity
         {
             // 进入瞎几把画
             // startActivity(XjbPaintActivity.newInstance(AppMainActivity.this));
-            new AlertDialog.Builder(this).setTitle("选择背景颜色")
+            new AlertDialog.Builder(this).setTitle("选择涂鸦板底色")
                     .setIcon(R.mipmap.ic_launcher)
                     .setSingleChoiceItems(
                             new String[] { "红色", "黑色", "白色", "绿色", "蓝色" },
@@ -323,12 +323,12 @@ public class AppMainActivity extends AppCompatActivity
             startActivity(
                     XjbPaintGalleryActivity.newInstance(AppMainActivity.this));
         }
-        else if (id == R.id.nav_edit_pic)
-        {
-            // 进入选择图片
-            startActivity(
-                    SelectPictureActivity.newInstance(AppMainActivity.this));
-        }
+        // else if (id == R.id.nav_edit_pic)
+        // {
+        // // 进入选择图片
+        // startActivity(
+        // SelectPictureActivity.newInstance(AppMainActivity.this));
+        // }
         else if (id == R.id.nav_aboutus)
         {
             // 进入关于我们的页面
