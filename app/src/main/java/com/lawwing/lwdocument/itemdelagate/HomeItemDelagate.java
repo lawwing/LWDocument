@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -78,7 +79,7 @@ public class HomeItemDelagate extends AdapterDelegate<List<HomeBaseModel>>
                 }
             });
             
-            holder.checkDocumentBtn
+            holder.checkDocumentLayout
                     .setOnClickListener(new View.OnClickListener()
                     {
                         @Override
@@ -90,7 +91,7 @@ public class HomeItemDelagate extends AdapterDelegate<List<HomeBaseModel>>
                         }
                     });
             
-            holder.deleteBtn.setOnClickListener(new View.OnClickListener()
+            holder.deleteLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -115,6 +116,10 @@ public class HomeItemDelagate extends AdapterDelegate<List<HomeBaseModel>>
         
         SwipeHorizontalMenuLayout bossLayout;
         
+        LinearLayout checkDocumentLayout;
+        
+        LinearLayout deleteLayout;
+        
         public HomeHolder(View itemView)
         {
             super(itemView);
@@ -125,6 +130,10 @@ public class HomeItemDelagate extends AdapterDelegate<List<HomeBaseModel>>
             bossLayout = (SwipeHorizontalMenuLayout) itemView
                     .findViewById(R.id.bossLayout);
             docName = (TextView) itemView.findViewById(R.id.docName);
+            checkDocumentLayout = (LinearLayout) itemView
+                    .findViewById(R.id.checkDocumentLayout);
+            deleteLayout = (LinearLayout) itemView
+                    .findViewById(R.id.deleteLayout);
         }
     }
     
