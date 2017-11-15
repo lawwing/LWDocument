@@ -5,16 +5,21 @@ import static com.lawwing.lwdocument.adapter.PaintListAdapter.CHECK_MODE;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import com.lawwing.lwdocument.adapter.PaintListAdapter;
 import com.lawwing.lwdocument.base.BaseActivity;
+import com.lawwing.lwdocument.event.PaintLongEvent;
 import com.lawwing.lwdocument.gen.PaintInfoDb;
 import com.lawwing.lwdocument.gen.PaintInfoDbDao;
 import com.lawwing.lwdocument.model.PaintInfoModel;
 import com.lawwing.lwdocument.utils.TitleBarUtils;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,6 +59,70 @@ public class XjbPaintGalleryActivity extends BaseActivity
         datas = new ArrayList<>();
         initRecyclerView();
         getPaintListByDb();
+        LWDApp.getEventBus().register(this);
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+        LWDApp.getEventBus().unregister(this);
+        super.onDestroy();
+    }
+    
+    @Subscribe
+    public void onEventMainThread(final PaintLongEvent event)
+    {
+        if (event != null)
+        {
+            new AlertDialog.Builder(this).setTitle("菜单")
+                    .setItems(new String[] { "删除" },
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                        int which)
+                                {
+                                    switch (which)
+                                    {
+                                        case 0:
+                                            new AlertDialog.Builder(
+                                                    XjbPaintGalleryActivity.this)
+                                                            .setTitle("警告")
+                                                            .setMessage(
+                                                                    "是否删除该涂鸦，删除后将无法查看")
+                                                            .setNegativeButton(
+                                                                    "取消",
+                                                                    null)
+                                                            .setPositiveButton(
+                                                                    "删除",
+                                                                    new DialogInterface.OnClickListener()
+                                                                    {
+                                                                        @Override
+                                                                        public void onClick(
+                                                                                DialogInterface dialog,
+                                                                                int which)
+                                                                        {
+                                                                            // 删除
+                                                                            mPaintInfoDbDao
+                                                                                    .deleteByKey(
+                                                                                            event.getModel()
+                                                                                                    .getId());
+                                                                            datas.remove(
+                                                                                    event.getPosition());
+                                                                            // 删除卡片操作
+                                                                            adapter.notifyItemRemoved(
+                                                                                    event.getPosition());
+                                                                            adapter.notifyDataSetChanged();
+                                                                        }
+                                                                    })
+                                                            .create()
+                                                            .show();
+                                            break;
+                                    }
+                                }
+                            })
+                    .show();
+        }
     }
     
     private void initRecyclerView()

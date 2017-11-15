@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.lawwing.lwdocument.CheckCommentPicActivity;
 import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
+import com.lawwing.lwdocument.event.PaintLongEvent;
 import com.lawwing.lwdocument.event.SelectPictureEvent;
 import com.lawwing.lwdocument.model.PaintInfoModel;
 import com.lawwing.lwdocument.utils.GlideUtils;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by lawwing on 2017/11/11.
@@ -55,7 +57,7 @@ public class PaintListAdapter
     }
     
     @Override
-    public void onBindViewHolder(PaintListHolder holder, int position)
+    public void onBindViewHolder(PaintListHolder holder, final int position)
     {
         final PaintInfoModel model = datas.get(position);
         if (model != null)
@@ -79,6 +81,17 @@ public class PaintListAdapter
                     }
                 }
             });
+            holder.paintImage
+                    .setOnLongClickListener(new View.OnLongClickListener()
+                    {
+                        @Override
+                        public boolean onLongClick(View view)
+                        {
+                            LWDApp.getEventBus()
+                                    .post(new PaintLongEvent(position, model));
+                            return true;
+                        }
+                    });
         }
         
     }
