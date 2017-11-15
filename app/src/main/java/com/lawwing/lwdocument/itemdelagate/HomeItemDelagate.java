@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by lawwing on 2017/11/11.
@@ -69,7 +68,7 @@ public class HomeItemDelagate extends AdapterDelegate<List<HomeBaseModel>>
             holder.docName.setText(model.getDocname());
             holder.bossLayout.setSwipeEnable(true);
             GlideUtils.loadNormalPicture(model.getPath(), holder.commentImage);
-            holder.commentImage.setOnClickListener(new View.OnClickListener()
+            holder.bossLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
