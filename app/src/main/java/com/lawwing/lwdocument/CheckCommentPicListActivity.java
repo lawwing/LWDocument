@@ -193,8 +193,6 @@ public class CheckCommentPicListActivity extends BaseActivity
                                             adapter.notifyItemRemoved(
                                                     event.getPosition());
                                             adapter.notifyDataSetChanged();
-                                            showShortToast(
-                                                    "删除" + event.getPosition());
                                             LWDApp.getEventBus()
                                                     .post(new SaveCommentEvent(
                                                             "列表删除"));
@@ -246,5 +244,22 @@ public class CheckCommentPicListActivity extends BaseActivity
                 permissions,
                 grantResults,
                 this);
+    }
+    
+    @Subscribe
+    public void onEventMainThread(SaveCommentEvent event)
+    {
+        if (event != null)
+        {
+            String flag = event.getFlag();
+            if ("批注".equals(flag))
+            {
+                getLocalCommentPicture();
+            }
+            else if ("列表删除".equals(flag))
+            {
+                getLocalCommentPicture();
+            }
+        }
     }
 }
