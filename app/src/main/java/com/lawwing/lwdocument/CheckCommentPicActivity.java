@@ -9,6 +9,7 @@ import com.lawwing.lwdocument.event.ShareSelectEvent;
 import com.lawwing.lwdocument.fragment.ShareDialogFregment;
 import com.lawwing.lwdocument.utils.GlideUtils;
 import com.lawwing.lwdocument.utils.ShareUtils;
+import com.lawwing.lwdocument.widget.PhotoView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -30,7 +31,7 @@ public class CheckCommentPicActivity extends BaseActivity
 {
     
     @BindView(R.id.commentBigImage)
-    ImageView commentBigImage;
+    PhotoView commentBigImage;
     
     @BindView(R.id.shareBtn)
     ImageView shareBtn;
@@ -54,6 +55,8 @@ public class CheckCommentPicActivity extends BaseActivity
         setContentView(R.layout.activity_check_comment_pic);
         ButterKnife.bind(this);
         GlideUtils.loadNormalPicture(path, commentBigImage);
+        
+        commentBigImage.enable();
         shareBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
