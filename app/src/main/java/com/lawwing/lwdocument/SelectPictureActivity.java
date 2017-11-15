@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.lawwing.lwdocument.adapter.PaintListAdapter;
 import com.lawwing.lwdocument.base.BaseActivity;
+import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.event.SelectPictureEvent;
 import com.lawwing.lwdocument.gen.PaintInfoDb;
 import com.lawwing.lwdocument.gen.PaintInfoDbDao;
@@ -122,10 +123,10 @@ public class SelectPictureActivity extends BaseActivity
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] bitmapByte = baos.toByteArray();
+                StaticDatas.bis = bitmapByte;
                 String filename = file.getName();
                 startActivity(CommentOfficeActivity.newIntance(
                         SelectPictureActivity.this,
-                        bitmapByte,
                         filename,
                         event.getModel().getPath()));
             }

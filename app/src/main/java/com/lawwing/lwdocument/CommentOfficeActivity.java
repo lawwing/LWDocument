@@ -108,11 +108,11 @@ public class CommentOfficeActivity extends BaseActivity
     
     private String docpath;
     
-    public static Intent newIntance(Activity activity, byte[] bitmapByte,
-            String docname, String docpath)
+    public static Intent newIntance(Activity activity, String docname,
+            String docpath)
     {
         Intent intent = new Intent(activity, CommentOfficeActivity.class);
-        intent.putExtra("bitmap", bitmapByte);
+        // intent.putExtra("bitmap", bitmapByte);
         intent.putExtra("docname", docname);
         intent.putExtra("docpath", docpath);
         return intent;
@@ -159,12 +159,13 @@ public class CommentOfficeActivity extends BaseActivity
         Intent intent = getIntent();
         if (intent != null)
         {
-            if (intent.hasExtra("bitmap"))
-            {
-                byte[] bis = intent.getByteArrayExtra("bitmap");
-                bm = BitmapFactory.decodeByteArray(bis, 0, bis.length);
-            }
-            
+            // if (intent.hasExtra("bitmap"))
+            // {
+            // byte[] bis = intent.getByteArrayExtra("bitmap");
+            // bm = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+            // }
+            byte[] bis = StaticDatas.bis;
+            bm = BitmapFactory.decodeByteArray(bis, 0, bis.length);
             if (intent.hasExtra("docname"))
             {
                 docname = intent.getStringExtra("docname");

@@ -17,4 +17,6 @@ public class StaticDatas
     
     // 图片背景涂鸦模式
     public final static int IMAGE_BACKGROUND_MODE = 1;
+    
+    public static byte[] bis = null;
 }

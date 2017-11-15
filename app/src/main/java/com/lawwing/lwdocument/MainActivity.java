@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import com.lawwing.lwdocument.base.BaseActivity;
+import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.widget.OfficeView;
 
 import android.Manifest;
@@ -52,13 +53,11 @@ public class MainActivity extends BaseActivity
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] bitmapByte = baos.toByteArray();
+                StaticDatas.bis = bitmapByte;
                 File file = new File(filePath);
                 String filename = file.getName();
-                startActivity(
-                        CommentOfficeActivity.newIntance(MainActivity.this,
-                                bitmapByte,
-                                filename,
-                                filePath));
+                startActivity(CommentOfficeActivity
+                        .newIntance(MainActivity.this, filename, filePath));
             }
         });
         
