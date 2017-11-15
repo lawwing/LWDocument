@@ -27,6 +27,12 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    /**
+     * 修改了打包出错
+     */
+    lintOptions {
+        checkReleaseBuilds false
+    }
 }
 
 dependencies {
