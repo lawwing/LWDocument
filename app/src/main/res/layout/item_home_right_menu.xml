@@ -11,12 +11,12 @@
         android:layout_height="48dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="15dp"
-        android:src="@mipmap/send_btn_normal" />
+        android:src="@mipmap/home_file_info_btn" />
 
     <ImageView
         android:id="@+id/deleteBtn"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginRight="15dp"
-        android:src="@mipmap/delete_btn_press" />
+        android:src="@mipmap/delete_btn_normal" />
 </LinearLayout>
