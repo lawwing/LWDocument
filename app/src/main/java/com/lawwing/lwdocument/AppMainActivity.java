@@ -462,7 +462,7 @@ public class AppMainActivity extends AppCompatActivity
     }
     
     @Subscribe
-    public void onEventMainThread(HomeDeleteEvent event)
+    public void onEventMainThread(final HomeDeleteEvent event)
     {
         if (event != null)
         {
@@ -471,11 +471,30 @@ public class AppMainActivity extends AppCompatActivity
             {
                 if (event.getModel() != null)
                 {
-                    mCommentInfoDao.deleteByKey(event.getModel().getId());
-                    datas.remove(event.getPosition());
-                    // 删除卡片操作
-                    adapter.notifyItemRemoved(event.getPosition());
-                    adapter.notifyDataSetChanged();
+                    
+                    new AlertDialog.Builder(this).setTitle("警告")
+                            .setMessage("是否删除该批注，删除后将无法查看")
+                            .setNegativeButton("取消", null)
+                            .setPositiveButton("删除",
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which)
+                                        {
+                                            mCommentInfoDao.deleteByKey(
+                                                    event.getModel().getId());
+                                            datas.remove(event.getPosition());
+                                            // 删除卡片操作
+                                            adapter.notifyItemRemoved(
+                                                    event.getPosition());
+                                            adapter.notifyDataSetChanged();
+                                            dialog.dismiss();
+                                        }
+                                    })
+                            .create()
+                            .show();
                 }
             }
         }

@@ -37,13 +37,9 @@ dependencies {
     compile files('libs/tbs_sdk_thirdapp_v3.5.0.1004_43500_sharewithdownload_withoutGame_obfs_20170801_113025.jar')
     compile files('libs/bugly_crash_release.jar')
     //权限框架
-
     //butterknife
-
     //数据库
-
     //RecyclerView的分类
-
     //左滑菜单
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -61,16 +57,26 @@ dependencies {
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     apt 'org.greenrobot:eventbus-annotation-processor:3.0.1'
-    compile files('libs/MobCommons-2017.0322.0931.jar')
-    compile files('libs/MobTools-2017.0322.0931.jar')
-    compile files('libs/ShareSDK-Core-2.8.2.jar')
-    compile files('libs/ShareSDK-Email-2.8.2.jar')
-    compile files('libs/ShareSDK-QQ-2.8.2.jar')
-    compile files('libs/ShareSDK-ShortMessage-2.8.2.jar')
-    compile files('libs/ShareSDK-SinaWeibo-2.8.2.jar')
-    compile files('libs/ShareSDK-Wechat-2.8.2.jar')
-    compile files('libs/ShareSDK-Wechat-Core-2.8.2.jar')
-    compile files('libs/ShareSDK-Wechat-Moments-2.8.2.jar')
+    //    compile files('libs/MobCommons-2017.0322.0931.jar')
+    //    compile files('libs/MobTools-2017.0322.0931.jar')
+    //    compile files('libs/ShareSDK-Core-2.8.2.jar')
+    //    compile files('libs/ShareSDK-Email-2.8.2.jar')
+    //    compile files('libs/ShareSDK-QQ-2.8.2.jar')
+    //    compile files('libs/ShareSDK-ShortMessage-2.8.2.jar')
+    //    compile files('libs/ShareSDK-SinaWeibo-2.8.2.jar')
+    //    compile files('libs/ShareSDK-Wechat-2.8.2.jar')
+    //    compile files('libs/ShareSDK-Wechat-Core-2.8.2.jar')
+    //    compile files('libs/ShareSDK-Wechat-Moments-2.8.2.jar')
+    compile files('libs/MobCommons-2017.0412.1554.jar')
+    compile files('libs/MobTools-2017.0412.1554.jar')
+    compile files('libs/ShareSDK-Core-2.8.3.jar')
+    compile files('libs/ShareSDK-QQ-2.8.3.jar')
+    compile files('libs/ShareSDK-QZone-2.8.3.jar')
+    compile files('libs/ShareSDK-SinaWeibo-2.8.3.jar')
+    compile files('libs/ShareSDK-Wechat-2.8.3.jar')
+    compile files('libs/ShareSDK-Wechat-Core-2.8.3.jar')
+    compile files('libs/ShareSDK-Wechat-Favorite-2.8.3.jar')
+    compile files('libs/ShareSDK-Wechat-Moments-2.8.3.jar')
 }
 
 apt {

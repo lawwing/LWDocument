@@ -3,10 +3,7 @@
     xmlns:sml="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bossLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    sml:sml_auto_open_percent="0.2"
-    sml:sml_scroller_duration="250"
-    sml:sml_scroller_interpolator="@android:anim/bounce_interpolator">
+    android:layout_height="wrap_content">
 
     <include
         android:id="@id/smContentView"

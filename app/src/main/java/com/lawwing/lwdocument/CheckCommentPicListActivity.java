@@ -18,10 +18,12 @@ import com.tubb.smrv.SwipeMenuRecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.TextView;
@@ -164,7 +166,7 @@ public class CheckCommentPicListActivity extends BaseActivity
     };
     
     @Subscribe
-    public void onEventMainThread(HomeDeleteEvent event)
+    public void onEventMainThread(final HomeDeleteEvent event)
     {
         if (event != null)
         {
@@ -173,13 +175,33 @@ public class CheckCommentPicListActivity extends BaseActivity
             {
                 if (event.getModel() != null)
                 {
-                    mCommentInfoDao.deleteByKey(event.getModel().getId());
-                    datas.remove(event.getPosition());
-                    // 删除卡片操作
-                    adapter.notifyItemRemoved(event.getPosition());
-                    adapter.notifyDataSetChanged();
-                    showShortToast("删除" + event.getPosition());
-                    LWDApp.getEventBus().post(new SaveCommentEvent("列表删除"));
+                    new AlertDialog.Builder(this).setTitle("警告")
+                            .setMessage("是否删除该批注，删除后将无法查看")
+                            .setNegativeButton("取消", null)
+                            .setPositiveButton("删除",
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which)
+                                        {
+                                            mCommentInfoDao.deleteByKey(
+                                                    event.getModel().getId());
+                                            datas.remove(event.getPosition());
+                                            // 删除卡片操作
+                                            adapter.notifyItemRemoved(
+                                                    event.getPosition());
+                                            adapter.notifyDataSetChanged();
+                                            showShortToast(
+                                                    "删除" + event.getPosition());
+                                            LWDApp.getEventBus()
+                                                    .post(new SaveCommentEvent(
+                                                            "列表删除"));
+                                        }
+                                    })
+                            .create()
+                            .show();
                 }
             }
         }
