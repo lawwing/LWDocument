@@ -285,7 +285,7 @@ public class CommentOfficeActivity extends BaseActivity
                                             
                                             showLongToast("保存成功");
                                             LWDApp.getEventBus().post(
-                                                    new SaveCommentEvent("批注"));
+                                                    new SaveCommentEvent("批阅"));
                                             finish();
                                         }
                                         else
@@ -641,7 +641,7 @@ public class CommentOfficeActivity extends BaseActivity
     public void onClickText(final float x, final float y)
     {
         final EditText editText = new EditText(this);
-        new AlertDialog.Builder(this).setTitle("请输入批注内容")
+        new AlertDialog.Builder(this).setTitle("请输入批阅内容")
                 .setView(editText)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener()
                 {

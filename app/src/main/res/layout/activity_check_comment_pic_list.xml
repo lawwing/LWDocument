@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="没有内容，点击试试批注吧！"
+            android:text="没有内容，点击试试批阅吧！"
             android:textSize="16sp"
             android:visibility="gone" />
     </RelativeLayout>

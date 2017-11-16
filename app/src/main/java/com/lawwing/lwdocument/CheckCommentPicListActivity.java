@@ -65,7 +65,7 @@ public class CheckCommentPicListActivity extends BaseActivity
         datas = new ArrayList<>();
         
         titleBarUtils = new TitleBarUtils(CheckCommentPicListActivity.this);
-        titleBarUtils.initTitle("批注列表");
+        titleBarUtils.initTitle("批阅列表");
         nullTips.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -176,7 +176,7 @@ public class CheckCommentPicListActivity extends BaseActivity
                 if (event.getModel() != null)
                 {
                     new AlertDialog.Builder(this).setTitle("警告")
-                            .setMessage("是否删除该批注，删除后将无法查看")
+                            .setMessage("是否删除该批阅，删除后将无法查看")
                             .setNegativeButton("取消", null)
                             .setPositiveButton("删除",
                                     new DialogInterface.OnClickListener()
@@ -252,7 +252,7 @@ public class CheckCommentPicListActivity extends BaseActivity
         if (event != null)
         {
             String flag = event.getFlag();
-            if ("批注".equals(flag))
+            if ("批阅".equals(flag))
             {
                 getLocalCommentPicture();
             }

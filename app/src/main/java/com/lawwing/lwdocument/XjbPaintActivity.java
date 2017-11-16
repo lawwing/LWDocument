@@ -623,7 +623,7 @@ public class XjbPaintActivity extends BaseActivity
     public void onClickText(final float x, final float y)
     {
         final EditText editText = new EditText(this);
-        new AlertDialog.Builder(this).setTitle("请输入批注内容")
+        new AlertDialog.Builder(this).setTitle("请输入批阅内容")
                 .setView(editText)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener()
                 {

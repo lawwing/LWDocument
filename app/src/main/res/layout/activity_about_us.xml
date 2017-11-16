@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:gravity="center"
-        android:text="本软件可以选择office文件进行批注，并进行查看批注图！！附加功能：涂鸦板以及涂鸦墙！！"
+        android:text="本软件可以选择office文件进行批阅，并进行查看批阅图！！附加功能：涂鸦板以及涂鸦墙！！"
         android:textColor="#333333"
         android:textSize="16sp" />
 </LinearLayout>
