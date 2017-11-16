@@ -490,6 +490,12 @@ public class AppMainActivity extends AppCompatActivity
                                             adapter.notifyItemRemoved(
                                                     event.getPosition());
                                             adapter.notifyDataSetChanged();
+                                            File file = new File(
+                                                    event.getModel().getPath());
+                                            if (file.exists())
+                                            {
+                                                file.delete();
+                                            }
                                             dialog.dismiss();
                                         }
                                     })

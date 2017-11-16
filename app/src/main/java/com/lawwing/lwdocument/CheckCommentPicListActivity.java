@@ -1,5 +1,6 @@
 package com.lawwing.lwdocument;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -193,6 +194,12 @@ public class CheckCommentPicListActivity extends BaseActivity
                                             adapter.notifyItemRemoved(
                                                     event.getPosition());
                                             adapter.notifyDataSetChanged();
+                                            File file = new File(
+                                                    event.getModel().getPath());
+                                            if (file.exists())
+                                            {
+                                                file.delete();
+                                            }
                                             LWDApp.getEventBus()
                                                     .post(new SaveCommentEvent(
                                                             "列表删除"));

@@ -2,6 +2,7 @@ package com.lawwing.lwdocument;
 
 import static com.lawwing.lwdocument.adapter.PaintListAdapter.CHECK_MODE;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,6 +114,14 @@ public class XjbPaintGalleryActivity extends BaseActivity
                                                                             adapter.notifyItemRemoved(
                                                                                     event.getPosition());
                                                                             adapter.notifyDataSetChanged();
+                                                                            
+                                                                            File file = new File(
+                                                                                    event.getModel()
+                                                                                            .getPath());
+                                                                            if (file.exists())
+                                                                            {
+                                                                                file.delete();
+                                                                            }
                                                                         }
                                                                     })
                                                             .create()
