@@ -133,6 +133,9 @@ public class XjbPaintActivity extends BaseActivity
         pv.drawBackgroundColor(color);
         pv.setListener(this);
         mPaintInfoDbDao = LWDApp.get().getDaoSession().getPaintInfoDbDao();
+        
+        StaticDatas.width = seekBar1.getProgress();
+        pv.setColorOrType();
         seekBar1.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener()
                 {
@@ -156,7 +159,8 @@ public class XjbPaintActivity extends BaseActivity
                             boolean arg2)
                     {
                         // TODO Auto-generated method stub
-                        pv.setWidth(arg1);
+                        StaticDatas.width = arg1;
+                        pv.setColorOrType();
                     }
                 });
     }

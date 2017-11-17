@@ -73,7 +73,7 @@ public class PaintView extends View
     private int bgcolor;
     
     // 画笔的粗细
-    public static int width = 5;
+    public int width = 5;
     
     public static int type = COMMENT_ARROW;
     
@@ -91,23 +91,6 @@ public class PaintView extends View
         savePath = new ArrayList<DrawPath>();
         deletePath = new ArrayList<DrawPath>();
         
-    }
-    
-    public void setWidth(int width)
-    {
-        PaintView.width = width;
-        // 字体用实心画，矩形和箭头用空心
-        if (type == COMMENT_TEXT)
-        {
-            mPaint.setTextSize(42);
-            mPaint.setStrokeWidth(3);
-            mPaint.setStyle(Paint.Style.FILL);
-        }
-        else
-        {
-            mPaint.setStrokeWidth(width);
-            mPaint.setStyle(Paint.Style.STROKE);
-        }
     }
     
     public PaintView(Context c, AttributeSet attrs)
@@ -163,7 +146,7 @@ public class PaintView extends View
     {
         mPaint.setColor(Color.parseColor(StaticDatas.color));
         type = StaticDatas.mode;
-        
+        width = StaticDatas.width;
         // 字体用实心画，矩形和箭头用空心
         if (type == COMMENT_TEXT)
         {
@@ -197,7 +180,7 @@ public class PaintView extends View
     public void setTextArea(String text, float x, float y)
     {
         dp = new DrawPath(mPath, mPaint, Color.parseColor(StaticDatas.color),
-                COMMENT_TEXT, text, x, y, 0, 0);
+                COMMENT_TEXT, text, x, y, 0, 0, StaticDatas.width);
         dp.setDtype(COMMENT_TEXT);
         mPaint.setTextSize(42);
         mPaint.setStrokeWidth(3);
@@ -222,6 +205,8 @@ public class PaintView extends View
         
         private int color;
         
+        private int width;
+        
         private int dtype;
         
         private float sX;// 开始的x坐标
@@ -233,7 +218,7 @@ public class PaintView extends View
         private float eY;// 结束的y坐标
         
         public DrawPath(Path dpath, Paint dpaint, int dcolor, int dtype,
-                String dtext, float sX, float sY, float eX, float eY)
+                String dtext, float sX, float sY, float eX, float eY, int width)
         {
             this.path = dpath;
             this.paint = dpaint;
@@ -244,6 +229,17 @@ public class PaintView extends View
             this.sY = sY;
             this.eX = eX;
             this.eY = eY;
+            this.width = width;
+        }
+        
+        public int getWidth()
+        {
+            return width;
+        }
+        
+        public void setWidth(int width)
+        {
+            this.width = width;
         }
         
         public int getColor()
@@ -377,7 +373,7 @@ public class PaintView extends View
                 else
                 {
                     mPaint.setColor(dp.getColor());
-                    mPaint.setStrokeWidth(width);
+                    mPaint.setStrokeWidth(dp.getWidth());
                     mPaint.setStyle(Paint.Style.STROKE);
                     mCanvas.drawPath(dp.getPath(), mPaint);
                 }
@@ -423,7 +419,7 @@ public class PaintView extends View
                 else
                 {
                     mPaint.setColor(dp.getColor());
-                    mPaint.setStrokeWidth(width);
+                    mPaint.setStrokeWidth(dp.getWidth());
                     mPaint.setStyle(Paint.Style.STROKE);
                     mCanvas.drawPath(dp.getPath(), mPaint);
                 }
@@ -612,7 +608,7 @@ public class PaintView extends View
     private void touch_up(float x, float y)
     {
         dp = new DrawPath(mPath, mPaint, Color.parseColor(StaticDatas.color),
-                COMMENT_FREEDOM, "", mX, mY, x, y);
+                COMMENT_FREEDOM, "", mX, mY, x, y, StaticDatas.width);
         dp.setDtype(COMMENT_FREEDOM);
         mPath.lineTo(mX, mY);
         mCanvas.drawPath(mPath, mPaint);
@@ -686,7 +682,7 @@ public class PaintView extends View
     private void toach_up_rectangle(float x, float y)
     {
         dp = new DrawPath(mPath, mPaint, Color.parseColor(StaticDatas.color),
-                COMMENT_RECTANGLE, "", mX, mY, x, y);
+                COMMENT_RECTANGLE, "", mX, mY, x, y, StaticDatas.width);
         dp.setDtype(COMMENT_RECTANGLE);
         mCanvas.drawPath(mPath, mPaint);
         savePath.add(dp);
@@ -700,7 +696,7 @@ public class PaintView extends View
     private void toach_up_arrow(float ex, float ey)
     {
         dp = new DrawPath(mPath, mPaint, Color.parseColor(StaticDatas.color),
-                COMMENT_ARROW, "", mX, mY, ex, ey);
+                COMMENT_ARROW, "", mX, mY, ex, ey, StaticDatas.width);
         dp.setDtype(COMMENT_ARROW);
         mCanvas.drawPath(mPath, mPaint);
         savePath.add(dp);

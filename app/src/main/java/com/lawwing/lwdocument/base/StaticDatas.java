@@ -12,6 +12,8 @@ public class StaticDatas
     // 当前的类型，箭头，文字，矩形框
     public static int mode;
     
+    public static int width;
+    
     // 纯颜色背景涂鸦模式
     public final static int COLOR_BACKGROUND_MODE = 0;
     
