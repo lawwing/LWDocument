@@ -24,13 +24,12 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -42,12 +41,6 @@ public class XjbPaintActivity extends BaseActivity
 {
     @BindView(R.id.pv)
     PaintView pv;
-    
-    @BindView(R.id.iv_comment_loadmorecolor)
-    ImageView mLoadMoreColor;
-    
-    @BindView(R.id.iv_comment_loadmorerightmenu)
-    ImageView mLoadMoreMenu;
     
     @BindView(R.id.iv_comment_redcolor)
     ImageView mRedColor;
@@ -83,13 +76,19 @@ public class XjbPaintActivity extends BaseActivity
     TextView mExit;
     
     @BindView(R.id.complete)
-    TextView mComplete;
+    ImageView mComplete;
     
-    @BindView(R.id.ll_leftcolor)
-    LinearLayout mLeftColorLayout;
+    @BindView(R.id.toolsBtn)
+    ImageView toolsBtn;
     
-    @BindView(R.id.ll_rightmenu)
-    LinearLayout mRightMenuLayout;
+    // @BindView(R.id.ll_rightmenu)
+    // LinearLayout mRightMenuLayout;
+    
+    @BindView(R.id.toolsLayout)
+    LinearLayout toolsLayout;
+    
+    @BindView(R.id.seekBar1)
+    SeekBar seekBar1;
     
     // 保存图片的路径
     private String path = "";
@@ -108,6 +107,8 @@ public class XjbPaintActivity extends BaseActivity
     private int height;
     
     private int color;
+    
+    private boolean isShowTools = true;
     
     public static Intent newInstance(Activity activity, int color)
     {
@@ -132,6 +133,32 @@ public class XjbPaintActivity extends BaseActivity
         pv.drawBackgroundColor(color);
         pv.setListener(this);
         mPaintInfoDbDao = LWDApp.get().getDaoSession().getPaintInfoDbDao();
+        seekBar1.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener()
+                {
+                    
+                    @Override
+                    public void onStopTrackingTouch(SeekBar arg0)
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                    
+                    @Override
+                    public void onStartTrackingTouch(SeekBar arg0)
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                    
+                    @Override
+                    public void onProgressChanged(SeekBar arg0, int arg1,
+                            boolean arg2)
+                    {
+                        // TODO Auto-generated method stub
+                        pv.setWidth(arg1);
+                    }
+                });
     }
     
     /**
@@ -159,7 +186,8 @@ public class XjbPaintActivity extends BaseActivity
      *
      * @param view
      */
-    @OnClick({ R.id.exit, R.id.complete, R.id.iv_redo, R.id.iv_cancle })
+    @OnClick({ R.id.exit, R.id.complete, R.id.iv_redo, R.id.iv_cancle,
+            R.id.toolsBtn })
     public void onTopClick(View view)
     {
         switch (view.getId())
@@ -178,6 +206,20 @@ public class XjbPaintActivity extends BaseActivity
             case R.id.iv_cancle:
                 // 撤销
                 pv.undo();
+                break;
+            case R.id.toolsBtn:
+                if (isShowTools)
+                {
+                    toolsBtn.setImageResource(R.mipmap.tools);
+                    toolsLayout.setVisibility(View.GONE);
+                    isShowTools = !isShowTools;
+                }
+                else
+                {
+                    toolsBtn.setImageResource(R.mipmap.tools_dismiss);
+                    toolsLayout.setVisibility(View.VISIBLE);
+                    isShowTools = !isShowTools;
+                }
                 break;
         }
     }
@@ -277,17 +319,13 @@ public class XjbPaintActivity extends BaseActivity
      *
      * @param view
      */
-    @OnClick({ R.id.iv_comment_loadmorecolor, R.id.iv_comment_bluecolor,
-            R.id.iv_comment_redcolor, R.id.iv_comment_greencolor,
-            R.id.iv_comment_blackcolor })
+    @OnClick({ R.id.iv_comment_bluecolor, R.id.iv_comment_redcolor,
+            R.id.iv_comment_greencolor, R.id.iv_comment_blackcolor })
     public void onColorClick(View view)
     {
         switch (view.getId())
         {
-            case R.id.iv_comment_loadmorecolor:
-                // 收起颜色面板
-                changeColorPanal();
-                break;
+            
             case R.id.iv_comment_bluecolor:
                 StaticDatas.color = PaintView.COLOR_BLUE;
                 initColorView(StaticDatas.color);
@@ -353,17 +391,12 @@ public class XjbPaintActivity extends BaseActivity
      *
      * @param view
      */
-    @OnClick({ R.id.iv_comment_loadmorerightmenu, R.id.iv_comment_arrow,
-            R.id.iv_comment_rectangle, R.id.iv_comment_text,
-            R.id.iv_comment_freedom })
+    @OnClick({ R.id.iv_comment_arrow, R.id.iv_comment_rectangle,
+            R.id.iv_comment_text, R.id.iv_comment_freedom })
     public void onRightMenuClick(View view)
     {
         switch (view.getId())
         {
-            case R.id.iv_comment_loadmorerightmenu:
-                // 收起面板
-                changeRightPanal();
-                break;
             case R.id.iv_comment_arrow:
                 StaticDatas.mode = PaintView.COMMENT_ARROW;
                 initRMenuView(StaticDatas.mode);
@@ -427,68 +460,6 @@ public class XjbPaintActivity extends BaseActivity
     }
     
     /**
-     * 控制右边菜单栏的显示隐藏
-     */
-    private void changeRightPanal()
-    {
-        AnimationSet set = new AnimationSet(true);
-        RotateAnimation animation = new RotateAnimation(0, 180,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                0.5f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-        mLoadMoreMenu.startAnimation(set);
-        set.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-                if (mRightMenuLayout.getVisibility() == View.VISIBLE)
-                {
-                    TranslateAnimation animation1 = new TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 1f);
-                    LayoutAnimation(animation1, mRightMenuLayout);
-                }
-                else
-                {
-                    mRightMenuLayout.setVisibility(View.INVISIBLE);
-                    TranslateAnimation animation2 = new TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 1f,
-                            Animation.RELATIVE_TO_SELF, 0f);
-                    LayoutAnimation(animation2, mRightMenuLayout);
-                }
-            }
-            
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                if (mRightMenuLayout.getVisibility() == View.VISIBLE)
-                {
-                    mLoadMoreMenu.setImageResource(R.mipmap.comment_opentools);
-                    mRightMenuLayout.setVisibility(View.GONE);
-                }
-                else
-                {
-                    mLoadMoreMenu.setImageResource(R.mipmap.comment_closetools);
-                    mRightMenuLayout.setVisibility(View.VISIBLE);
-                }
-            }
-            
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-                
-            }
-        });
-        
-    }
-    
-    /**
      * 控制上下的动画
      *
      * @param animation1
@@ -500,70 +471,6 @@ public class XjbPaintActivity extends BaseActivity
         animation1.setDuration(500);
         set1.addAnimation(animation1);
         view.startAnimation(animation1);
-    }
-    
-    /**
-     * 控制颜色面板收
-     */
-    private void changeColorPanal()
-    {
-        AnimationSet set = new AnimationSet(true);
-        RotateAnimation animation = new RotateAnimation(0, 180,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                0.5f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-        mLoadMoreColor.startAnimation(set);
-        set.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-                if (mLeftColorLayout.getVisibility() == View.VISIBLE)
-                {
-                    TranslateAnimation animation1 = new TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 1f);
-                    LayoutAnimation(animation1, mLeftColorLayout);
-                }
-                else
-                {
-                    mLeftColorLayout.setVisibility(View.INVISIBLE);
-                    TranslateAnimation animation2 = new TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 1f,
-                            Animation.RELATIVE_TO_SELF, 0f);
-                    LayoutAnimation(animation2, mLeftColorLayout);
-                }
-            }
-            
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                if (mLeftColorLayout.getVisibility() == View.VISIBLE)
-                {
-                    mLoadMoreColor
-                            .setImageResource(R.mipmap.comment_colour_pop);
-                    mLeftColorLayout.setVisibility(View.GONE);
-                }
-                else
-                {
-                    mLoadMoreColor
-                            .setImageResource(R.mipmap.comment_colour_back);
-                    mLeftColorLayout.setVisibility(View.VISIBLE);
-                }
-            }
-            
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-                
-            }
-        });
-        
     }
     
     // 转发消息给别人,转跳到选择联系人页面

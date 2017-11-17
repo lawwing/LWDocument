@@ -73,7 +73,7 @@ public class PaintView extends View
     private int bgcolor;
     
     // 画笔的粗细
-    public static int width = 10;
+    public static int width = 5;
     
     public static int type = COMMENT_ARROW;
     
@@ -93,9 +93,21 @@ public class PaintView extends View
         
     }
     
-    public static void setWidth(int width)
+    public void setWidth(int width)
     {
         PaintView.width = width;
+        // 字体用实心画，矩形和箭头用空心
+        if (type == COMMENT_TEXT)
+        {
+            mPaint.setTextSize(42);
+            mPaint.setStrokeWidth(3);
+            mPaint.setStyle(Paint.Style.FILL);
+        }
+        else
+        {
+            mPaint.setStrokeWidth(width);
+            mPaint.setStyle(Paint.Style.STROKE);
+        }
     }
     
     public PaintView(Context c, AttributeSet attrs)
@@ -151,14 +163,7 @@ public class PaintView extends View
     {
         mPaint.setColor(Color.parseColor(StaticDatas.color));
         type = StaticDatas.mode;
-        if (type == COMMENT_ARROW)
-        {
-            width = 10;
-        }
-        else
-        {
-            width = 5;
-        }
+        
         // 字体用实心画，矩形和箭头用空心
         if (type == COMMENT_TEXT)
         {
