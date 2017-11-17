@@ -93,6 +93,11 @@ public class PaintView extends View
         
     }
     
+    public static void setWidth(int width)
+    {
+        PaintView.width = width;
+    }
+    
     public PaintView(Context c, AttributeSet attrs)
     {
         super(c, attrs);
@@ -146,6 +151,14 @@ public class PaintView extends View
     {
         mPaint.setColor(Color.parseColor(StaticDatas.color));
         type = StaticDatas.mode;
+        if (type == COMMENT_ARROW)
+        {
+            width = 10;
+        }
+        else
+        {
+            width = 5;
+        }
         // 字体用实心画，矩形和箭头用空心
         if (type == COMMENT_TEXT)
         {
