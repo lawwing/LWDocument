@@ -2,6 +2,7 @@ package com.lawwing.lwdocument;
 
 import java.io.File;
 
+import com.bumptech.glide.Glide;
 import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.gen.PaintInfoDb;
@@ -9,6 +10,8 @@ import com.lawwing.lwdocument.gen.PaintInfoDbDao;
 import com.lawwing.lwdocument.utils.FileManager;
 import com.lawwing.lwdocument.utils.ImageUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
+import com.lawwing.lwdocument.widget.ColorPickerView;
+import com.lawwing.lwdocument.widget.GlideCircleTransform;
 import com.lawwing.lwdocument.widget.PaintView;
 
 import android.app.Activity;
@@ -31,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,6 +93,15 @@ public class XjbPaintActivity extends BaseActivity
     
     @BindView(R.id.seekBar1)
     SeekBar seekBar1;
+    
+    @BindView(R.id.colorPickerView)
+    ColorPickerView colorPickerView;
+    
+    @BindView(R.id.tipsText)
+    TextView tipsText;
+    
+    @BindView(R.id.selectColorView)
+    ImageView selectColorView;
     
     // 保存图片的路径
     private String path = "";
@@ -161,6 +174,40 @@ public class XjbPaintActivity extends BaseActivity
                         // TODO Auto-generated method stub
                         StaticDatas.width = arg1;
                         pv.setColorOrType();
+                    }
+                });
+        colorPickerView.setOnColorChangedListenner(
+                new ColorPickerView.OnColorChangedListener()
+                {
+                    /**
+                     * 手指抬起，选定颜色时
+                     */
+                    @Override
+                    public void onColorChanged(int r, int g, int b)
+                    {
+                        if (r == 0 && g == 0 && b == 0)
+                        {
+                            showShortToast("颜色为0");
+                            return;
+                        }
+                        Toast.makeText(XjbPaintActivity.this,
+                                "选取 RGB:" + r + "," + g + "," + b,
+                                Toast.LENGTH_SHORT).show();
+                        selectColorView.setColorFilter(Color.rgb(r, g, b));
+                    }
+                    
+                    /**
+                     * 颜色移动的时候
+                     */
+                    @Override
+                    public void onMoveColor(int r, int g, int b)
+                    {
+                        if (r == 0 && g == 0 && b == 0)
+                        {
+                            return;
+                        }
+                        selectColorView.setColorFilter(Color.rgb(r, g, b));
+                        tipsText.setText("RGB:" + r + "," + g + "," + b);
                     }
                 });
     }
