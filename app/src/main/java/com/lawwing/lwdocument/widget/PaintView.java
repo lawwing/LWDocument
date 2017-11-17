@@ -36,13 +36,13 @@ public class PaintView extends View
     
     public static final int COMMENT_FREEDOM = 3;
     
-    public static final String COLOR_RED = "#ff4351";
-    
-    public static final String COLOR_BLUE = "#007aff";
-    
-    public static final String COLOR_GREEN = "#4bd754";
-    
-    public static final String COLOR_BLACK = "#323232";
+    // public static final String COLOR_RED = "#ff4351";
+    //
+    // public static final String COLOR_BLUE = "#007aff";
+    //
+    // public static final String COLOR_GREEN = "#4bd754";
+    //
+    // public static final String COLOR_BLACK = "#323232";
     
     private Canvas mCanvas;
     

@@ -138,7 +138,8 @@ public class CommentOfficeActivity extends BaseActivity
      */
     private void initData()
     {
-        StaticDatas.color = PaintView.COLOR_RED;
+        StaticDatas.color = String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color1)));
         StaticDatas.mode = PaintView.COMMENT_ARROW;
         PaintView.type = PaintView.COMMENT_ARROW;
     }
@@ -304,77 +305,77 @@ public class CommentOfficeActivity extends BaseActivity
      *
      * @param view
      */
-    @OnClick({ R.id.iv_comment_loadmorecolor, R.id.iv_comment_bluecolor,
-            R.id.iv_comment_redcolor, R.id.iv_comment_greencolor,
-            R.id.iv_comment_blackcolor })
-    public void onColorClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.iv_comment_loadmorecolor:
-                // 收起颜色面板
-                changeColorPanal();
-                break;
-            case R.id.iv_comment_bluecolor:
-                StaticDatas.color = PaintView.COLOR_BLUE;
-                initColorView(StaticDatas.color);
-                pv.setColorOrType();
-                break;
-            case R.id.iv_comment_redcolor:
-                StaticDatas.color = PaintView.COLOR_RED;
-                initColorView(StaticDatas.color);
-                pv.setColorOrType();
-                break;
-            case R.id.iv_comment_greencolor:
-                StaticDatas.color = PaintView.COLOR_GREEN;
-                initColorView(StaticDatas.color);
-                pv.setColorOrType();
-                break;
-            case R.id.iv_comment_blackcolor:
-                StaticDatas.color = PaintView.COLOR_BLACK;
-                initColorView(StaticDatas.color);
-                pv.setColorOrType();
-                break;
-        }
-    }
+    // @OnClick({ R.id.iv_comment_loadmorecolor, R.id.iv_comment_bluecolor,
+    // R.id.iv_comment_redcolor, R.id.iv_comment_greencolor,
+    // R.id.iv_comment_blackcolor })
+    // public void onColorClick(View view)
+    // {
+    // switch (view.getId())
+    // {
+    // case R.id.iv_comment_loadmorecolor:
+    // // 收起颜色面板
+    // changeColorPanal();
+    // break;
+    // case R.id.iv_comment_bluecolor:
+    // StaticDatas.color = PaintView.COLOR_BLUE;
+    // initColorView(StaticDatas.color);
+    // pv.setColorOrType();
+    // break;
+    // case R.id.iv_comment_redcolor:
+    // StaticDatas.color = PaintView.COLOR_RED;
+    // initColorView(StaticDatas.color);
+    // pv.setColorOrType();
+    // break;
+    // case R.id.iv_comment_greencolor:
+    // StaticDatas.color = PaintView.COLOR_GREEN;
+    // initColorView(StaticDatas.color);
+    // pv.setColorOrType();
+    // break;
+    // case R.id.iv_comment_blackcolor:
+    // StaticDatas.color = PaintView.COLOR_BLACK;
+    // initColorView(StaticDatas.color);
+    // pv.setColorOrType();
+    // break;
+    // }
+    // }
     
-    /**
-     * 初始化颜色的选择
-     *
-     * @param color
-     */
-    private void initColorView(String color)
-    {
-        if (color.equals(PaintView.COLOR_BLACK))
-        {
-            mBlackColor.setImageResource(R.mipmap.comment_black_select);
-            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
-        }
-        else if (color.equals(PaintView.COLOR_BLUE))
-        {
-            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-            mBlueColor.setImageResource(R.mipmap.comment_blue_select);
-            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
-        }
-        else if (color.equals(PaintView.COLOR_RED))
-        {
-            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-            mRedColor.setImageResource(R.mipmap.comment_red_select);
-            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
-        }
-        else if (color.equals(PaintView.COLOR_GREEN))
-        {
-            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-            mGreenColor.setImageResource(R.mipmap.comment_green_select);
-        }
-    }
-    
+//    /**
+//     * 初始化颜色的选择
+//     *
+//     * @param color
+//     */
+//    private void initColorView(String color)
+//    {
+//        if (color.equals(PaintView.COLOR_BLACK))
+//        {
+//            mBlackColor.setImageResource(R.mipmap.comment_black_select);
+//            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
+//            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
+//            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
+//        }
+//        else if (color.equals(PaintView.COLOR_BLUE))
+//        {
+//            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
+//            mBlueColor.setImageResource(R.mipmap.comment_blue_select);
+//            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
+//            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
+//        }
+//        else if (color.equals(PaintView.COLOR_RED))
+//        {
+//            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
+//            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
+//            mRedColor.setImageResource(R.mipmap.comment_red_select);
+//            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
+//        }
+//        else if (color.equals(PaintView.COLOR_GREEN))
+//        {
+//            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
+//            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
+//            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
+//            mGreenColor.setImageResource(R.mipmap.comment_green_select);
+//        }
+//    }
+//    
     /**
      * 右侧菜单栏的点击事件
      *

@@ -43,16 +43,16 @@ public class XjbPaintActivity extends BaseActivity
     PaintView pv;
     
     @BindView(R.id.iv_comment_redcolor)
-    ImageView mRedColor;
+    TextView mRedColor;
     
     @BindView(R.id.iv_comment_greencolor)
-    ImageView mGreenColor;
+    TextView mGreenColor;
     
     @BindView(R.id.iv_comment_blackcolor)
-    ImageView mBlackColor;
+    TextView mBlackColor;
     
     @BindView(R.id.iv_comment_bluecolor)
-    ImageView mBlueColor;
+    TextView mBlueColor;
     
     @BindView(R.id.iv_comment_arrow)
     ImageView mArrow;
@@ -170,7 +170,8 @@ public class XjbPaintActivity extends BaseActivity
      */
     private void initData()
     {
-        StaticDatas.color = PaintView.COLOR_RED;
+        StaticDatas.color = String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color1)));
         StaticDatas.mode = PaintView.COMMENT_ARROW;
         PaintView.type = PaintView.COMMENT_ARROW;
         Intent intent = getIntent();
@@ -324,31 +325,39 @@ public class XjbPaintActivity extends BaseActivity
      * @param view
      */
     @OnClick({ R.id.iv_comment_bluecolor, R.id.iv_comment_redcolor,
-            R.id.iv_comment_greencolor, R.id.iv_comment_blackcolor })
+            R.id.iv_comment_greencolor, R.id.iv_comment_blackcolor,
+            R.id.iv_comment_morecolor })
     public void onColorClick(View view)
     {
         switch (view.getId())
         {
             
             case R.id.iv_comment_bluecolor:
-                StaticDatas.color = PaintView.COLOR_BLUE;
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color2)));
                 initColorView(StaticDatas.color);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_redcolor:
-                StaticDatas.color = PaintView.COLOR_RED;
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color1)));
                 initColorView(StaticDatas.color);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_greencolor:
-                StaticDatas.color = PaintView.COLOR_GREEN;
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color3)));
                 initColorView(StaticDatas.color);
                 pv.setColorOrType();
                 break;
             case R.id.iv_comment_blackcolor:
-                StaticDatas.color = PaintView.COLOR_BLACK;
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color4)));
                 initColorView(StaticDatas.color);
                 pv.setColorOrType();
+                break;
+            case R.id.iv_comment_morecolor:
+                // 这里点击弹出颜色圆盘
                 break;
         }
     }
@@ -360,34 +369,39 @@ public class XjbPaintActivity extends BaseActivity
      */
     private void initColorView(String color)
     {
-        if (color.equals(PaintView.COLOR_BLACK))
+        if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color1)))))
         {
-            mBlackColor.setImageResource(R.mipmap.comment_black_select);
-            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_select);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
         }
-        else if (color.equals(PaintView.COLOR_BLUE))
+        else if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color2)))))
         {
-            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-            mBlueColor.setImageResource(R.mipmap.comment_blue_select);
-            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_select);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
         }
-        else if (color.equals(PaintView.COLOR_RED))
+        else if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color3)))))
         {
-            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-            mRedColor.setImageResource(R.mipmap.comment_red_select);
-            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_select);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
         }
-        else if (color.equals(PaintView.COLOR_GREEN))
+        else if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color4)))))
         {
-            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-            mGreenColor.setImageResource(R.mipmap.comment_green_select);
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_select);
         }
+        
     }
     
     /**

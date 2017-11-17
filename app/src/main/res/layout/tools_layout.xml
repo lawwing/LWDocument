@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:orientation="horizontal"
-        android:weightSum="5">
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
@@ -77,37 +77,104 @@
             android:textColor="@color/white"
             android:textSize="14sp" />
 
-        <ImageView
-            android:id="@+id/iv_comment_redcolor"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:contentDescription="@null"
-            android:src="@mipmap/comment_red_select" />
+            android:gravity="center">
 
-        <ImageView
-            android:id="@+id/iv_comment_bluecolor"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:contentDescription="@null"
-            android:src="@mipmap/comment_blue_unselect" />
+            <TextView
+                android:id="@+id/iv_comment_redcolor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/color_bg1_select" />
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_comment_greencolor"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:contentDescription="@null"
-            android:src="@mipmap/comment_green_unselect" />
+            android:gravity="center">
 
-        <ImageView
-            android:id="@+id/iv_comment_blackcolor"
+            <TextView
+                android:id="@+id/iv_comment_bluecolor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/color_bg2_unselect" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:contentDescription="@null"
-            android:src="@mipmap/comment_black_unselect" />
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/iv_comment_greencolor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/color_bg3_unselect" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/iv_comment_blackcolor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/color_bg4_unselect" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/iv_comment_morecolor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/color_bg1_unselect"
+                android:gravity="center"
+                android:text="more"
+                android:textSize="10sp" />
+        </LinearLayout>
+        <!--<ImageView-->
+        <!--android:id="@+id/iv_comment_redcolor"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:src="@mipmap/comment_red_select" />-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/iv_comment_bluecolor"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:src="@mipmap/comment_blue_unselect" />-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/iv_comment_greencolor"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:src="@mipmap/comment_green_unselect" />-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/iv_comment_blackcolor"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:src="@mipmap/comment_black_unselect" />-->
 
     </LinearLayout>
 
