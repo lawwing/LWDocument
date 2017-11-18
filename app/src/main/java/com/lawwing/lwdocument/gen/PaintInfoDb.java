@@ -23,27 +23,27 @@ public class PaintInfoDb
     {
         return this.path;
     }
-    
+
     public void setPath(String path)
     {
         this.path = path;
     }
-    
+
     public String getName()
     {
         return this.name;
     }
-    
+
     public void setName(String name)
     {
         this.name = name;
     }
-    
+
     public Long getId()
     {
         return this.id;
     }
-    
+
     public void setId(Long id)
     {
         this.id = id;
@@ -56,7 +56,7 @@ public class PaintInfoDb
     public void setTime(long time) {
         this.time = time;
     }
-    
+
     @Generated(hash = 278412209)
     public PaintInfoDb(Long id, String name, String path, long time) {
         this.id = id;

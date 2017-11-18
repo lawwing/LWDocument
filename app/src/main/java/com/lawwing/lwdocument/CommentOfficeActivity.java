@@ -338,47 +338,46 @@ public class CommentOfficeActivity extends BaseActivity
      */
     private void showMyDialog()
     {
-        new AlertDialog.Builder(this).setTitle("菜单")
-                .setItems(new String[] { "保存到本地相册" },
-                        new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                    int which)
-                            {
-                                switch (which)
-                                {
-                                    case 0:
-                                        // 保存到本地相册
-                                        bitmap = getBitmapFromView(pv);
-                                        path = saveImageFile();
-                                        // 保存
-                                        if (!TextUtils.isEmpty(path))
-                                        {
-                                            File file = new File(path);
-                                            CommentInfoDb model = new CommentInfoDb();
-                                            model.setName(file.getName());
-                                            model.setPath(path);
-                                            model.setDocname(docname);
-                                            model.setDocpath(docpath);
-                                            model.setTime(file.lastModified());
-                                            mCommentInfoDao
-                                                    .insertOrReplace(model);
-                                            
-                                            showLongToast("保存成功");
-                                            LWDApp.getEventBus().post(
-                                                    new SaveCommentEvent("批阅"));
-                                            finish();
-                                        }
-                                        else
-                                        {
-                                            showLongToast("保存失败");
-                                        }
-                                        break;
-                                }
-                            }
-                        })
-                .show();
+        // 保存到本地相册
+        bitmap = getBitmapFromView(pv);
+        path = saveImageFile();
+        // 保存
+        if (!TextUtils.isEmpty(path))
+        {
+            File file = new File(path);
+            CommentInfoDb model = new CommentInfoDb();
+            model.setName(file.getName());
+            model.setPath(path);
+            model.setDocname(docname);
+            model.setDocpath(docpath);
+            model.setTime(file.lastModified());
+            mCommentInfoDao.insertOrReplace(model);
+            
+            showLongToast("批阅成功");
+            LWDApp.getEventBus().post(new SaveCommentEvent("批阅"));
+            finish();
+        }
+        else
+        {
+            showLongToast("保存批阅失败");
+        }
+        // new AlertDialog.Builder(this).setTitle("菜单")
+        // .setItems(new String[] { "保存到本地相册" },
+        // new DialogInterface.OnClickListener()
+        // {
+        // @Override
+        // public void onClick(DialogInterface dialog,
+        // int which)
+        // {
+        // switch (which)
+        // {
+        // case 0:
+        //
+        // break;
+        // }
+        // }
+        // })
+        // .show();
     }
     
     /**

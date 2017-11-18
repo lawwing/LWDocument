@@ -63,7 +63,8 @@ public class PaintListAdapter
         if (model != null)
         {
             GlideUtils.loadNormalPicture(model.getPath(), holder.paintImage);
-            holder.paintNameText.setText(model.getName());
+            holder.paintNameText
+                    .setText(model.getName().replaceAll(".jpg", ""));
             holder.paintImage.setOnClickListener(new View.OnClickListener()
             {
                 @Override
