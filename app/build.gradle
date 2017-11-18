@@ -63,16 +63,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     apt 'org.greenrobot:eventbus-annotation-processor:3.0.1'
-    //    compile files('libs/MobCommons-2017.0322.0931.jar')
-    //    compile files('libs/MobTools-2017.0322.0931.jar')
-    //    compile files('libs/ShareSDK-Core-2.8.2.jar')
-    //    compile files('libs/ShareSDK-Email-2.8.2.jar')
-    //    compile files('libs/ShareSDK-QQ-2.8.2.jar')
-    //    compile files('libs/ShareSDK-ShortMessage-2.8.2.jar')
-    //    compile files('libs/ShareSDK-SinaWeibo-2.8.2.jar')
-    //    compile files('libs/ShareSDK-Wechat-2.8.2.jar')
-    //    compile files('libs/ShareSDK-Wechat-Core-2.8.2.jar')
-    //    compile files('libs/ShareSDK-Wechat-Moments-2.8.2.jar')
     compile files('libs/MobCommons-2017.0412.1554.jar')
     compile files('libs/MobTools-2017.0412.1554.jar')
     compile files('libs/ShareSDK-Core-2.8.3.jar')
@@ -94,4 +84,5 @@ greendao {
     schemaVersion 2
     daoPackage 'com.lawwing.lwdocument.gen'
     targetGenDir 'src/main/java'
+
 }
