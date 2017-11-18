@@ -10,9 +10,12 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.lawwing.lwdocument.adapter.HomeAdapter;
 import com.lawwing.lwdocument.event.HomeDeleteEvent;
+import com.lawwing.lwdocument.event.PickerColorBgEvent;
 import com.lawwing.lwdocument.event.SaveCommentEvent;
+import com.lawwing.lwdocument.fragment.SelectColorDialogFragment;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
+import com.lawwing.lwdocument.model.ColorModel;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.model.HomeBaseModel;
 import com.lawwing.lwdocument.model.HomeBottomModel;
@@ -33,6 +36,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,6 +70,13 @@ public class AppMainActivity extends AppCompatActivity
     
     private int homeCardNum = 5;
     
+    private ArrayList<ColorModel> colorDatas;
+    
+    private SelectColorDialogFragment fragment;
+    
+    private int[] colorsInt = { Color.RED, Color.BLACK, Color.WHITE,
+            Color.GREEN, Color.BLUE };
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -74,6 +85,7 @@ public class AppMainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mCommentInfoDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
+        colorDatas = new ArrayList<>();
         toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -298,49 +310,17 @@ public class AppMainActivity extends AppCompatActivity
         {
             // 进入瞎几把画
             // startActivity(XjbPaintActivity.newInstance(AppMainActivity.this));
-            new AlertDialog.Builder(this).setTitle("选择涂鸦板底色")
-                    .setIcon(R.mipmap.ic_launcher)
-                    .setSingleChoiceItems(
-                            new String[] { "红色", "黑色", "白色", "绿色", "蓝色" },
-                            0,
-                            new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                        int which)
-                                {
-                                    int color = Color.WHITE;
-                                    switch (which)
-                                    {
-                                        case 0:
-                                            // 红色
-                                            color = Color.RED;
-                                            break;
-                                        case 1:
-                                            // 黑色
-                                            color = Color.BLACK;
-                                            break;
-                                        case 2:
-                                            // 白色
-                                            color = Color.WHITE;
-                                            break;
-                                        case 3:
-                                            // 绿色
-                                            color = Color.GREEN;
-                                            break;
-                                        case 4:
-                                            // 蓝色
-                                            color = Color.BLUE;
-                                            break;
-                                    }
-                                    startActivity(XjbPaintActivity.newInstance(
-                                            AppMainActivity.this,
-                                            color));
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setNegativeButton("取消", null)
-                    .show();
+            colorDatas.clear();
+            for (int i = 0; i < colorsInt.length; i++)
+            {
+                ColorModel model = new ColorModel();
+                model.setColor(
+                        String.format("#%06X", (0xFFFFFF & colorsInt[i])));
+                colorDatas.add(model);
+            }
+            fragment = new SelectColorDialogFragment(colorDatas, 5);
+            fragment.show(getFragmentManager(), "选择涂鸦板背景色");
+            
         }
         else if (id == R.id.nav_paint_gallery)
         {
@@ -506,4 +486,17 @@ public class AppMainActivity extends AppCompatActivity
         }
     }
     
+    @Subscribe
+    public void onEventMainThread(final PickerColorBgEvent event)
+    {
+        if (event != null)
+        {
+            if (!TextUtils.isEmpty(event.getModel().getColor()))
+            {
+                startActivity(XjbPaintActivity.newInstance(AppMainActivity.this,
+                        Color.parseColor(event.getModel().getColor())));
+                fragment.dismiss();
+            }
+        }
+    }
 }

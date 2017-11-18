@@ -282,7 +282,7 @@ public class XjbPaintActivity extends BaseActivity
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提示");
-        builder.setMessage("是否退出当前页面？退出将会丢失您的备注");
+        builder.setMessage("是否退出当前页面？退出将会丢失您的涂鸦");
         builder.setNegativeButton("取消", null);
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
         {

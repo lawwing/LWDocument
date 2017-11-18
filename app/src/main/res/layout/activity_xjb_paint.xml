@@ -18,16 +18,18 @@
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
         android:background="@color/black"
+        android:clickable="true"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
         <TextView
             android:id="@+id/exit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="取消"
+            android:gravity="center"
+            android:text="退出"
             android:textColor="#8b8b8b"
             android:textSize="16sp" />
 
@@ -50,7 +52,6 @@
                 android:id="@+id/iv_redo"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginLeft="4dp"
                 android:contentDescription="@null"
                 android:padding="4dp"
                 android:scaleType="centerInside"
