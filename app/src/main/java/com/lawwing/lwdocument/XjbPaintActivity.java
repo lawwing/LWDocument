@@ -1,17 +1,21 @@
 package com.lawwing.lwdocument;
 
 import java.io.File;
+import java.util.ArrayList;
 
-import com.bumptech.glide.Glide;
+import org.greenrobot.eventbus.Subscribe;
+
+import com.lawwing.lwdocument.adapter.ColorListAdapter;
 import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.base.StaticDatas;
+import com.lawwing.lwdocument.event.ColorListEvent;
+import com.lawwing.lwdocument.fragment.PickerColorDialogFragment;
 import com.lawwing.lwdocument.gen.PaintInfoDb;
 import com.lawwing.lwdocument.gen.PaintInfoDbDao;
+import com.lawwing.lwdocument.model.ColorModel;
 import com.lawwing.lwdocument.utils.FileManager;
 import com.lawwing.lwdocument.utils.ImageUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
-import com.lawwing.lwdocument.widget.ColorPickerView;
-import com.lawwing.lwdocument.widget.GlideCircleTransform;
 import com.lawwing.lwdocument.widget.PaintView;
 
 import android.app.Activity;
@@ -23,6 +27,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -34,7 +41,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +63,9 @@ public class XjbPaintActivity extends BaseActivity
     
     @BindView(R.id.iv_comment_bluecolor)
     TextView mBlueColor;
+    
+    @BindView(R.id.iv_comment_whitecolor)
+    TextView mWhiteColor;
     
     @BindView(R.id.iv_comment_arrow)
     ImageView mArrow;
@@ -85,6 +94,8 @@ public class XjbPaintActivity extends BaseActivity
     @BindView(R.id.toolsBtn)
     ImageView toolsBtn;
     
+    @BindView(R.id.moreColorRecyclerView)
+    RecyclerView moreColorRecyclerView;
     // @BindView(R.id.ll_rightmenu)
     // LinearLayout mRightMenuLayout;
     
@@ -93,15 +104,6 @@ public class XjbPaintActivity extends BaseActivity
     
     @BindView(R.id.seekBar1)
     SeekBar seekBar1;
-    
-    @BindView(R.id.colorPickerView)
-    ColorPickerView colorPickerView;
-    
-    @BindView(R.id.tipsText)
-    TextView tipsText;
-    
-    @BindView(R.id.selectColorView)
-    ImageView selectColorView;
     
     // 保存图片的路径
     private String path = "";
@@ -122,6 +124,15 @@ public class XjbPaintActivity extends BaseActivity
     private int color;
     
     private boolean isShowTools = true;
+    
+    /**
+     * 颜色列表相关
+     */
+    private ArrayList<ColorModel> colorDatas;
+    
+    private ColorListAdapter adapter;
+    
+    private PickerColorDialogFragment fragment;
     
     public static Intent newInstance(Activity activity, int color)
     {
@@ -176,40 +187,31 @@ public class XjbPaintActivity extends BaseActivity
                         pv.setColorOrType();
                     }
                 });
-        colorPickerView.setOnColorChangedListenner(
-                new ColorPickerView.OnColorChangedListener()
-                {
-                    /**
-                     * 手指抬起，选定颜色时
-                     */
-                    @Override
-                    public void onColorChanged(int r, int g, int b)
-                    {
-                        if (r == 0 && g == 0 && b == 0)
-                        {
-                            showShortToast("颜色为0");
-                            return;
-                        }
-                        Toast.makeText(XjbPaintActivity.this,
-                                "选取 RGB:" + r + "," + g + "," + b,
-                                Toast.LENGTH_SHORT).show();
-                        selectColorView.setColorFilter(Color.rgb(r, g, b));
-                    }
-                    
-                    /**
-                     * 颜色移动的时候
-                     */
-                    @Override
-                    public void onMoveColor(int r, int g, int b)
-                    {
-                        if (r == 0 && g == 0 && b == 0)
-                        {
-                            return;
-                        }
-                        selectColorView.setColorFilter(Color.rgb(r, g, b));
-                        tipsText.setText("RGB:" + r + "," + g + "," + b);
-                    }
-                });
+        getColorData();
+        initRecyclerView();
+        LWDApp.getEventBus().register(this);
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+        LWDApp.getEventBus().unregister(this);
+        super.onDestroy();
+    }
+    
+    private void getColorData()
+    {
+        colorDatas.clear();
+    }
+    
+    private void initRecyclerView()
+    {
+        GridLayoutManager manager = new GridLayoutManager(XjbPaintActivity.this,
+                5);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        moreColorRecyclerView.setLayoutManager(manager);
+        adapter = new ColorListAdapter(XjbPaintActivity.this, colorDatas);
+        moreColorRecyclerView.setAdapter(adapter);
     }
     
     /**
@@ -226,6 +228,7 @@ public class XjbPaintActivity extends BaseActivity
         {
             color = intent.getIntExtra("color", Color.WHITE);
         }
+        colorDatas = new ArrayList<>();
     }
     
     // private void initView()
@@ -373,7 +376,7 @@ public class XjbPaintActivity extends BaseActivity
      */
     @OnClick({ R.id.iv_comment_bluecolor, R.id.iv_comment_redcolor,
             R.id.iv_comment_greencolor, R.id.iv_comment_blackcolor,
-            R.id.iv_comment_morecolor })
+            R.id.iv_comment_whitecolor })
     public void onColorClick(View view)
     {
         switch (view.getId())
@@ -403,8 +406,11 @@ public class XjbPaintActivity extends BaseActivity
                 initColorView(StaticDatas.color);
                 pv.setColorOrType();
                 break;
-            case R.id.iv_comment_morecolor:
-                // 这里点击弹出颜色圆盘
+            case R.id.iv_comment_whitecolor:
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color5)));
+                initColorView(StaticDatas.color);
+                pv.setColorOrType();
                 break;
         }
     }
@@ -423,6 +429,7 @@ public class XjbPaintActivity extends BaseActivity
             mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
             mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
             mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
         }
         else if (color.equals(String.format("#%06X",
                 (0xFFFFFF & getResources().getColor(R.color.color2)))))
@@ -431,6 +438,7 @@ public class XjbPaintActivity extends BaseActivity
             mBlueColor.setBackgroundResource(R.drawable.color_bg2_select);
             mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
             mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
         }
         else if (color.equals(String.format("#%06X",
                 (0xFFFFFF & getResources().getColor(R.color.color3)))))
@@ -439,6 +447,7 @@ public class XjbPaintActivity extends BaseActivity
             mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
             mGreenColor.setBackgroundResource(R.drawable.color_bg3_select);
             mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
         }
         else if (color.equals(String.format("#%06X",
                 (0xFFFFFF & getResources().getColor(R.color.color4)))))
@@ -447,8 +456,17 @@ public class XjbPaintActivity extends BaseActivity
             mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
             mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
             mBlackColor.setBackgroundResource(R.drawable.color_bg4_select);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
         }
-        
+        else if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color5)))))
+        {
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_select);
+        }
     }
     
     /**
@@ -643,5 +661,27 @@ public class XjbPaintActivity extends BaseActivity
             initDialog();
         }
         return super.onKeyDown(keyCode, event);
+    }
+    
+    @Subscribe
+    public void onEventMainThread(ColorListEvent event)
+    {
+        if (event != null)
+        {
+            if (!TextUtils.isEmpty(event.getType()))
+            {
+                switch (event.getType())
+                {
+                    case "add":
+                        fragment = new PickerColorDialogFragment();
+                        fragment.show(getFragmentManager(), "选择颜色");
+                        break;
+                    case "select":
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }

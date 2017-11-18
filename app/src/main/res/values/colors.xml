@@ -10,4 +10,7 @@
     <color name="color2">#007aff</color>
     <color name="color3">#4bd754</color>
     <color name="color4">#323232</color>
+    <color name="color5">#ffffff</color>
+
+    <color name="gray">#cccccc</color>
 </resources>

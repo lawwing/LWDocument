@@ -26,7 +26,7 @@
             android:gravity="center"
             android:text="工具"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/iv_comment_arrow"
@@ -73,9 +73,9 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="颜色"
+            android:text="默认颜色"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -136,75 +136,37 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/iv_comment_morecolor"
+                android:id="@+id/iv_comment_whitecolor"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/color_bg1_unselect"
-                android:gravity="center"
-                android:text="more"
-                android:textSize="10sp" />
+                android:background="@drawable/color_bg5_unselect" />
         </LinearLayout>
-        <!--<ImageView-->
-        <!--android:id="@+id/iv_comment_redcolor"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:contentDescription="@null"-->
-        <!--android:src="@mipmap/comment_red_select" />-->
 
-        <!--<ImageView-->
-        <!--android:id="@+id/iv_comment_bluecolor"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:contentDescription="@null"-->
-        <!--android:src="@mipmap/comment_blue_unselect" />-->
-
-        <!--<ImageView-->
-        <!--android:id="@+id/iv_comment_greencolor"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:contentDescription="@null"-->
-        <!--android:src="@mipmap/comment_green_unselect" />-->
-
-        <!--<ImageView-->
-        <!--android:id="@+id/iv_comment_blackcolor"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:contentDescription="@null"-->
-        <!--android:src="@mipmap/comment_black_unselect" />-->
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:weightSum="6">
 
-        <com.lawwing.lwdocument.widget.ColorPickerView
-            android:id="@+id/colorPickerView"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:scaleType="center"
-            android:src="@mipmap/color_picker" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="更多颜色"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
-        <!--<LinearLayout-->
-        <!--android:layout_width="30dp"-->
-        <!--android:layout_height="30dp"-->
-        <!--android:background="@drawable/white_ring_bg">-->
-
-        <ImageView
-            android:id="@+id/selectColorView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/white_ring_bg" />
-        <!--</LinearLayout>-->
-
-
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/moreColorRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_weight="5"></android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
     <LinearLayout
@@ -220,7 +182,7 @@
             android:gravity="center"
             android:text="画笔粗细"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <SeekBar
             android:id="@+id/seekBar1"
