@@ -29,12 +29,20 @@
             android:textSize="12sp" />
 
         <ImageView
+            android:id="@+id/iv_comment_freedom"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:contentDescription="@null"
+            android:src="@mipmap/comment_freedom_select" />
+
+        <ImageView
             android:id="@+id/iv_comment_arrow"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
             android:contentDescription="@null"
-            android:src="@mipmap/comment_arrow_select" />
+            android:src="@mipmap/comment_arrow_unselect" />
 
         <ImageView
             android:id="@+id/iv_comment_text"
@@ -52,13 +60,7 @@
             android:contentDescription="@null"
             android:src="@mipmap/comment_rectangle_unselect" />
 
-        <ImageView
-            android:id="@+id/iv_comment_freedom"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:contentDescription="@null"
-            android:src="@mipmap/comment_freedom_unselect" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -173,7 +175,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="5">
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
@@ -188,7 +190,7 @@
             android:id="@+id/seekBar1"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:max="50"
             android:progress="10" />
     </LinearLayout>

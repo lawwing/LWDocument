@@ -222,8 +222,8 @@ public class XjbPaintActivity extends BaseActivity
     {
         StaticDatas.color = String.format("#%06X",
                 (0xFFFFFF & getResources().getColor(R.color.color1)));
-        StaticDatas.mode = PaintView.COMMENT_ARROW;
-        PaintView.type = PaintView.COMMENT_ARROW;
+        StaticDatas.mode = PaintView.COMMENT_FREEDOM;
+        PaintView.type = PaintView.COMMENT_FREEDOM;
         Intent intent = getIntent();
         if (intent != null)
         {
