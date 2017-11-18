@@ -301,8 +301,8 @@ public class XjbPaintActivity extends BaseActivity
         Bitmap bitmap = null;
         try
         {
-            int width = view.getWidth();
-            int height = view.getHeight();
+            // int width = view.getWidth();
+            // int height = view.getHeight();
             if (width != 0 && height != 0)
             {
                 bitmap = Bitmap

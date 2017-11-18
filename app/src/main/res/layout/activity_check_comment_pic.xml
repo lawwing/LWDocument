@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <com.lawwing.lwdocument.widget.PhotoView
         android:id="@+id/commentBigImage"
@@ -18,5 +19,5 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:padding="5dp"
-        android:src="@drawable/ic_menu_share" />
+        android:src="@mipmap/share_logo" />
 </RelativeLayout>
