@@ -1,12 +1,23 @@
 package com.lawwing.lwdocument;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.greenrobot.eventbus.Subscribe;
+
+import com.lawwing.lwdocument.adapter.ColorListAdapter;
 import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.base.StaticDatas;
+import com.lawwing.lwdocument.event.ColorAddEvent;
+import com.lawwing.lwdocument.event.ColorListEvent;
 import com.lawwing.lwdocument.event.SaveCommentEvent;
+import com.lawwing.lwdocument.fragment.PickerColorDialogFragment;
+import com.lawwing.lwdocument.gen.ColorInfoDb;
+import com.lawwing.lwdocument.gen.ColorInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
+import com.lawwing.lwdocument.model.ColorModel;
 import com.lawwing.lwdocument.utils.FileManager;
 import com.lawwing.lwdocument.utils.ImageUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
@@ -20,17 +31,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -43,23 +53,20 @@ public class CommentOfficeActivity extends BaseActivity
     @BindView(R.id.pv)
     PaintView pv;
     
-    @BindView(R.id.iv_comment_loadmorecolor)
-    ImageView mLoadMoreColor;
-    
-    @BindView(R.id.iv_comment_loadmorerightmenu)
-    ImageView mLoadMoreMenu;
-    
     @BindView(R.id.iv_comment_redcolor)
-    ImageView mRedColor;
+    TextView mRedColor;
     
     @BindView(R.id.iv_comment_greencolor)
-    ImageView mGreenColor;
+    TextView mGreenColor;
     
     @BindView(R.id.iv_comment_blackcolor)
-    ImageView mBlackColor;
+    TextView mBlackColor;
     
     @BindView(R.id.iv_comment_bluecolor)
-    ImageView mBlueColor;
+    TextView mBlueColor;
+    
+    @BindView(R.id.iv_comment_whitecolor)
+    TextView mWhiteColor;
     
     @BindView(R.id.iv_comment_arrow)
     ImageView mArrow;
@@ -83,13 +90,21 @@ public class CommentOfficeActivity extends BaseActivity
     TextView mExit;
     
     @BindView(R.id.complete)
-    TextView mComplete;
+    ImageView mComplete;
     
-    @BindView(R.id.ll_leftcolor)
-    LinearLayout mLeftColorLayout;
+    @BindView(R.id.toolsBtn)
+    ImageView toolsBtn;
     
-    @BindView(R.id.ll_rightmenu)
-    LinearLayout mRightMenuLayout;
+    @BindView(R.id.moreColorRecyclerView)
+    RecyclerView moreColorRecyclerView;
+    // @BindView(R.id.ll_rightmenu)
+    // LinearLayout mRightMenuLayout;
+    
+    @BindView(R.id.toolsLayout)
+    LinearLayout toolsLayout;
+    
+    @BindView(R.id.seekBar1)
+    SeekBar seekBar1;
     
     private Bitmap bm;
     
@@ -107,6 +122,21 @@ public class CommentOfficeActivity extends BaseActivity
     private String docname;
     
     private String docpath;
+    
+    private int color;
+    
+    private boolean isShowTools = true;
+    
+    /**
+     * 颜色列表相关
+     */
+    private ArrayList<ColorModel> colorDatas;
+    
+    private ColorListAdapter adapter;
+    
+    private PickerColorDialogFragment fragment;
+    
+    private ColorInfoDbDao mColorInfoDbDao;
     
     public static Intent newIntance(Activity activity, String docname,
             String docpath)
@@ -126,11 +156,53 @@ public class CommentOfficeActivity extends BaseActivity
         initData();
         setContentView(R.layout.activity_comment_office);
         ButterKnife.bind(this);
+        mColorInfoDbDao = LWDApp.get().getDaoSession().getColorInfoDbDao();
+        mCommentInfoDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
         pv.drawBackground(bm);
         pv.setListener(this);
-        mCommentInfoDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
-        Log.e("test", StaticDatas.color + " -- " + StaticDatas.mode);
-        // initView();
+        StaticDatas.width = seekBar1.getProgress();
+        pv.setColorOrType();
+        seekBar1.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener()
+                {
+                    
+                    @Override
+                    public void onStopTrackingTouch(SeekBar arg0)
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                    
+                    @Override
+                    public void onStartTrackingTouch(SeekBar arg0)
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                    
+                    @Override
+                    public void onProgressChanged(SeekBar arg0, int arg1,
+                            boolean arg2)
+                    {
+                        // TODO Auto-generated method stub
+                        StaticDatas.width = arg1;
+                        pv.setColorOrType();
+                    }
+                });
+        initColorDataByDb();
+        initRecyclerView();
+        LWDApp.getEventBus().register(this);
+        
+    }
+    
+    private void initRecyclerView()
+    {
+        GridLayoutManager manager = new GridLayoutManager(
+                CommentOfficeActivity.this, 5);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        moreColorRecyclerView.setLayoutManager(manager);
+        adapter = new ColorListAdapter(CommentOfficeActivity.this, colorDatas);
+        moreColorRecyclerView.setAdapter(adapter);
     }
     
     /**
@@ -140,31 +212,25 @@ public class CommentOfficeActivity extends BaseActivity
     {
         StaticDatas.color = String.format("#%06X",
                 (0xFFFFFF & getResources().getColor(R.color.color1)));
-        StaticDatas.mode = PaintView.COMMENT_ARROW;
-        PaintView.type = PaintView.COMMENT_ARROW;
+        StaticDatas.mode = PaintView.COMMENT_FREEDOM;
+        PaintView.type = PaintView.COMMENT_FREEDOM;
+        colorDatas = new ArrayList<>();
     }
     
     @Override
     protected void onDestroy()
     {
+        LWDApp.getEventBus().unregister(this);
         initData();
         super.onDestroy();
     }
-    // private void initView()
-    // {
-    // mBackgroundIV.setImageBitmap(bm);
-    // }
     
     private void getIntentData()
     {
         Intent intent = getIntent();
         if (intent != null)
         {
-            // if (intent.hasExtra("bitmap"))
-            // {
-            // byte[] bis = intent.getByteArrayExtra("bitmap");
-            // bm = BitmapFactory.decodeByteArray(bis, 0, bis.length);
-            // }
+            
             byte[] bis = StaticDatas.bis;
             bm = BitmapFactory.decodeByteArray(bis, 0, bis.length);
             if (intent.hasExtra("docname"))
@@ -184,7 +250,8 @@ public class CommentOfficeActivity extends BaseActivity
      *
      * @param view
      */
-    @OnClick({ R.id.exit, R.id.complete, R.id.iv_redo, R.id.iv_cancle })
+    @OnClick({ R.id.exit, R.id.complete, R.id.iv_redo, R.id.iv_cancle,
+            R.id.toolsBtn })
     public void onTopClick(View view)
     {
         switch (view.getId())
@@ -204,6 +271,20 @@ public class CommentOfficeActivity extends BaseActivity
                 // 撤销
                 pv.undo();
                 break;
+            case R.id.toolsBtn:
+                if (isShowTools)
+                {
+                    toolsBtn.setImageResource(R.mipmap.tools);
+                    toolsLayout.setVisibility(View.GONE);
+                    isShowTools = !isShowTools;
+                }
+                else
+                {
+                    toolsBtn.setImageResource(R.mipmap.tools_dismiss);
+                    toolsLayout.setVisibility(View.VISIBLE);
+                    isShowTools = !isShowTools;
+                }
+                break;
         }
     }
     
@@ -214,7 +295,7 @@ public class CommentOfficeActivity extends BaseActivity
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提示");
-        builder.setMessage("是否退出当前页面？退出将会丢失您的备注");
+        builder.setMessage("是否退出当前页面？退出将会丢失您的批阅");
         builder.setNegativeButton("取消", null);
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
         {
@@ -298,311 +379,6 @@ public class CommentOfficeActivity extends BaseActivity
                             }
                         })
                 .show();
-    }
-    
-    /**
-     * 颜色相关的点击事件
-     *
-     * @param view
-     */
-    // @OnClick({ R.id.iv_comment_loadmorecolor, R.id.iv_comment_bluecolor,
-    // R.id.iv_comment_redcolor, R.id.iv_comment_greencolor,
-    // R.id.iv_comment_blackcolor })
-    // public void onColorClick(View view)
-    // {
-    // switch (view.getId())
-    // {
-    // case R.id.iv_comment_loadmorecolor:
-    // // 收起颜色面板
-    // changeColorPanal();
-    // break;
-    // case R.id.iv_comment_bluecolor:
-    // StaticDatas.color = PaintView.COLOR_BLUE;
-    // initColorView(StaticDatas.color);
-    // pv.setColorOrType();
-    // break;
-    // case R.id.iv_comment_redcolor:
-    // StaticDatas.color = PaintView.COLOR_RED;
-    // initColorView(StaticDatas.color);
-    // pv.setColorOrType();
-    // break;
-    // case R.id.iv_comment_greencolor:
-    // StaticDatas.color = PaintView.COLOR_GREEN;
-    // initColorView(StaticDatas.color);
-    // pv.setColorOrType();
-    // break;
-    // case R.id.iv_comment_blackcolor:
-    // StaticDatas.color = PaintView.COLOR_BLACK;
-    // initColorView(StaticDatas.color);
-    // pv.setColorOrType();
-    // break;
-    // }
-    // }
-    
-//    /**
-//     * 初始化颜色的选择
-//     *
-//     * @param color
-//     */
-//    private void initColorView(String color)
-//    {
-//        if (color.equals(PaintView.COLOR_BLACK))
-//        {
-//            mBlackColor.setImageResource(R.mipmap.comment_black_select);
-//            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-//            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-//            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
-//        }
-//        else if (color.equals(PaintView.COLOR_BLUE))
-//        {
-//            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-//            mBlueColor.setImageResource(R.mipmap.comment_blue_select);
-//            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-//            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
-//        }
-//        else if (color.equals(PaintView.COLOR_RED))
-//        {
-//            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-//            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-//            mRedColor.setImageResource(R.mipmap.comment_red_select);
-//            mGreenColor.setImageResource(R.mipmap.comment_green_unselect);
-//        }
-//        else if (color.equals(PaintView.COLOR_GREEN))
-//        {
-//            mBlackColor.setImageResource(R.mipmap.comment_black_unselect);
-//            mBlueColor.setImageResource(R.mipmap.comment_blue_unselect);
-//            mRedColor.setImageResource(R.mipmap.comment_red_unselect);
-//            mGreenColor.setImageResource(R.mipmap.comment_green_select);
-//        }
-//    }
-//    
-    /**
-     * 右侧菜单栏的点击事件
-     *
-     * @param view
-     */
-    @OnClick({ R.id.iv_comment_loadmorerightmenu, R.id.iv_comment_arrow,
-            R.id.iv_comment_rectangle, R.id.iv_comment_text,
-            R.id.iv_comment_freedom })
-    public void onRightMenuClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.iv_comment_loadmorerightmenu:
-                // 收起面板
-                changeRightPanal();
-                break;
-            case R.id.iv_comment_arrow:
-                StaticDatas.mode = PaintView.COMMENT_ARROW;
-                initRMenuView(StaticDatas.mode);
-                pv.setColorOrType();
-                break;
-            case R.id.iv_comment_rectangle:
-                StaticDatas.mode = PaintView.COMMENT_RECTANGLE;
-                initRMenuView(StaticDatas.mode);
-                pv.setColorOrType();
-                break;
-            case R.id.iv_comment_text:
-                StaticDatas.mode = PaintView.COMMENT_TEXT;
-                initRMenuView(StaticDatas.mode);
-                pv.setColorOrType();
-                break;
-            case R.id.iv_comment_freedom:
-                StaticDatas.mode = PaintView.COMMENT_FREEDOM;
-                initRMenuView(StaticDatas.mode);
-                pv.setColorOrType();
-                break;
-        }
-    }
-    
-    /**
-     * 点击不同的模式（矩形，文字，箭头）
-     *
-     * @param mode
-     */
-    private void initRMenuView(int mode)
-    {
-        switch (mode)
-        {
-            case PaintView.COMMENT_ARROW:
-                mArrow.setImageResource(R.mipmap.comment_arrow_select);
-                mText.setImageResource(R.mipmap.comment_text_unselect);
-                mRectangle
-                        .setImageResource(R.mipmap.comment_rectangle_unselect);
-                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
-                break;
-            case PaintView.COMMENT_TEXT:
-                mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
-                mText.setImageResource(R.mipmap.comment_text_select);
-                mRectangle
-                        .setImageResource(R.mipmap.comment_rectangle_unselect);
-                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
-                break;
-            case PaintView.COMMENT_RECTANGLE:
-                mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
-                mText.setImageResource(R.mipmap.comment_text_unselect);
-                mRectangle.setImageResource(R.mipmap.comment_rectangle_select);
-                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
-                break;
-            case PaintView.COMMENT_FREEDOM:
-                mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
-                mText.setImageResource(R.mipmap.comment_text_unselect);
-                mRectangle
-                        .setImageResource(R.mipmap.comment_rectangle_unselect);
-                mFreedom.setImageResource(R.mipmap.comment_freedom_select);
-                break;
-        }
-    }
-    
-    /**
-     * 控制右边菜单栏的显示隐藏
-     */
-    private void changeRightPanal()
-    {
-        AnimationSet set = new AnimationSet(true);
-        RotateAnimation animation = new RotateAnimation(0, 180,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                0.5f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-        mLoadMoreMenu.startAnimation(set);
-        set.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-                if (mRightMenuLayout.getVisibility() == View.VISIBLE)
-                {
-                    TranslateAnimation animation1 = new TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 1f);
-                    LayoutAnimation(animation1, mRightMenuLayout);
-                }
-                else
-                {
-                    mRightMenuLayout.setVisibility(View.INVISIBLE);
-                    TranslateAnimation animation2 = new TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 1f,
-                            Animation.RELATIVE_TO_SELF, 0f);
-                    LayoutAnimation(animation2, mRightMenuLayout);
-                }
-            }
-            
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                if (mRightMenuLayout.getVisibility() == View.VISIBLE)
-                {
-                    mLoadMoreMenu.setImageResource(R.mipmap.comment_opentools);
-                    mRightMenuLayout.setVisibility(View.GONE);
-                }
-                else
-                {
-                    mLoadMoreMenu.setImageResource(R.mipmap.comment_closetools);
-                    mRightMenuLayout.setVisibility(View.VISIBLE);
-                }
-            }
-            
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-                
-            }
-        });
-        
-    }
-    
-    /**
-     * 控制上下的动画
-     *
-     * @param animation1
-     * @param view
-     */
-    private void LayoutAnimation(TranslateAnimation animation1, View view)
-    {
-        AnimationSet set1 = new AnimationSet(true);
-        animation1.setDuration(500);
-        set1.addAnimation(animation1);
-        view.startAnimation(animation1);
-    }
-    
-    /**
-     * 控制颜色面板收
-     */
-    private void changeColorPanal()
-    {
-        AnimationSet set = new AnimationSet(true);
-        RotateAnimation animation = new RotateAnimation(0, 180,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                0.5f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-        mLoadMoreColor.startAnimation(set);
-        set.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-                if (mLeftColorLayout.getVisibility() == View.VISIBLE)
-                {
-                    TranslateAnimation animation1 = new TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 1f);
-                    LayoutAnimation(animation1, mLeftColorLayout);
-                }
-                else
-                {
-                    mLeftColorLayout.setVisibility(View.INVISIBLE);
-                    TranslateAnimation animation2 = new TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 0f,
-                            Animation.RELATIVE_TO_SELF, 1f,
-                            Animation.RELATIVE_TO_SELF, 0f);
-                    LayoutAnimation(animation2, mLeftColorLayout);
-                }
-            }
-            
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                if (mLeftColorLayout.getVisibility() == View.VISIBLE)
-                {
-                    mLoadMoreColor
-                            .setImageResource(R.mipmap.comment_colour_pop);
-                    mLeftColorLayout.setVisibility(View.GONE);
-                }
-                else
-                {
-                    mLoadMoreColor
-                            .setImageResource(R.mipmap.comment_colour_back);
-                    mLeftColorLayout.setVisibility(View.VISIBLE);
-                }
-            }
-            
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-                
-            }
-        });
-        
-    }
-    
-    // 转发消息给别人,转跳到选择联系人页面
-    private void sendToOther()
-    {
-        /*
-         * Intent intent = ChooseUserCardInfoActivity
-         * .newInstance(CommentOfficeActivity.this, "Transmit");
-         * startActivityForResult(intent, CHOOSE_SENDOTHER_REQUEST_INFO);
-         * overridePendingTransitionEnter();
-         */
     }
     
     /**
@@ -691,4 +467,332 @@ public class CommentOfficeActivity extends BaseActivity
         }
         return super.onKeyDown(keyCode, event);
     }
+    
+    /**
+     * 颜色相关的点击事件
+     *
+     * @param view
+     */
+    @OnClick({ R.id.iv_comment_bluecolor, R.id.iv_comment_redcolor,
+            R.id.iv_comment_greencolor, R.id.iv_comment_blackcolor,
+            R.id.iv_comment_whitecolor })
+    public void onColorClick(View view)
+    {
+        switch (view.getId())
+        {
+            
+            case R.id.iv_comment_bluecolor:
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color2)));
+                initColorView(StaticDatas.color);
+                pv.setColorOrType();
+                break;
+            case R.id.iv_comment_redcolor:
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color1)));
+                initColorView(StaticDatas.color);
+                pv.setColorOrType();
+                break;
+            case R.id.iv_comment_greencolor:
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color3)));
+                initColorView(StaticDatas.color);
+                pv.setColorOrType();
+                break;
+            case R.id.iv_comment_blackcolor:
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color4)));
+                initColorView(StaticDatas.color);
+                pv.setColorOrType();
+                break;
+            case R.id.iv_comment_whitecolor:
+                StaticDatas.color = String.format("#%06X",
+                        (0xFFFFFF & getResources().getColor(R.color.color5)));
+                initColorView(StaticDatas.color);
+                pv.setColorOrType();
+                break;
+        }
+    }
+    
+    /**
+     * 初始化颜色的选择
+     *
+     * @param color
+     */
+    private void initColorView(String color)
+    {
+        hideOffenColorSelect();
+        if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color1)))))
+        {
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_select);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
+        }
+        else if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color2)))))
+        {
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_select);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
+        }
+        else if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color3)))))
+        {
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_select);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
+        }
+        else if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color4)))))
+        {
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_select);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
+        }
+        else if (color.equals(String.format("#%06X",
+                (0xFFFFFF & getResources().getColor(R.color.color5)))))
+        {
+            mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+            mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+            mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+            mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+            mWhiteColor.setBackgroundResource(R.drawable.color_bg5_select);
+        }
+    }
+    
+    /**
+     * 右侧菜单栏的点击事件
+     *
+     * @param view
+     */
+    @OnClick({ R.id.iv_comment_arrow, R.id.iv_comment_rectangle,
+            R.id.iv_comment_text, R.id.iv_comment_freedom })
+    public void onRightMenuClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.iv_comment_arrow:
+                StaticDatas.mode = PaintView.COMMENT_ARROW;
+                initRMenuView(StaticDatas.mode);
+                pv.setColorOrType();
+                break;
+            case R.id.iv_comment_rectangle:
+                StaticDatas.mode = PaintView.COMMENT_RECTANGLE;
+                initRMenuView(StaticDatas.mode);
+                pv.setColorOrType();
+                break;
+            case R.id.iv_comment_text:
+                StaticDatas.mode = PaintView.COMMENT_TEXT;
+                initRMenuView(StaticDatas.mode);
+                pv.setColorOrType();
+                break;
+            case R.id.iv_comment_freedom:
+                StaticDatas.mode = PaintView.COMMENT_FREEDOM;
+                initRMenuView(StaticDatas.mode);
+                pv.setColorOrType();
+                break;
+        }
+    }
+    
+    /**
+     * 点击不同的模式（矩形，文字，箭头）
+     *
+     * @param mode
+     */
+    private void initRMenuView(int mode)
+    {
+        switch (mode)
+        {
+            case PaintView.COMMENT_ARROW:
+                mArrow.setImageResource(R.mipmap.comment_arrow_select);
+                mText.setImageResource(R.mipmap.comment_text_unselect);
+                mRectangle
+                        .setImageResource(R.mipmap.comment_rectangle_unselect);
+                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
+                break;
+            case PaintView.COMMENT_TEXT:
+                mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
+                mText.setImageResource(R.mipmap.comment_text_select);
+                mRectangle
+                        .setImageResource(R.mipmap.comment_rectangle_unselect);
+                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
+                break;
+            case PaintView.COMMENT_RECTANGLE:
+                mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
+                mText.setImageResource(R.mipmap.comment_text_unselect);
+                mRectangle.setImageResource(R.mipmap.comment_rectangle_select);
+                mFreedom.setImageResource(R.mipmap.comment_freedom_unselect);
+                break;
+            case PaintView.COMMENT_FREEDOM:
+                mArrow.setImageResource(R.mipmap.comment_arrow_unselect);
+                mText.setImageResource(R.mipmap.comment_text_unselect);
+                mRectangle
+                        .setImageResource(R.mipmap.comment_rectangle_unselect);
+                mFreedom.setImageResource(R.mipmap.comment_freedom_select);
+                break;
+        }
+    }
+    
+    @Subscribe
+    public void onEventMainThread(ColorListEvent event)
+    {
+        if (event != null)
+        {
+            if (!TextUtils.isEmpty(event.getType()))
+            {
+                switch (event.getType())
+                {
+                    case "add":
+                        fragment = new PickerColorDialogFragment();
+                        fragment.show(getFragmentManager(), "选择颜色");
+                        break;
+                    case "select":
+                        // 单独设置显示隐藏
+                        selectColorDataByDb(event.getModel().getId());
+                        adapter.notifyDataSetChanged();
+                        // 画笔颜色
+                        StaticDatas.color = event.getModel().getColor();
+                        pv.setColorOrType();
+                        // 隐藏默认颜色
+                        hideNormalColorSelect();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+    
+    /**
+     * 取消选择五个默认颜色
+     */
+    private void hideNormalColorSelect()
+    {
+        mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+        mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+        mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+        mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+        mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
+    }
+    
+    /**
+     * 取消选择自定义颜色
+     */
+    private void hideOffenColorSelect()
+    {
+        initColorDataByDb();
+        adapter.notifyDataSetChanged();
+    }
+    
+    @Subscribe
+    public void onEventMainThread(ColorAddEvent event)
+    {
+        if (event != null)
+        {
+            if (!TextUtils.isEmpty(event.getColor()))
+            {
+                // 添加进本地数据库
+                ColorInfoDb colorInfoDb = new ColorInfoDb();
+                colorInfoDb.setColor(event.getColor());
+                colorInfoDb.setCreateTime(TimeUtils.getCurTimeMills());
+                mColorInfoDbDao.insertOrReplace(colorInfoDb);
+                // 更新数据源,需要更换方法
+                initColorDataAfterAdd();
+                hideNormalColorSelect();
+                // 刷新界面
+                adapter.notifyDataSetChanged();
+                // 更换画笔
+                StaticDatas.color = event.getColor();
+                pv.setColorOrType();
+                
+            }
+        }
+    }
+    
+    private void initColorDataAfterAdd()
+    {
+        colorDatas.clear();
+        List<ColorInfoDb> colorBeans = mColorInfoDbDao.queryBuilder()
+                .orderDesc(ColorInfoDbDao.Properties.Id)
+                .limit(4)
+                .list();
+        int count = 0;
+        for (ColorInfoDb colorBean : colorBeans)
+        {
+            ColorModel model = new ColorModel();
+            model.setId(colorBean.getId());
+            model.setColor(colorBean.getColor());
+            model.setCreateTime(colorBean.getCreateTime());
+            if (count == 0)
+            {
+                model.setSelect(true);
+            }
+            else
+            {
+                model.setSelect(false);
+            }
+            colorDatas.add(model);
+            count++;
+        }
+    }
+    
+    /**
+     * 初始化数据库
+     */
+    private void initColorDataByDb()
+    {
+        colorDatas.clear();
+        List<ColorInfoDb> colorBeans = mColorInfoDbDao.queryBuilder()
+                .orderDesc(ColorInfoDbDao.Properties.Id)
+                .limit(4)
+                .list();
+        for (ColorInfoDb colorBean : colorBeans)
+        {
+            ColorModel model = new ColorModel();
+            model.setId(colorBean.getId());
+            model.setColor(colorBean.getColor());
+            model.setCreateTime(colorBean.getCreateTime());
+            model.setSelect(false);
+            colorDatas.add(model);
+        }
+    }
+    
+    private void selectColorDataByDb(Long id)
+    {
+        colorDatas.clear();
+        List<ColorInfoDb> colorBeans = mColorInfoDbDao.queryBuilder()
+                .orderDesc(ColorInfoDbDao.Properties.Id)
+                .list();
+        int count = 0;
+        for (ColorInfoDb colorBean : colorBeans)
+        {
+            if (count < 4)
+            {
+                ColorModel model = new ColorModel();
+                model.setId(colorBean.getId());
+                model.setColor(colorBean.getColor());
+                model.setCreateTime(colorBean.getCreateTime());
+                if (model.getId() == id)
+                {
+                    model.setSelect(true);
+                }
+                else
+                {
+                    model.setSelect(false);
+                }
+                colorDatas.add(model);
+                count++;
+            }
+        }
+    }
+    
 }

@@ -4,10 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<ImageView-->
-    <!--android:id="@+id/comment_background"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"/>-->
     <com.lawwing.lwdocument.widget.PaintView
         android:id="@+id/pv"
         android:layout_width="match_parent"

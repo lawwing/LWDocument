@@ -24,7 +24,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
         <activity android:name=".SelectFileActivity" />
-        <activity android:name=".CommentOfficeActivity" />
+        <activity
+            android:name=".CommentOfficeActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".AppMainActivity"
             android:launchMode="singleTask"
@@ -58,7 +60,9 @@
         <activity android:name=".CheckCommentPicListActivity" />
         <activity android:name=".AboutUsActivity" />
         <activity android:name=".ShowDocumentListActivity" />
-        <activity android:name=".XjbPaintActivity" />
+        <activity
+            android:name=".XjbPaintActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".XjbPaintGalleryActivity" />
         <activity android:name=".EditPictureActivity" />
         <activity android:name=".SelectPictureActivity"></activity>

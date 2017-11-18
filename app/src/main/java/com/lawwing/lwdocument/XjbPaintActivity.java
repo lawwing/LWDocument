@@ -540,20 +540,6 @@ public class XjbPaintActivity extends BaseActivity
     }
     
     /**
-     * 控制上下的动画
-     *
-     * @param animation1
-     * @param view
-     */
-    private void LayoutAnimation(TranslateAnimation animation1, View view)
-    {
-        AnimationSet set1 = new AnimationSet(true);
-        animation1.setDuration(500);
-        set1.addAnimation(animation1);
-        view.startAnimation(animation1);
-    }
-    
-    /**
      * 保存bitmap到文件，返回路径
      *
      * @return
