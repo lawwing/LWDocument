@@ -8,9 +8,11 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.lawwing.lwdocument.gen.ColorInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.PaintInfoDb;
 
+import com.lawwing.lwdocument.gen.ColorInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.gen.PaintInfoDbDao;
 
@@ -23,9 +25,11 @@ import com.lawwing.lwdocument.gen.PaintInfoDbDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig colorInfoDbDaoConfig;
     private final DaoConfig commentInfoDbDaoConfig;
     private final DaoConfig paintInfoDbDaoConfig;
 
+    private final ColorInfoDbDao colorInfoDbDao;
     private final CommentInfoDbDao commentInfoDbDao;
     private final PaintInfoDbDao paintInfoDbDao;
 
@@ -33,22 +37,32 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        colorInfoDbDaoConfig = daoConfigMap.get(ColorInfoDbDao.class).clone();
+        colorInfoDbDaoConfig.initIdentityScope(type);
+
         commentInfoDbDaoConfig = daoConfigMap.get(CommentInfoDbDao.class).clone();
         commentInfoDbDaoConfig.initIdentityScope(type);
 
         paintInfoDbDaoConfig = daoConfigMap.get(PaintInfoDbDao.class).clone();
         paintInfoDbDaoConfig.initIdentityScope(type);
 
+        colorInfoDbDao = new ColorInfoDbDao(colorInfoDbDaoConfig, this);
         commentInfoDbDao = new CommentInfoDbDao(commentInfoDbDaoConfig, this);
         paintInfoDbDao = new PaintInfoDbDao(paintInfoDbDaoConfig, this);
 
+        registerDao(ColorInfoDb.class, colorInfoDbDao);
         registerDao(CommentInfoDb.class, commentInfoDbDao);
         registerDao(PaintInfoDb.class, paintInfoDbDao);
     }
     
     public void clear() {
+        colorInfoDbDaoConfig.getIdentityScope().clear();
         commentInfoDbDaoConfig.getIdentityScope().clear();
         paintInfoDbDaoConfig.getIdentityScope().clear();
+    }
+
+    public ColorInfoDbDao getColorInfoDbDao() {
+        return colorInfoDbDao;
     }
 
     public CommentInfoDbDao getCommentInfoDbDao() {

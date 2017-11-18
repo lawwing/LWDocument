@@ -91,7 +91,7 @@ apt {
     }
 }
 greendao {
-    schemaVersion 1
+    schemaVersion 2
     daoPackage 'com.lawwing.lwdocument.gen'
     targetGenDir 'src/main/java'
 }

@@ -48,6 +48,8 @@ public class ColorListAdapter
         if (datas.size() > position)
         {
             final ColorModel model = datas.get(position);
+            holder.colorImage.setVisibility(View.VISIBLE);
+            holder.addImage.setVisibility(View.GONE);
             holder.colorImage
                     .setColorFilter(Color.parseColor(model.getColor()));
             holder.colorImage.setOnClickListener(new View.OnClickListener()
@@ -59,11 +61,22 @@ public class ColorListAdapter
                             new ColorListEvent("select", position, model));
                 }
             });
+            if (model.isSelect())
+            {
+                holder.ringImage.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.ringImage.setVisibility(View.GONE);
+            }
         }
         else
         {
-            holder.colorImage.setImageResource(R.mipmap.add_color);
-            holder.colorImage.setOnClickListener(new View.OnClickListener()
+            holder.colorImage.setVisibility(View.GONE);
+            holder.ringImage.setVisibility(View.GONE);
+            holder.addImage.setVisibility(View.VISIBLE);
+            holder.addImage.setImageResource(R.mipmap.add_color);
+            holder.addImage.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -86,10 +99,16 @@ public class ColorListAdapter
     {
         ImageView colorImage;
         
+        ImageView ringImage;
+        
+        ImageView addImage;
+        
         public ColorListHolder(View itemView)
         {
             super(itemView);
             colorImage = (ImageView) itemView.findViewById(R.id.colorImage);
+            addImage = (ImageView) itemView.findViewById(R.id.addImage);
+            ringImage = (ImageView) itemView.findViewById(R.id.ringImage);
         }
     }
 }

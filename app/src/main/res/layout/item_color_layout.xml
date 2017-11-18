@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
@@ -9,5 +9,19 @@
         android:id="@+id/colorImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/white_ring_bg" />
+
+    <ImageView
+        android:id="@+id/addImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:background="@android:color/transparent" />
-</LinearLayout>
+
+    <ImageView
+        android:id="@+id/ringImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/white_ring_bg" />
+</RelativeLayout>

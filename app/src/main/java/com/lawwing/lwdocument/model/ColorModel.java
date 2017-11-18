@@ -6,9 +6,23 @@ package com.lawwing.lwdocument.model;
 
 public class ColorModel
 {
+    private Long id;
+    
     private String color;
     
     private long createTime;
+    
+    private boolean isSelect = false;
+    
+    public Long getId()
+    {
+        return id;
+    }
+    
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
     
     public String getColor()
     {
@@ -28,5 +42,15 @@ public class ColorModel
     public void setCreateTime(long createTime)
     {
         this.createTime = createTime;
+    }
+    
+    public boolean isSelect()
+    {
+        return isSelect;
+    }
+    
+    public void setSelect(boolean select)
+    {
+        isSelect = select;
     }
 }

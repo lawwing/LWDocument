@@ -1,18 +1,22 @@
 package com.lawwing.lwdocument.fragment;
 
+import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
+import com.lawwing.lwdocument.event.ColorAddEvent;
 import com.lawwing.lwdocument.widget.ColorPickerView;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +38,8 @@ public class PickerColorDialogFragment extends DialogFragment
     
     @BindView(R.id.contentLayout)
     LinearLayout contentLayout;
+    
+    private String color;
     
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -68,6 +74,8 @@ public class PickerColorDialogFragment extends DialogFragment
                             selectColorView.setColorFilter(Color.rgb(r, g, b));
                             return;
                         }
+                        color = String.format("#%06X",
+                                (0xFFFFFF & Color.rgb(r, g, b)));
                         selectColorView.setColorFilter(Color.rgb(r, g, b));
                     }
                     
@@ -91,6 +99,14 @@ public class PickerColorDialogFragment extends DialogFragment
             public void onClick(View v)
             {
                 // 点击确定添加颜色到数据库
+                if (TextUtils.isEmpty(color))
+                {
+                    Toast.makeText(getActivity(), "请选择颜色再确定", Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                }
+                LWDApp.getEventBus().post(new ColorAddEvent(color));
+                dismiss();
             }
         });
         contentLayout.setOnClickListener(new View.OnClickListener()

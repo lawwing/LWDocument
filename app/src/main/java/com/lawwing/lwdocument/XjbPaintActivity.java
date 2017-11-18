@@ -2,14 +2,18 @@ package com.lawwing.lwdocument;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import com.lawwing.lwdocument.adapter.ColorListAdapter;
 import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.base.StaticDatas;
+import com.lawwing.lwdocument.event.ColorAddEvent;
 import com.lawwing.lwdocument.event.ColorListEvent;
 import com.lawwing.lwdocument.fragment.PickerColorDialogFragment;
+import com.lawwing.lwdocument.gen.ColorInfoDb;
+import com.lawwing.lwdocument.gen.ColorInfoDbDao;
 import com.lawwing.lwdocument.gen.PaintInfoDb;
 import com.lawwing.lwdocument.gen.PaintInfoDbDao;
 import com.lawwing.lwdocument.model.ColorModel;
@@ -134,6 +138,8 @@ public class XjbPaintActivity extends BaseActivity
     
     private PickerColorDialogFragment fragment;
     
+    private ColorInfoDbDao mColorInfoDbDao;
+    
     public static Intent newInstance(Activity activity, int color)
     {
         Intent intent = new Intent(activity, XjbPaintActivity.class);
@@ -153,7 +159,7 @@ public class XjbPaintActivity extends BaseActivity
         
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
-        
+        mColorInfoDbDao = LWDApp.get().getDaoSession().getColorInfoDbDao();
         pv.drawBackgroundColor(color);
         pv.setListener(this);
         mPaintInfoDbDao = LWDApp.get().getDaoSession().getPaintInfoDbDao();
@@ -187,7 +193,7 @@ public class XjbPaintActivity extends BaseActivity
                         pv.setColorOrType();
                     }
                 });
-        getColorData();
+        initColorDataByDb();
         initRecyclerView();
         LWDApp.getEventBus().register(this);
     }
@@ -197,11 +203,6 @@ public class XjbPaintActivity extends BaseActivity
     {
         LWDApp.getEventBus().unregister(this);
         super.onDestroy();
-    }
-    
-    private void getColorData()
-    {
-        colorDatas.clear();
     }
     
     private void initRecyclerView()
@@ -230,11 +231,6 @@ public class XjbPaintActivity extends BaseActivity
         }
         colorDatas = new ArrayList<>();
     }
-    
-    // private void initView()
-    // {
-    // mBackgroundIV.setImageBitmap(bm);
-    // }
     
     /**
      * 顶部菜单的相关点击事件
@@ -422,6 +418,7 @@ public class XjbPaintActivity extends BaseActivity
      */
     private void initColorView(String color)
     {
+        hideOffenColorSelect();
         if (color.equals(String.format("#%06X",
                 (0xFFFFFF & getResources().getColor(R.color.color1)))))
         {
@@ -556,17 +553,6 @@ public class XjbPaintActivity extends BaseActivity
         view.startAnimation(animation1);
     }
     
-    // 转发消息给别人,转跳到选择联系人页面
-    private void sendToOther()
-    {
-        /*
-         * Intent intent = ChooseUserCardInfoActivity
-         * .newInstance(CommentOfficeActivity.this, "Transmit");
-         * startActivityForResult(intent, CHOOSE_SENDOTHER_REQUEST_INFO);
-         * overridePendingTransitionEnter();
-         */
-    }
-    
     /**
      * 保存bitmap到文件，返回路径
      *
@@ -613,7 +599,7 @@ public class XjbPaintActivity extends BaseActivity
     public void onClickText(final float x, final float y)
     {
         final EditText editText = new EditText(this);
-        new AlertDialog.Builder(this).setTitle("请输入批阅内容")
+        new AlertDialog.Builder(this).setTitle("请输入文本内容")
                 .setView(editText)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener()
                 {
@@ -677,10 +663,141 @@ public class XjbPaintActivity extends BaseActivity
                         fragment.show(getFragmentManager(), "选择颜色");
                         break;
                     case "select":
+                        // 单独设置显示隐藏
+                        selectColorDataByDb(event.getModel().getId());
+                        adapter.notifyDataSetChanged();
+                        // 画笔颜色
+                        StaticDatas.color = event.getModel().getColor();
+                        pv.setColorOrType();
+                        // 隐藏默认颜色
+                        hideNormalColorSelect();
                         break;
                     default:
                         break;
                 }
+            }
+        }
+    }
+    
+    /**
+     * 取消选择五个默认颜色
+     */
+    private void hideNormalColorSelect()
+    {
+        mRedColor.setBackgroundResource(R.drawable.color_bg1_unselect);
+        mBlueColor.setBackgroundResource(R.drawable.color_bg2_unselect);
+        mGreenColor.setBackgroundResource(R.drawable.color_bg3_unselect);
+        mBlackColor.setBackgroundResource(R.drawable.color_bg4_unselect);
+        mWhiteColor.setBackgroundResource(R.drawable.color_bg5_unselect);
+    }
+    
+    /**
+     * 取消选择自定义颜色
+     */
+    private void hideOffenColorSelect()
+    {
+        initColorDataByDb();
+        adapter.notifyDataSetChanged();
+    }
+    
+    @Subscribe
+    public void onEventMainThread(ColorAddEvent event)
+    {
+        if (event != null)
+        {
+            if (!TextUtils.isEmpty(event.getColor()))
+            {
+                // 添加进本地数据库
+                ColorInfoDb colorInfoDb = new ColorInfoDb();
+                colorInfoDb.setColor(event.getColor());
+                colorInfoDb.setCreateTime(TimeUtils.getCurTimeMills());
+                mColorInfoDbDao.insertOrReplace(colorInfoDb);
+                // 更新数据源,需要更换方法
+                initColorDataAfterAdd();
+                hideNormalColorSelect();
+                // 刷新界面
+                adapter.notifyDataSetChanged();
+                // 更换画笔
+                StaticDatas.color = event.getColor();
+                pv.setColorOrType();
+                
+            }
+        }
+    }
+    
+    private void initColorDataAfterAdd()
+    {
+        colorDatas.clear();
+        List<ColorInfoDb> colorBeans = mColorInfoDbDao.queryBuilder()
+                .orderDesc(ColorInfoDbDao.Properties.Id)
+                .limit(4)
+                .list();
+        int count = 0;
+        for (ColorInfoDb colorBean : colorBeans)
+        {
+            ColorModel model = new ColorModel();
+            model.setId(colorBean.getId());
+            model.setColor(colorBean.getColor());
+            model.setCreateTime(colorBean.getCreateTime());
+            if (count == 0)
+            {
+                model.setSelect(true);
+            }
+            else
+            {
+                model.setSelect(false);
+            }
+            colorDatas.add(model);
+            count++;
+        }
+    }
+    
+    /**
+     * 初始化数据库
+     */
+    private void initColorDataByDb()
+    {
+        colorDatas.clear();
+        List<ColorInfoDb> colorBeans = mColorInfoDbDao.queryBuilder()
+                .orderDesc(ColorInfoDbDao.Properties.Id)
+                .limit(4)
+                .list();
+        for (ColorInfoDb colorBean : colorBeans)
+        {
+            ColorModel model = new ColorModel();
+            model.setId(colorBean.getId());
+            model.setColor(colorBean.getColor());
+            model.setCreateTime(colorBean.getCreateTime());
+            model.setSelect(false);
+            colorDatas.add(model);
+        }
+    }
+    
+    private void selectColorDataByDb(Long id)
+    {
+        colorDatas.clear();
+        List<ColorInfoDb> colorBeans = mColorInfoDbDao.queryBuilder()
+                .orderDesc(ColorInfoDbDao.Properties.Id)
+                .list();
+        int count = 0;
+        for (ColorInfoDb colorBean : colorBeans)
+        {
+            if (count < 4)
+            {
+                ColorModel model = new ColorModel();
+                model.setId(colorBean.getId());
+                model.setColor(colorBean.getColor());
+                model.setCreateTime(colorBean.getCreateTime());
+                if (model.getId() == id)
+                {
+                    model.setSelect(true);
+                }
+                else
+                {
+                    model.setSelect(false);
+                }
+                colorDatas.add(model);
+                count++;
             }
         }
     }
