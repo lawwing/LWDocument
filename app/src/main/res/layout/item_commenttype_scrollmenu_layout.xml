@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tubb.smrv.SwipeHorizontalMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sml="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bossLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        android:id="@id/smContentView"
+        layout="@layout/item_commenttype_layout" />
+
+    <include
+        android:id="@id/smMenuViewRight"
+        layout="@layout/item_commenttype_right_menu" />
+
+</com.tubb.smrv.SwipeHorizontalMenuLayout>

@@ -9,6 +9,9 @@
             android:id="@+id/nav_check_comment"
             android:title="查看批阅图片" />
         <item
+            android:id="@+id/nav_comment_type"
+            android:title="批阅分类管理" />
+        <item
             android:id="@+id/nav_paint"
             android:title="涂鸦板" />
         <item
@@ -17,6 +20,7 @@
         <!--<item-->
         <!--android:id="@+id/nav_edit_pic"-->
         <!--android:title="编辑图片" />-->
+
         <item
             android:id="@+id/nav_aboutus"
             android:title="关于我们" />

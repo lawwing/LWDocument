@@ -328,6 +328,12 @@ public class AppMainActivity extends AppCompatActivity
             startActivity(
                     XjbPaintGalleryActivity.newInstance(AppMainActivity.this));
         }
+        else if (id == R.id.nav_comment_type)
+        {
+            // 批阅分类管理
+            startActivity(CommentTypeListActivity
+                    .newInstance(AppMainActivity.this, "check"));
+        }
         // else if (id == R.id.nav_edit_pic)
         // {
         // // 进入选择图片

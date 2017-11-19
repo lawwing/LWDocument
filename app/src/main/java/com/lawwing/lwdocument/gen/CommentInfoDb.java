@@ -1,8 +1,8 @@
 package com.lawwing.lwdocument.gen;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * Created by lawwing on 2017/11/11.
@@ -21,6 +21,9 @@ public class CommentInfoDb
     private String path;
     
     private String docpath;
+    
+    // 类型id
+    private long typeId;
     
     private long time = 0;
     
@@ -84,15 +87,26 @@ public class CommentInfoDb
         this.id = id;
     }
     
-    @Generated(hash = 464876029)
+    public Long getTypeId()
+    {
+        return this.typeId;
+    }
+    
+    public void setTypeId(long typeId)
+    {
+        this.typeId = typeId;
+    }
+    
+    @Generated(hash = 1590374052)
     public CommentInfoDb(Long id, String name, String docname, String path,
-            String docpath, long time)
+            String docpath, long typeId, long time)
     {
         this.id = id;
         this.name = name;
         this.docname = docname;
         this.path = path;
         this.docpath = docpath;
+        this.typeId = typeId;
         this.time = time;
     }
     
@@ -101,4 +115,12 @@ public class CommentInfoDb
     {
     }
     
+    @Override
+    public String toString()
+    {
+        return "CommentInfoDb{" + "id=" + id + ", name='" + name + '\''
+                + ", docname='" + docname + '\'' + ", path='" + path + '\''
+                + ", docpath='" + docpath + '\'' + ", typeId=" + typeId
+                + ", time=" + time + '}';
+    }
 }

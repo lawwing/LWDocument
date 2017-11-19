@@ -11,6 +11,7 @@ import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.event.ColorAddEvent;
 import com.lawwing.lwdocument.event.ColorListEvent;
+import com.lawwing.lwdocument.event.CommentTypeClickEvent;
 import com.lawwing.lwdocument.event.SaveCommentEvent;
 import com.lawwing.lwdocument.fragment.PickerColorDialogFragment;
 import com.lawwing.lwdocument.gen.ColorInfoDb;
@@ -261,7 +262,9 @@ public class CommentOfficeActivity extends BaseActivity
                 break;
             case R.id.complete:
                 // 完成的点击事件
-                showMyDialog();
+                startActivity(CommentTypeListActivity
+                        .newInstance(CommentOfficeActivity.this, "select"));
+                // showMyDialog();
                 break;
             case R.id.iv_redo:
                 // 重做,有bug
@@ -338,29 +341,9 @@ public class CommentOfficeActivity extends BaseActivity
      */
     private void showMyDialog()
     {
-        // 保存到本地相册
-        bitmap = getBitmapFromView(pv);
-        path = saveImageFile();
-        // 保存
-        if (!TextUtils.isEmpty(path))
-        {
-            File file = new File(path);
-            CommentInfoDb model = new CommentInfoDb();
-            model.setName(file.getName());
-            model.setPath(path);
-            model.setDocname(docname);
-            model.setDocpath(docpath);
-            model.setTime(file.lastModified());
-            mCommentInfoDao.insertOrReplace(model);
-            
-            showLongToast("批阅成功");
-            LWDApp.getEventBus().post(new SaveCommentEvent("批阅"));
-            finish();
-        }
-        else
-        {
-            showLongToast("保存批阅失败");
-        }
+        long typeId = 0;
+        saveComment(typeId);
+        
         // new AlertDialog.Builder(this).setTitle("菜单")
         // .setItems(new String[] { "保存到本地相册" },
         // new DialogInterface.OnClickListener()
@@ -378,6 +361,34 @@ public class CommentOfficeActivity extends BaseActivity
         // }
         // })
         // .show();
+    }
+    
+    private void saveComment(long typeId)
+    {
+        // 保存到本地相册
+        bitmap = getBitmapFromView(pv);
+        path = saveImageFile();
+        // 保存
+        if (!TextUtils.isEmpty(path))
+        {
+            File file = new File(path);
+            CommentInfoDb model = new CommentInfoDb();
+            model.setName(file.getName());
+            model.setPath(path);
+            model.setDocname(docname);
+            model.setDocpath(docpath);
+            model.setTime(file.lastModified());
+            model.setTypeId(typeId);
+            mCommentInfoDao.insertOrReplace(model);
+            
+            showLongToast("批阅成功");
+            LWDApp.getEventBus().post(new SaveCommentEvent("批阅"));
+            finish();
+        }
+        else
+        {
+            showLongToast("保存批阅失败");
+        }
     }
     
     /**
@@ -794,4 +805,20 @@ public class CommentOfficeActivity extends BaseActivity
         }
     }
     
+    @Subscribe
+    public void onEventMainThread(CommentTypeClickEvent event)
+    {
+        if (event != null)
+        {
+            if (!TextUtils.isEmpty(event.getType()))
+            {
+                switch (event.getType())
+                {
+                    case "select":
+                        saveComment(event.getModel().getId());
+                        break;
+                }
+            }
+        }
+    }
 }

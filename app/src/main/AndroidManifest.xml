@@ -15,6 +15,7 @@
 
     <!-- 短信验证登陆功能需要添加次权限来自动填充验证码，用不到可以去掉 -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
     <application
         android:name=".LWDApp"
         android:allowBackup="true"
@@ -65,7 +66,7 @@
             android:launchMode="singleTask" />
         <activity android:name=".XjbPaintGalleryActivity" />
         <activity android:name=".EditPictureActivity" />
-        <activity android:name=".SelectPictureActivity"></activity>
+        <activity android:name=".SelectPictureActivity" />
         <!-- 填写您从Mob开发者后台中得到的Appkey和AppSecret -->
         <meta-data
             android:name="Mob-AppKey"
@@ -111,6 +112,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".CommentTypeListActivity"></activity>
     </application>
 
 </manifest>
