@@ -16,7 +16,9 @@ public class CommentInfoModel extends HomeBaseModel
     
     private String docpath;
     
-    private long time;
+    private long time = 0;
+    
+    private long typeId;
     
     public String getName()
     {
@@ -76,5 +78,15 @@ public class CommentInfoModel extends HomeBaseModel
     public void setTime(long time)
     {
         this.time = time;
+    }
+    
+    public long getTypeId()
+    {
+        return typeId;
+    }
+    
+    public void setTypeId(long typeId)
+    {
+        this.typeId = typeId;
     }
 }

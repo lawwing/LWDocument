@@ -1,18 +1,33 @@
 package com.lawwing.lwdocument.fragment;
 
+import static com.lawwing.dateselectview.CalendarHelper.getCalendarByYearMonthDay;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
+import java.util.TreeMap;
+
+import com.lawwing.dateselectview.CalendarHelper;
 import com.lawwing.dateselectview.CalendarListView;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.adapter.CalendarItemAdapter;
 import com.lawwing.lwdocument.adapter.CommentDateListAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
+import com.lawwing.lwdocument.model.CommentCalendarItemModel;
+import com.lawwing.lwdocument.model.CommentInfoModel;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
 
@@ -23,6 +38,16 @@ import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
 public class DateCommentListFragment extends BaseFragment
         implements ScreenShotable
 {
+    public static final SimpleDateFormat DAY_FORMAT = new SimpleDateFormat(
+            "yyyyMMdd");
+    
+    public static final SimpleDateFormat YEAR_MONTH_FORMAT = new SimpleDateFormat(
+            "yyyy年MM月");
+    
+    private TreeMap<String, List<CommentInfoModel>> listTreeMap = new TreeMap<>();
+    
+    private Handler handler = new Handler();
+    
     private Bitmap bitmap;
     
     private View containerView;
@@ -54,7 +79,157 @@ public class DateCommentListFragment extends BaseFragment
         calendarItemAdapter = new CalendarItemAdapter(getActivity());
         calendarListView.setCalendarListViewAdapter(calendarItemAdapter,
                 dayNewsListAdapter);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -7);
+        loadCommentList(DAY_FORMAT.format(calendar.getTime()));
+        // actionBar.setTitle(YEAR_MONTH_FORMAT.format(calendar.getTime()));
+        calendarListView
+                .setOnListPullListener(new CalendarListView.onListPullListener()
+                {
+                    @Override
+                    public void onRefresh()
+                    {
+                        String date = listTreeMap.firstKey();
+                        Calendar calendar = getCalendarByYearMonthDay(date);
+                        calendar.add(Calendar.MONTH, -1);
+                        calendar.set(Calendar.DAY_OF_MONTH, 1);
+                        loadCommentList(DAY_FORMAT.format(calendar.getTime()));
+                    }
+                    
+                    @Override
+                    public void onLoadMore()
+                    {
+                        String date = listTreeMap.lastKey();
+                        Calendar calendar = getCalendarByYearMonthDay(date);
+                        calendar.add(Calendar.MONTH, 1);
+                        calendar.set(Calendar.DAY_OF_MONTH, 1);
+                        loadCommentList(DAY_FORMAT.format(calendar.getTime()));
+                    }
+                });
         
+        //
+        calendarListView.setOnMonthChangedListener(
+                new CalendarListView.OnMonthChangedListener()
+                {
+                    @Override
+                    public void onMonthChanged(String yearMonth)
+                    {
+                        Calendar calendar = CalendarHelper
+                                .getCalendarByYearMonth(yearMonth);
+                        // actionBar.setTitle(
+                        // YEAR_MONTH_FORMAT.format(calendar.getTime()));
+                        loadCalendarData(yearMonth);
+                        Toast.makeText(getActivity(),
+                                YEAR_MONTH_FORMAT.format(calendar.getTime()),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+        
+        calendarListView.setOnCalendarViewItemClickListener(
+                new CalendarListView.OnCalendarViewItemClickListener()
+                {
+                    @Override
+                    public void onDateSelected(View View, String selectedDate,
+                            int listSection,
+                            SelectedDateRegion selectedDateRegion)
+                    {
+                        
+                    }
+                });
+    }
+    
+    private void loadCalendarData(final String date)
+    {
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    sleep(1000);
+                    handler.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Random random = new Random();
+                            if (date.equals(
+                                    calendarListView.getCurrentSelectedDate()
+                                            .substring(0, 7)))
+                            {
+                                for (String d : listTreeMap.keySet())
+                                {
+                                    if (date.equals(d.substring(0, 7)))
+                                    {
+                                        CommentCalendarItemModel customCalendarItemModel = calendarItemAdapter
+                                                .getDayModelList()
+                                                .get(d);
+                                        if (customCalendarItemModel != null)
+                                        {
+                                            customCalendarItemModel
+                                                    .setCommentCount(
+                                                            listTreeMap.get(d)
+                                                                    .size());
+                                            customCalendarItemModel.setFav(
+                                                    random.nextBoolean());
+                                        }
+                                        
+                                    }
+                                }
+                                calendarItemAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            
+        }.start();
+    }
+    
+    private void loadCommentList(String date)
+    {
+        Calendar calendar = getCalendarByYearMonthDay(date);
+        String key = CalendarHelper.YEAR_MONTH_FORMAT
+                .format(calendar.getTime());
+        Random random = new Random();
+        final List<String> set = new ArrayList<>();
+        while (set.size() < 5)
+        {
+            int i = random.nextInt(29);
+            if (i > 0)
+            {
+                if (!set.contains(key + "-" + i))
+                {
+                    if (i < 10)
+                    {
+                        set.add(key + "-0" + i);
+                    }
+                    else
+                    {
+                        set.add(key + "-" + i);
+                    }
+                }
+            }
+        }
+    }
+    
+    public static Calendar getCalendarByYearMonthDay(String yearMonthDay)
+    {
+        Calendar calendar = Calendar.getInstance();
+        try
+        {
+            calendar.setTimeInMillis(DAY_FORMAT.parse(yearMonthDay).getTime());
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        return calendar;
     }
     
     @Override
