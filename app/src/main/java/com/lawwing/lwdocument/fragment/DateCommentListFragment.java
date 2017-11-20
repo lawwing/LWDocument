@@ -1,7 +1,5 @@
 package com.lawwing.lwdocument.fragment;
 
-import static com.lawwing.dateselectview.CalendarHelper.getCalendarByYearMonthDay;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,10 +10,13 @@ import java.util.TreeMap;
 
 import com.lawwing.dateselectview.CalendarHelper;
 import com.lawwing.dateselectview.CalendarListView;
+import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.adapter.CalendarItemAdapter;
 import com.lawwing.lwdocument.adapter.CommentDateListAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
+import com.lawwing.lwdocument.gen.CommentInfoDb;
+import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.model.CommentCalendarItemModel;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 
@@ -58,6 +59,8 @@ public class DateCommentListFragment extends BaseFragment
     
     private CalendarItemAdapter calendarItemAdapter;
     
+    private CommentInfoDbDao mCommentInfoDbDao;
+    
     public static DateCommentListFragment newInstance(int resId)
     {
         DateCommentListFragment dateCommentListFragment = new DateCommentListFragment();
@@ -71,7 +74,9 @@ public class DateCommentListFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        mCommentInfoDbDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
         this.containerView = view.findViewById(R.id.container);
+        
         calendarListView = (CalendarListView) view
                 .findViewById(R.id.calendar_listview);
         
@@ -216,6 +221,37 @@ public class DateCommentListFragment extends BaseFragment
                 }
             }
         }
+        List<CommentInfoDb> dbs = mCommentInfoDbDao.loadAll();
+        
+        // 获取数据
+        for (int i = 0; i < dbs.size(); i++)
+        {
+            CommentInfoModel model = new CommentInfoModel();
+            model.setName(dbs.get(i).getName());
+            model.setDocname(dbs.get(i).getDocname());
+            model.setTime(dbs.get(i).getTime());
+            model.setPath(dbs.get(i).getPath());
+            model.setDocpath(dbs.get(i).getDocpath());
+            model.setId(dbs.get(i).getId());
+            model.setTypeId(dbs.get(i).getTypeId());
+            int index = random.nextInt(5);
+            String day = set.get(index);
+            if (listTreeMap.get(day) != null)
+            {
+                List<CommentInfoModel> list = listTreeMap.get(day);
+                list.add(model);
+            }
+            else
+            {
+                List<CommentInfoModel> list = new ArrayList<CommentInfoModel>();
+                list.add(model);
+                listTreeMap.put(day, list);
+            }
+        }
+        
+        dayNewsListAdapter.setDateDataMap(listTreeMap);
+        dayNewsListAdapter.notifyDataSetChanged();
+        calendarItemAdapter.notifyDataSetChanged();
     }
     
     public static Calendar getCalendarByYearMonthDay(String yearMonthDay)
