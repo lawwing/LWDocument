@@ -10,46 +10,27 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
 
 /**
- * Created by Konstantin on 22.12.2014.
+ * Created by lawwing on 2017/11/20.
  */
-public class ContentFragment extends BaseFragment implements ScreenShotable
+
+public class DateCommentListFragment extends BaseFragment
+        implements ScreenShotable
 {
-    public static final String CLOSE = "Close";
-    
-    public static final String BUILDING = "Building";
-    
-    public static final String BOOK = "Book";
-    
-    public static final String PAINT = "Paint";
-    
-    public static final String CASE = "Case";
-    
-    public static final String SHOP = "Shop";
-    
-    public static final String PARTY = "Party";
-    
-    public static final String MOVIE = "Movie";
+    private Bitmap bitmap;
     
     private View containerView;
     
-    protected ImageView mImageView;
-    
-    protected int res;
-    
-    private Bitmap bitmap;
-    
-    public static ContentFragment newInstance(int resId)
+    public static DateCommentListFragment newInstance(int resId)
     {
-        ContentFragment contentFragment = new ContentFragment();
+        DateCommentListFragment dateCommentListFragment = new DateCommentListFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Integer.class.getName(), resId);
-        contentFragment.setArguments(bundle);
-        return contentFragment;
+        dateCommentListFragment.setArguments(bundle);
+        return dateCommentListFragment;
     }
     
     @Override
@@ -60,23 +41,24 @@ public class ContentFragment extends BaseFragment implements ScreenShotable
     }
     
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        res = getArguments().getInt(Integer.class.getName());
-    }
-    
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
         View rootView = inflater
-                .inflate(R.layout.fragment_main, container, false);
-        mImageView = (ImageView) rootView.findViewById(R.id.image_content);
-        mImageView.setClickable(true);
-        mImageView.setFocusable(true);
-        mImageView.setImageResource(res);
+                .inflate(R.layout.fragment_date_comment_list, container, false);
         return rootView;
+    }
+    
+    @Override
+    public void loadData()
+    {
+        
+    }
+    
+    @Override
+    public void loadSubData()
+    {
+        
     }
     
     @Override
@@ -92,29 +74,16 @@ public class ContentFragment extends BaseFragment implements ScreenShotable
                         Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(bitmap);
                 containerView.draw(canvas);
-                ContentFragment.this.bitmap = bitmap;
+                DateCommentListFragment.this.bitmap = bitmap;
             }
         };
         
         thread.start();
-        
     }
     
     @Override
     public Bitmap getBitmap()
     {
         return bitmap;
-    }
-    
-    @Override
-    public void loadData()
-    {
-        
-    }
-    
-    @Override
-    public void loadSubData()
-    {
-        
     }
 }

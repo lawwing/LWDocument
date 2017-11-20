@@ -3,7 +3,9 @@ package com.lawwing.lwdocument;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.fragment.ContentFragment;
+import com.lawwing.lwdocument.fragment.DateCommentListFragment;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -35,7 +37,7 @@ public class NewAppMainActivity extends AppCompatActivity
     
     private List<SlideMenuItem> list = new ArrayList<>();
     
-    private ContentFragment contentFragment;
+    private DateCommentListFragment contentFragment;
     
     private ViewAnimator viewAnimator;
     
@@ -48,7 +50,8 @@ public class NewAppMainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_app_main);
-        contentFragment = ContentFragment.newInstance(R.mipmap.content_music);
+        contentFragment = DateCommentListFragment
+                .newInstance(R.mipmap.content_music);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, contentFragment)
                 .commit();
@@ -181,7 +184,7 @@ public class NewAppMainActivity extends AppCompatActivity
     }
     
     private ScreenShotable replaceFragment(ScreenShotable screenShotable,
-            int topPosition)
+            int topPosition, String name)
     {
         this.res = this.res == R.mipmap.content_music ? R.mipmap.content_films
                 : R.mipmap.content_music;
@@ -195,9 +198,17 @@ public class NewAppMainActivity extends AppCompatActivity
         findViewById(R.id.content_overlay).setBackgroundDrawable(
                 new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         animator.start();
-        ContentFragment contentFragment = ContentFragment.newInstance(this.res);
+        ScreenShotable contentFragment;
+        if (name.equals(ContentFragment.BOOK))
+        {
+            contentFragment = DateCommentListFragment.newInstance(this.res);
+        }
+        else
+        {
+            contentFragment = ContentFragment.newInstance(this.res);
+        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, contentFragment)
+                .replace(R.id.content_frame, (BaseFragment) contentFragment)
                 .commit();
         return contentFragment;
     }
@@ -211,7 +222,9 @@ public class NewAppMainActivity extends AppCompatActivity
             case ContentFragment.CLOSE:
                 return screenShotable;
             default:
-                return replaceFragment(screenShotable, position);
+                return replaceFragment(screenShotable,
+                        position,
+                        slideMenuItem.getName());
         }
     }
     
@@ -227,7 +240,6 @@ public class NewAppMainActivity extends AppCompatActivity
     {
         getSupportActionBar().setHomeButtonEnabled(true);
         drawerLayout.closeDrawers();
-        
     }
     
     @Override
