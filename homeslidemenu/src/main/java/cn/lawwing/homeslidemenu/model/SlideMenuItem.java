@@ -3,7 +3,7 @@ package cn.lawwing.homeslidemenu.model;
 import cn.lawwing.homeslidemenu.interfaces.Resourceble;
 
 /**
- * Created by Konstantin on 23.12.2014.
+ * Created by lawwing on 2017/10/30.
  */
 public class SlideMenuItem implements Resourceble
 {

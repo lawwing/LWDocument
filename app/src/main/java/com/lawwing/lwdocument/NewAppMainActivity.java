@@ -92,13 +92,13 @@ public class NewAppMainActivity extends AppCompatActivity
         list.add(menuItem4);
         SlideMenuItem menuItem5 = new SlideMenuItem(ContentFragment.SHOP,
                 R.mipmap.icn_5);
-        list.add(menuItem5);
-        SlideMenuItem menuItem6 = new SlideMenuItem(ContentFragment.PARTY,
-                R.mipmap.icn_6);
-        list.add(menuItem6);
-        SlideMenuItem menuItem7 = new SlideMenuItem(ContentFragment.MOVIE,
-                R.mipmap.icn_7);
-        list.add(menuItem7);
+        // list.add(menuItem5);
+        // SlideMenuItem menuItem6 = new SlideMenuItem(ContentFragment.PARTY,
+        // R.mipmap.icn_6);
+        // list.add(menuItem6);
+        // SlideMenuItem menuItem7 = new SlideMenuItem(ContentFragment.MOVIE,
+        // R.mipmap.icn_7);
+        // list.add(menuItem7);
     }
     
     private void setActionBar()

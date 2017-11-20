@@ -3,10 +3,11 @@ package cn.lawwing.homeslidemenu.interfaces;
 import android.graphics.Bitmap;
 
 /**
- * Created by Konstantin on 12.01.2015.
+ * Created by lawwing on 2017/10/30.
  */
-public interface ScreenShotable {
+public interface ScreenShotable
+{
     public void takeScreenShot();
-
+    
     public Bitmap getBitmap();
 }

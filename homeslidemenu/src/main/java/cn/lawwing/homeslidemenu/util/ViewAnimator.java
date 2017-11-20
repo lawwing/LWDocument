@@ -17,7 +17,7 @@ import cn.lawwing.homeslidemenu.interfaces.Resourceble;
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
 
 /**
- * Created by Konstantin on 12.01.2015.
+ * Created by lawwing on 2017/10/30.
  */
 public class ViewAnimator<T extends Resourceble>
 {
