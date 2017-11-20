@@ -90,6 +90,7 @@ dependencies {
 
     compile 'com.github.ozodrukh:CircularReveal:1.0.4'
     compile project(':homeslidemenu')
+    compile project(':dateselectview')
 }
 
 apt {
