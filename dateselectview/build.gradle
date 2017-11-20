@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+group = 'con.lawwing.dateselectview'
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"

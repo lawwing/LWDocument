@@ -1,6 +1,9 @@
 package com.lawwing.lwdocument.fragment;
 
+import com.lawwing.dateselectview.CalendarListView;
 import com.lawwing.lwdocument.R;
+import com.lawwing.lwdocument.adapter.CalendarItemAdapter;
+import com.lawwing.lwdocument.adapter.CommentDateListAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
 
 import android.graphics.Bitmap;
@@ -24,6 +27,12 @@ public class DateCommentListFragment extends BaseFragment
     
     private View containerView;
     
+    private CalendarListView calendarListView;
+    
+    private CommentDateListAdapter dayNewsListAdapter;
+    
+    private CalendarItemAdapter calendarItemAdapter;
+    
     public static DateCommentListFragment newInstance(int resId)
     {
         DateCommentListFragment dateCommentListFragment = new DateCommentListFragment();
@@ -38,6 +47,14 @@ public class DateCommentListFragment extends BaseFragment
     {
         super.onViewCreated(view, savedInstanceState);
         this.containerView = view.findViewById(R.id.container);
+        calendarListView = (CalendarListView) view
+                .findViewById(R.id.calendar_listview);
+        
+        dayNewsListAdapter = new CommentDateListAdapter(getActivity());
+        calendarItemAdapter = new CalendarItemAdapter(getActivity());
+        calendarListView.setCalendarListViewAdapter(calendarItemAdapter,
+                dayNewsListAdapter);
+        
     }
     
     @Override

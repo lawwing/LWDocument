@@ -8,12 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <com.lawwing.dateselectview.CalendarListView
+            android:id="@+id/calendar_listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/color3"
-            android:gravity="center"
-            android:text="这是内容" />
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 </io.codetail.widget.RevealFrameLayout>
