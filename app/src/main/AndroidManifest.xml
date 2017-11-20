@@ -112,7 +112,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".CommentTypeListActivity"></activity>
+        <activity android:name=".CommentTypeListActivity" />
+        <activity android:name=".NewAppMainActivity"></activity>
     </application>
 
 </manifest>

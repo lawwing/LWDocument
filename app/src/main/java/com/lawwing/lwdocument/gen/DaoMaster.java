@@ -23,16 +23,16 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(Database db, boolean ifNotExists) {
         ColorInfoDbDao.createTable(db, ifNotExists);
         CommentInfoDbDao.createTable(db, ifNotExists);
-        PaintInfoDbDao.createTable(db, ifNotExists);
         CommentTypeInfoDbDao.createTable(db, ifNotExists);
+        PaintInfoDbDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         ColorInfoDbDao.dropTable(db, ifExists);
         CommentInfoDbDao.dropTable(db, ifExists);
-        PaintInfoDbDao.dropTable(db, ifExists);
         CommentTypeInfoDbDao.dropTable(db, ifExists);
+        PaintInfoDbDao.dropTable(db, ifExists);
     }
 
     /**
@@ -53,8 +53,8 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(ColorInfoDbDao.class);
         registerDaoClass(CommentInfoDbDao.class);
-        registerDaoClass(PaintInfoDbDao.class);
         registerDaoClass(CommentTypeInfoDbDao.class);
+        registerDaoClass(PaintInfoDbDao.class);
     }
 
     public DaoSession newSession() {

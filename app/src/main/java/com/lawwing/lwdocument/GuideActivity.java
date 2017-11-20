@@ -1,7 +1,6 @@
 package com.lawwing.lwdocument;
 
 import com.lawwing.lwdocument.base.BaseActivity;
-import com.lawwing.lwdocument.utils.SystemUtils;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -40,14 +39,18 @@ public class GuideActivity extends BaseActivity
                 
                 if (TextUtils.isEmpty(filePath))
                 {
+                    // startActivity(new Intent(GuideActivity.this,
+                    // AppMainActivity.class));
                     startActivity(new Intent(GuideActivity.this,
-                            AppMainActivity.class));
+                            NewAppMainActivity.class));
                 }
                 else
                 {
                     Log.e("test", filePath);
+                    // Intent homeIntent = new Intent(GuideActivity.this,
+                    // AppMainActivity.class);
                     Intent homeIntent = new Intent(GuideActivity.this,
-                            AppMainActivity.class);
+                            NewAppMainActivity.class);
                     Intent officeViewIntent = MainActivity
                             .newInstance(GuideActivity.this, filePath);
                     
