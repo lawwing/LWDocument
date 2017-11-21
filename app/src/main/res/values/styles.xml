@@ -24,7 +24,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <!--设置menu中item的图标颜色-->
-        <item name="android:textColorSecondary">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/white</item>
 
     </style>
 

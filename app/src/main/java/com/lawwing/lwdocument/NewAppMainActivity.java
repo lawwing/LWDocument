@@ -6,6 +6,7 @@ import java.util.List;
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.fragment.ContentFragment;
+import com.lawwing.lwdocument.fragment.DateCommentFragment;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -35,7 +36,7 @@ public class NewAppMainActivity extends AppCompatActivity
     
     private List<SlideMenuItem> list = new ArrayList<>();
     
-    private ContentFragment contentFragment;
+    private DateCommentFragment dateCommentFragment;
     
     private ViewAnimator viewAnimator;
     
@@ -48,9 +49,9 @@ public class NewAppMainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_app_main);
-        contentFragment = ContentFragment.newInstance(R.mipmap.content_music);
+        dateCommentFragment = DateCommentFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, contentFragment)
+                .replace(R.id.content_frame, dateCommentFragment)
                 .commit();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
@@ -66,7 +67,7 @@ public class NewAppMainActivity extends AppCompatActivity
         
         setActionBar();
         createMenuList();
-        viewAnimator = new ViewAnimator<>(this, list, contentFragment,
+        viewAnimator = new ViewAnimator<>(this, list, dateCommentFragment,
                 drawerLayout, this);
     }
     
@@ -97,8 +98,7 @@ public class NewAppMainActivity extends AppCompatActivity
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("首页");
-        toolbar.setTitleTextColor(
-                getResources().getColor(R.color.colorPrimary));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -171,9 +171,14 @@ public class NewAppMainActivity extends AppCompatActivity
                 new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         animator.start();
         ScreenShotable contentFragment;
-        
-        contentFragment = ContentFragment.newInstance(this.res);
-        
+        if (name.equals(StaticDatas.DATE_COMMENT))
+        {
+            contentFragment = DateCommentFragment.newInstance();
+        }
+        else
+        {
+            contentFragment = ContentFragment.newInstance(this.res);
+        }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, (BaseFragment) contentFragment)
                 .commit();

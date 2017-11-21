@@ -16,7 +16,7 @@
             android:background="#333333"
             android:minHeight="48dp"
             android:title="首页"
-            android:titleTextColor="@color/colorPrimary" />
+            android:titleTextColor="@color/white" />
 
         <LinearLayout
             android:id="@+id/content_overlay"

@@ -1,1 +1,1 @@
-include ':app', ':homeslidemenu'
+include ':app', ':homeslidemenu', ':calendarlibrary'
