@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lawwing.lwdocument.base.BaseFragment;
+import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.fragment.ContentFragment;
-import com.lawwing.lwdocument.fragment.DateCommentListFragment;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -15,8 +15,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
@@ -37,7 +35,7 @@ public class NewAppMainActivity extends AppCompatActivity
     
     private List<SlideMenuItem> list = new ArrayList<>();
     
-    private DateCommentListFragment contentFragment;
+    private ContentFragment contentFragment;
     
     private ViewAnimator viewAnimator;
     
@@ -50,8 +48,7 @@ public class NewAppMainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_app_main);
-        contentFragment = DateCommentListFragment
-                .newInstance(R.mipmap.content_music);
+        contentFragment = ContentFragment.newInstance(R.mipmap.content_music);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, contentFragment)
                 .commit();
@@ -75,36 +72,33 @@ public class NewAppMainActivity extends AppCompatActivity
     
     private void createMenuList()
     {
-        SlideMenuItem menuItem0 = new SlideMenuItem(ContentFragment.CLOSE,
+        SlideMenuItem menuItem0 = new SlideMenuItem(StaticDatas.DATE_COMMENT,
                 R.mipmap.icn_close);
         list.add(menuItem0);
-        SlideMenuItem menuItem = new SlideMenuItem(ContentFragment.BUILDING,
+        SlideMenuItem menuItem = new SlideMenuItem(StaticDatas.TYPE_COMMENT,
                 R.mipmap.icn_1);
         list.add(menuItem);
-        SlideMenuItem menuItem2 = new SlideMenuItem(ContentFragment.BOOK,
+        SlideMenuItem menuItem2 = new SlideMenuItem(StaticDatas.FILE_LIST,
                 R.mipmap.icn_2);
         list.add(menuItem2);
-        SlideMenuItem menuItem3 = new SlideMenuItem(ContentFragment.PAINT,
+        SlideMenuItem menuItem3 = new SlideMenuItem(StaticDatas.ABOUT_US,
                 R.mipmap.icn_3);
         list.add(menuItem3);
-        SlideMenuItem menuItem4 = new SlideMenuItem(ContentFragment.CASE,
+        SlideMenuItem menuItem4 = new SlideMenuItem(StaticDatas.SETTING,
                 R.mipmap.icn_4);
         list.add(menuItem4);
-        SlideMenuItem menuItem5 = new SlideMenuItem(ContentFragment.SHOP,
-                R.mipmap.icn_5);
-        // list.add(menuItem5);
-        // SlideMenuItem menuItem6 = new SlideMenuItem(ContentFragment.PARTY,
-        // R.mipmap.icn_6);
-        // list.add(menuItem6);
-        // SlideMenuItem menuItem7 = new SlideMenuItem(ContentFragment.MOVIE,
-        // R.mipmap.icn_7);
-        // list.add(menuItem7);
+        
     }
     
+    /**
+     * 设置titlebar
+     */
     private void setActionBar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle("首页");
+        toolbar.setTitleTextColor(
+                getResources().getColor(R.color.colorPrimary));
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -161,29 +155,6 @@ public class NewAppMainActivity extends AppCompatActivity
         drawerToggle.onConfigurationChanged(newConfig);
     }
     
-    // @Override
-    // public boolean onCreateOptionsMenu(Menu menu)
-    // {
-    // getMenuInflater().inflate(R.menu.menu_main, menu);
-    // return true;
-    // }
-    
-    // @Override
-    // public boolean onOptionsItemSelected(MenuItem item)
-    // {
-    // if (drawerToggle.onOptionsItemSelected(item))
-    // {
-    // return true;
-    // }
-    // switch (item.getItemId())
-    // {
-    // case R.id.action_settings:
-    // return true;
-    // default:
-    // return super.onOptionsItemSelected(item);
-    // }
-    // }
-    
     private ScreenShotable replaceFragment(ScreenShotable screenShotable,
             int topPosition, String name)
     {
@@ -200,14 +171,9 @@ public class NewAppMainActivity extends AppCompatActivity
                 new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         animator.start();
         ScreenShotable contentFragment;
-        if (name.equals(ContentFragment.BOOK))
-        {
-            contentFragment = DateCommentListFragment.newInstance(this.res);
-        }
-        else
-        {
-            contentFragment = ContentFragment.newInstance(this.res);
-        }
+        
+        contentFragment = ContentFragment.newInstance(this.res);
+        
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, (BaseFragment) contentFragment)
                 .commit();
@@ -220,8 +186,7 @@ public class NewAppMainActivity extends AppCompatActivity
     {
         switch (slideMenuItem.getName())
         {
-            case ContentFragment.CLOSE:
-                return screenShotable;
+            
             default:
                 return replaceFragment(screenShotable,
                         position,
@@ -233,7 +198,6 @@ public class NewAppMainActivity extends AppCompatActivity
     public void disableHomeButton()
     {
         getSupportActionBar().setHomeButtonEnabled(false);
-        
     }
     
     @Override

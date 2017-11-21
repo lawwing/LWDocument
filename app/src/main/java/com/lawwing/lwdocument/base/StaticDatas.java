@@ -21,4 +21,14 @@ public class StaticDatas
     public final static int IMAGE_BACKGROUND_MODE = 1;
     
     public static byte[] bis = null;
+    
+    public static final String DATE_COMMENT = "date_comment";
+    
+    public static final String TYPE_COMMENT = "type_comment";
+    
+    public static final String FILE_LIST = "file_list";
+    
+    public static final String ABOUT_US = "about_us";
+    
+    public static final String SETTING = "setting";
 }

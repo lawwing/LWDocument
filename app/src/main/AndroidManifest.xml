@@ -113,7 +113,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".CommentTypeListActivity" />
-        <activity android:name=".NewAppMainActivity"></activity>
+        <activity
+            android:name=".NewAppMainActivity"
+            android:theme="@style/AppTheme.Navigatheme"></activity>
     </application>
 
 </manifest>

@@ -3,36 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <io.codetail.widget.RevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/container_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#333333"
+            android:minHeight="48dp"
+            android:title="首页"
+            android:titleTextColor="@color/colorPrimary" />
 
         <LinearLayout
             android:id="@+id/content_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
             android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
             android:orientation="vertical" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="#00000000"
-            android:minHeight="48dp"
-            android:titleTextColor="@color/white" />
 
-    </io.codetail.widget.RevealFrameLayout>
+    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="120dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
         android:layout_gravity="start|bottom"
         android:layout_marginLeft="48dp"
@@ -41,7 +46,7 @@
 
         <LinearLayout
             android:id="@+id/left_drawer"
-            android:layout_width="120dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:background="@color/color1"
             android:divider="@color/color1"
