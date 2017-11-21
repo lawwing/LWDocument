@@ -100,21 +100,25 @@ public class DateCommentListFragment extends BaseFragment
                     @Override
                     public void onRefresh()
                     {
-                        String date = listTreeMap.firstKey();
-                        Calendar calendar = getCalendarByYearMonthDay(date);
-                        calendar.add(Calendar.MONTH, -1);
-                        calendar.set(Calendar.DAY_OF_MONTH, 1);
-                        loadCommentList();
+                        Log.e("test", "刷新onRefresh");
+                        // String date = listTreeMap.firstKey();
+                        // Calendar calendar = getCalendarByYearMonthDay(date);
+                        // calendar.add(Calendar.MONTH, -1);
+                        // calendar.set(Calendar.DAY_OF_MONTH, 1);
+                        // loadCommentList();
+                        commentDateListAdapter.notifyDataSetChanged();
                     }
                     
                     @Override
                     public void onLoadMore()
                     {
-                        String date = listTreeMap.lastKey();
-                        Calendar calendar = getCalendarByYearMonthDay(date);
-                        calendar.add(Calendar.MONTH, 1);
-                        calendar.set(Calendar.DAY_OF_MONTH, 1);
-                        loadCommentList();
+                        Log.e("test", "加载更多onLoadMore");
+                        // String date = listTreeMap.lastKey();
+                        // Calendar calendar = getCalendarByYearMonthDay(date);
+                        // calendar.add(Calendar.MONTH, 1);
+                        // calendar.set(Calendar.DAY_OF_MONTH, 1);
+                        // loadCommentList();
+                        commentDateListAdapter.notifyDataSetChanged();
                     }
                 });
         
@@ -125,6 +129,8 @@ public class DateCommentListFragment extends BaseFragment
                     @Override
                     public void onMonthChanged(String yearMonth)
                     {
+                        
+                        Log.e("test", "月份变化" + yearMonth);
                         Calendar calendar = CalendarHelper
                                 .getCalendarByYearMonth(yearMonth);
                         monthText.setText(
@@ -145,6 +151,8 @@ public class DateCommentListFragment extends BaseFragment
                             SelectedDateRegion selectedDateRegion)
                     {
                         
+                        Log.e("test",
+                                "点击了日历" + selectedDate + " -- " + listSection);
                     }
                 });
     }

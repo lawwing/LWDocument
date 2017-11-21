@@ -216,8 +216,15 @@ public class PinnedHeaderListView extends ListView implements OnScrollListener
             Iterator<OnScrollListener> it = mOnScrollListeners.iterator();
             while (it.hasNext())
             {
-                OnScrollListener item = it.next();
-                item.onScrollStateChanged(view, scrollState);
+                try
+                {
+                    OnScrollListener item = it.next();
+                    item.onScrollStateChanged(view, scrollState);
+                }
+                catch (Exception e)
+                {
+                    
+                }
             }
         }
     }
