@@ -104,6 +104,7 @@ public class NewAppMainActivity extends AppCompatActivity
     private void setActionBar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -160,28 +161,28 @@ public class NewAppMainActivity extends AppCompatActivity
         drawerToggle.onConfigurationChanged(newConfig);
     }
     
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    // @Override
+    // public boolean onCreateOptionsMenu(Menu menu)
+    // {
+    // getMenuInflater().inflate(R.menu.menu_main, menu);
+    // return true;
+    // }
     
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (drawerToggle.onOptionsItemSelected(item))
-        {
-            return true;
-        }
-        switch (item.getItemId())
-        {
-            case R.id.action_settings:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+    // @Override
+    // public boolean onOptionsItemSelected(MenuItem item)
+    // {
+    // if (drawerToggle.onOptionsItemSelected(item))
+    // {
+    // return true;
+    // }
+    // switch (item.getItemId())
+    // {
+    // case R.id.action_settings:
+    // return true;
+    // default:
+    // return super.onOptionsItemSelected(item);
+    // }
+    // }
     
     private ScreenShotable replaceFragment(ScreenShotable screenShotable,
             int topPosition, String name)

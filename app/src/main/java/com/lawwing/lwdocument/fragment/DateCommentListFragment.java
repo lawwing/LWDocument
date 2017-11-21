@@ -19,15 +19,18 @@ import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.model.CommentCalendarItemModel;
 import com.lawwing.lwdocument.model.CommentInfoModel;
+import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
@@ -55,7 +58,9 @@ public class DateCommentListFragment extends BaseFragment
     
     private CalendarListView calendarListView;
     
-    private CommentDateListAdapter dayNewsListAdapter;
+    private TextView monthText;
+    
+    private CommentDateListAdapter commentDateListAdapter;
     
     private CalendarItemAdapter calendarItemAdapter;
     
@@ -76,18 +81,19 @@ public class DateCommentListFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
         mCommentInfoDbDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
         this.containerView = view.findViewById(R.id.container);
+        this.monthText = (TextView) view.findViewById(R.id.monthText);
         
         calendarListView = (CalendarListView) view
                 .findViewById(R.id.calendar_listview);
         
-        dayNewsListAdapter = new CommentDateListAdapter(getActivity());
+        commentDateListAdapter = new CommentDateListAdapter(getActivity());
         calendarItemAdapter = new CalendarItemAdapter(getActivity());
         calendarListView.setCalendarListViewAdapter(calendarItemAdapter,
-                dayNewsListAdapter);
+                commentDateListAdapter);
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -7);
-        loadCommentList(DAY_FORMAT.format(calendar.getTime()));
-        // actionBar.setTitle(YEAR_MONTH_FORMAT.format(calendar.getTime()));
+        calendar.add(Calendar.MONTH, 0);
+        loadCommentList();
+        monthText.setText(YEAR_MONTH_FORMAT.format(calendar.getTime()));
         calendarListView
                 .setOnListPullListener(new CalendarListView.onListPullListener()
                 {
@@ -98,7 +104,7 @@ public class DateCommentListFragment extends BaseFragment
                         Calendar calendar = getCalendarByYearMonthDay(date);
                         calendar.add(Calendar.MONTH, -1);
                         calendar.set(Calendar.DAY_OF_MONTH, 1);
-                        loadCommentList(DAY_FORMAT.format(calendar.getTime()));
+                        loadCommentList();
                     }
                     
                     @Override
@@ -108,7 +114,7 @@ public class DateCommentListFragment extends BaseFragment
                         Calendar calendar = getCalendarByYearMonthDay(date);
                         calendar.add(Calendar.MONTH, 1);
                         calendar.set(Calendar.DAY_OF_MONTH, 1);
-                        loadCommentList(DAY_FORMAT.format(calendar.getTime()));
+                        loadCommentList();
                     }
                 });
         
@@ -121,8 +127,8 @@ public class DateCommentListFragment extends BaseFragment
                     {
                         Calendar calendar = CalendarHelper
                                 .getCalendarByYearMonth(yearMonth);
-                        // actionBar.setTitle(
-                        // YEAR_MONTH_FORMAT.format(calendar.getTime()));
+                        monthText.setText(
+                                YEAR_MONTH_FORMAT.format(calendar.getTime()));
                         loadCalendarData(yearMonth);
                         Toast.makeText(getActivity(),
                                 YEAR_MONTH_FORMAT.format(calendar.getTime()),
@@ -196,31 +202,8 @@ public class DateCommentListFragment extends BaseFragment
         }.start();
     }
     
-    private void loadCommentList(String date)
+    private void loadCommentList()
     {
-        Calendar calendar = getCalendarByYearMonthDay(date);
-        String key = CalendarHelper.YEAR_MONTH_FORMAT
-                .format(calendar.getTime());
-        Random random = new Random();
-        final List<String> set = new ArrayList<>();
-        while (set.size() < 5)
-        {
-            int i = random.nextInt(29);
-            if (i > 0)
-            {
-                if (!set.contains(key + "-" + i))
-                {
-                    if (i < 10)
-                    {
-                        set.add(key + "-0" + i);
-                    }
-                    else
-                    {
-                        set.add(key + "-" + i);
-                    }
-                }
-            }
-        }
         List<CommentInfoDb> dbs = mCommentInfoDbDao.loadAll();
         
         // 获取数据
@@ -234,8 +217,8 @@ public class DateCommentListFragment extends BaseFragment
             model.setDocpath(dbs.get(i).getDocpath());
             model.setId(dbs.get(i).getId());
             model.setTypeId(dbs.get(i).getTypeId());
-            int index = random.nextInt(5);
-            String day = set.get(index);
+            String day = TimeUtils.milliseconds2String(dbs.get(i).getTime(),
+                    DAY_FORMAT);
             if (listTreeMap.get(day) != null)
             {
                 List<CommentInfoModel> list = listTreeMap.get(day);
@@ -248,9 +231,9 @@ public class DateCommentListFragment extends BaseFragment
                 listTreeMap.put(day, list);
             }
         }
-        
-        dayNewsListAdapter.setDateDataMap(listTreeMap);
-        dayNewsListAdapter.notifyDataSetChanged();
+        Log.e("test", listTreeMap.toString());
+        commentDateListAdapter.setDateDataMap(listTreeMap);
+        commentDateListAdapter.notifyDataSetChanged();
         calendarItemAdapter.notifyDataSetChanged();
     }
     

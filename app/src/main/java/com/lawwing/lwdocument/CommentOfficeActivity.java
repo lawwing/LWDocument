@@ -377,7 +377,7 @@ public class CommentOfficeActivity extends BaseActivity
             model.setPath(path);
             model.setDocname(docname);
             model.setDocpath(docpath);
-            model.setTime(file.lastModified());
+            model.setTime(file.lastModified() - 150 * 60 * 60 * 1000);
             model.setTypeId(typeId);
             mCommentInfoDao.insertOrReplace(model);
             

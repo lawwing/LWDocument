@@ -1,14 +1,15 @@
 package com.lawwing.lwdocument.adapter;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
 import com.lawwing.dateselectview.BaseCalendarListAdapter;
-import com.lawwing.dateselectview.CalendarHelper;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.fragment.DateCommentListFragment;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.utils.GlideUtils;
+import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.content.Context;
 import android.view.View;
@@ -53,7 +54,8 @@ public class CommentDateListAdapter
         }
         
         contentViewHolder.titleTextView.setText(model.getDocname());
-        contentViewHolder.timeTextView.setText(model.getTime() + "");
+        contentViewHolder.timeTextView
+                .setText(TimeUtils.milliseconds2String(model.getTime()) + "");
         // GenericDraweeHierarchy hierarchy =
         // GenericDraweeHierarchyBuilder.newInstance(convertView.getResources())
         // .setRoundingParams(RoundingParams.asCircle())
@@ -89,7 +91,7 @@ public class CommentDateListAdapter
             convertView.setTag(headerViewHolder);
         }
         
-        Calendar calendar = CalendarHelper.getCalendarByYearMonthDay(date);
+        Calendar calendar = getCalendarByYearMonthDay(date);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String dayStr = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
         if (day < 10)
@@ -101,6 +103,22 @@ public class CommentDateListAdapter
                 .setText(DateCommentListFragment.YEAR_MONTH_FORMAT
                         .format(calendar.getTime()));
         return convertView;
+    }
+    
+    public Calendar getCalendarByYearMonthDay(String yearMonthDay)
+    {
+        Calendar calendar = Calendar.getInstance();
+        try
+        {
+            calendar.setTimeInMillis(
+                    DateCommentListFragment.DAY_FORMAT.parse(yearMonthDay)
+                            .getTime());
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        return calendar;
     }
     
     private static class HeaderViewHolder
