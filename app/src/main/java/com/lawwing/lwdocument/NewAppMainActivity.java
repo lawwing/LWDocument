@@ -23,13 +23,16 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import cn.lawwing.homeslidemenu.interfaces.Resourceble;
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
@@ -282,5 +285,44 @@ public class NewAppMainActivity extends AppCompatActivity
             // toolbar.setTitle(event.getYear() + "年" + event.getMonth() + "月"
             // + event.getDay() + "日");
         }
+    }
+    
+    // 记录用户首次点击返回键的时间
+    private long firstTime = 0;
+    
+    /**
+     * 第一种解决办法 onKeyDown
+     * 
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN)
+        {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            {
+                drawerLayout.closeDrawers();
+                return true;
+            }
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - firstTime > 2000)
+            {
+                Toast.makeText(NewAppMainActivity.this,
+                        "再按一次退出程序",
+                        Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;
+                return true;
+            }
+            else
+            {
+                System.exit(0);
+            }
+        }
+        
+        return super.onKeyUp(keyCode, event);
     }
 }

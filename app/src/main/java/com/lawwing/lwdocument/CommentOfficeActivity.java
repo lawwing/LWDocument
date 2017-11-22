@@ -18,7 +18,10 @@ import com.lawwing.lwdocument.gen.ColorInfoDb;
 import com.lawwing.lwdocument.gen.ColorInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
+import com.lawwing.lwdocument.gen.SaveDateDbDao;
 import com.lawwing.lwdocument.model.ColorModel;
+import com.lawwing.lwdocument.model.SaveDateModel;
+import com.lawwing.lwdocument.utils.DbUtils;
 import com.lawwing.lwdocument.utils.FileManager;
 import com.lawwing.lwdocument.utils.ImageUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
@@ -120,6 +123,8 @@ public class CommentOfficeActivity extends BaseActivity
     
     private CommentInfoDbDao mCommentInfoDao;
     
+    private SaveDateDbDao mSaveDateDbDao;
+    
     private String docname;
     
     private String docpath;
@@ -159,6 +164,7 @@ public class CommentOfficeActivity extends BaseActivity
         ButterKnife.bind(this);
         mColorInfoDbDao = LWDApp.get().getDaoSession().getColorInfoDbDao();
         mCommentInfoDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
+        mSaveDateDbDao = LWDApp.get().getDaoSession().getSaveDateDbDao();
         pv.drawBackground(bm);
         pv.setListener(this);
         StaticDatas.width = seekBar1.getProgress();
@@ -372,6 +378,13 @@ public class CommentOfficeActivity extends BaseActivity
         if (!TextUtils.isEmpty(path))
         {
             File file = new File(path);
+            
+            SaveDateModel savemodel = TimeUtils.getCurDateModel();
+            int day = savemodel.getDay();
+            int month = savemodel.getMonth();
+            int year = savemodel.getYear();
+            long id = DbUtils.saveDateDb(mSaveDateDbDao, year, month, day);
+            
             CommentInfoDb model = new CommentInfoDb();
             model.setName(file.getName());
             model.setPath(path);
@@ -379,6 +392,7 @@ public class CommentOfficeActivity extends BaseActivity
             model.setDocpath(docpath);
             model.setTime(file.lastModified() - 150 * 60 * 60 * 1000);
             model.setTypeId(typeId);
+            model.setDateId(id);
             mCommentInfoDao.insertOrReplace(model);
             
             showLongToast("批阅成功");

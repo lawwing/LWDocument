@@ -42,14 +42,14 @@
         android:layout_gravity="start|bottom"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="48dp"
-        android:scrollbarThumbVertical="@color/color1">
+        android:scrollbarThumbVertical="@color/scrollbarThumbVerticalColor">
 
         <LinearLayout
             android:id="@+id/left_drawer"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:background="@color/color1"
-            android:divider="@color/color1"
+            android:background="@color/scrollbarThumbVerticalColor"
+            android:divider="@color/scrollbarThumbVerticalColor"
             android:orientation="vertical"></LinearLayout>
     </ScrollView>
 </android.support.v4.widget.DrawerLayout>

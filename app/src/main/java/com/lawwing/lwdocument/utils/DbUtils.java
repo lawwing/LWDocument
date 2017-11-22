@@ -17,15 +17,17 @@ public class DbUtils
      * @param month
      * @param day
      */
-    public static void saveDateDb(SaveDateDbDao mSaveDateDbDao, int year,
+    public static long saveDateDb(SaveDateDbDao mSaveDateDbDao, int year,
             int month, int day)
     {
+        long id = (long) (year * 10000 + month * 100 + day);
         SaveDateDb saveDateDb = new SaveDateDb();
         saveDateDb.setYear(year);
         saveDateDb.setMonth(month);
         saveDateDb.setDay(day);
         saveDateDb.setTimeString("" + (year * 10000 + month * 100 + day));
-        saveDateDb.setId((long) (year * 10000 + month * 100 + day));
+        saveDateDb.setId(id);
         mSaveDateDbDao.insertOrReplace(saveDateDb);
+        return id;
     }
 }
