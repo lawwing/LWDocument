@@ -1,16 +1,6 @@
 package com.lawwing.lwdocument.fragment;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import java.util.ArrayList;
 
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.adapter.OfficeFileAdapter;
@@ -18,7 +8,16 @@ import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.model.FileBean;
 import com.lawwing.lwdocument.utils.FileUtils;
 
-import java.util.ArrayList;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

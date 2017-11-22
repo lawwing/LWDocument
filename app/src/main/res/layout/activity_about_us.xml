@@ -1,57 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical"
-    tools:context="com.lawwing.lwdocument.AboutUsActivity">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@color/background">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@mipmap/ic_launcher" />
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/appNameText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/appVersionText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@mipmap/ic_launcher" />
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/authorNameText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="作者：晓晓罗"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
+            <TextView
+                android:id="@+id/appNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:gravity="center"
-        android:text="本软件可以选择office文件进行批阅，并进行查看批阅图！！附加功能：涂鸦板以及涂鸦墙！！"
-        android:textColor="#333333"
-        android:textSize="16sp" />
-</LinearLayout>
+            <TextView
+                android:id="@+id/appVersionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/authorNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="作者：晓晓罗"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:text="本软件可以选择office文件进行批阅，并进行查看批阅图！！附加功能：涂鸦板以及涂鸦墙！！"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </FrameLayout>
+</RelativeLayout>

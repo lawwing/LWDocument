@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.event.DateClickEvent;
 import com.lawwing.lwdocument.event.MonthChangeEvent;
+import com.lawwing.lwdocument.fragment.AboutUsFragment;
 import com.lawwing.lwdocument.fragment.ContentFragment;
 import com.lawwing.lwdocument.fragment.DateCommentFragment;
+import com.lawwing.lwdocument.fragment.SelectFileFragment;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.content.res.Configuration;
@@ -24,8 +28,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import cn.lawwing.homeslidemenu.interfaces.Resourceble;
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
@@ -91,19 +93,19 @@ public class NewAppMainActivity extends AppCompatActivity
     private void createMenuList()
     {
         SlideMenuItem menuItem0 = new SlideMenuItem(StaticDatas.DATE_COMMENT,
-                R.mipmap.icn_close);
+                R.mipmap.icn_date_comment);
         list.add(menuItem0);
         SlideMenuItem menuItem = new SlideMenuItem(StaticDatas.TYPE_COMMENT,
-                R.mipmap.icn_1);
+                R.mipmap.icn_type_comment);
         list.add(menuItem);
         SlideMenuItem menuItem2 = new SlideMenuItem(StaticDatas.FILE_LIST,
-                R.mipmap.icn_2);
+                R.mipmap.icn_file_list);
         list.add(menuItem2);
         SlideMenuItem menuItem3 = new SlideMenuItem(StaticDatas.ABOUT_US,
-                R.mipmap.icn_3);
+                R.mipmap.icn_about_us);
         list.add(menuItem3);
         SlideMenuItem menuItem4 = new SlideMenuItem(StaticDatas.SETTING,
-                R.mipmap.icn_4);
+                R.mipmap.icn_setting);
         list.add(menuItem4);
         
     }
@@ -196,6 +198,16 @@ public class NewAppMainActivity extends AppCompatActivity
                     TimeUtils.getCurTimeMills(),
                     new SimpleDateFormat("yyyy年MM月", Locale.getDefault())));
             contentFragment = DateCommentFragment.newInstance();
+        }
+        else if (name.equals(StaticDatas.FILE_LIST))
+        {
+            toolbar.setTitle("文档列表");
+            contentFragment = SelectFileFragment.newInstance();
+        }
+        else if (name.equals(StaticDatas.ABOUT_US))
+        {
+            toolbar.setTitle("关于我们");
+            contentFragment = AboutUsFragment.newInstance();
         }
         else
         {
