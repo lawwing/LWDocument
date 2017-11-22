@@ -27,6 +27,8 @@ public class CommentInfoDb
     
     private long time = 0;
     
+    private long dateId;
+    
     public long getTime()
     {
         return this.time;
@@ -97,9 +99,9 @@ public class CommentInfoDb
         this.typeId = typeId;
     }
     
-    @Generated(hash = 1590374052)
+    @Generated(hash = 453917774)
     public CommentInfoDb(Long id, String name, String docname, String path,
-            String docpath, long typeId, long time)
+            String docpath, long typeId, long time, long dateId)
     {
         this.id = id;
         this.name = name;
@@ -108,6 +110,7 @@ public class CommentInfoDb
         this.docpath = docpath;
         this.typeId = typeId;
         this.time = time;
+        this.dateId = dateId;
     }
     
     @Generated(hash = 1788982875)
@@ -122,5 +125,15 @@ public class CommentInfoDb
                 + ", docname='" + docname + '\'' + ", path='" + path + '\''
                 + ", docpath='" + docpath + '\'' + ", typeId=" + typeId
                 + ", time=" + time + '}';
+    }
+    
+    public long getDateId()
+    {
+        return this.dateId;
+    }
+    
+    public void setDateId(long dateId)
+    {
+        this.dateId = dateId;
     }
 }

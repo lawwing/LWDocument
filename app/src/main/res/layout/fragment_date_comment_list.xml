@@ -46,11 +46,12 @@
                             android:layout_height="@dimen/month_calendar_height"
                             android:background="@color/calendar_bg_color"
                             android:overScrollMode="never"
+                            app:month_count="1000"
                             app:month_day_text_size="@integer/calendar_text_size"
                             app:month_holiday_color="@color/holiday_text_color"
                             app:month_selected_circle_color="@color/select_circle_color"
-                            app:month_show_holiday_hint="true"
-                            app:month_show_lunar="true"
+                            app:month_show_holiday_hint="false"
+                            app:month_show_lunar="false"
                             app:month_show_task_hint="true" />
                     </RelativeLayout>
 
@@ -61,20 +62,23 @@
                         android:background="@color/calendar_bg_color"
                         android:overScrollMode="never"
                         android:visibility="gone"
+                        app:week_count="10000"
                         app:week_day_text_size="@integer/calendar_text_size"
                         app:week_holiday_color="@color/holiday_text_color"
                         app:week_selected_circle_color="@color/select_circle_color"
-                        app:week_show_holiday_hint="true"
-                        app:week_show_lunar="true"
+                        app:week_show_holiday_hint="false"
+                        app:week_show_lunar="false"
                         app:week_show_task_hint="true" />
 
                 </RelativeLayout>
+
 
                 <RelativeLayout
                     android:id="@+id/rlScheduleList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorBackground">
+                    android:background="@color/colorBackground"
+                    android:clickable="true">
 
                     <com.lawwing.calendarlibrary.ScheduleRecyclerView
                         android:id="@+id/rvScheduleList"
@@ -87,20 +91,29 @@
                         android:overScrollMode="never"
                         android:paddingTop="6dp" />
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:id="@+id/rlNoTask"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/colorBackground">
+                        android:background="@color/colorBackground"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/dateText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:padding="5dp"
+                            android:textColor="#333333" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
                             android:layout_marginTop="50dp"
                             android:src="@mipmap/bg_no_comment" />
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
                 </RelativeLayout>
 

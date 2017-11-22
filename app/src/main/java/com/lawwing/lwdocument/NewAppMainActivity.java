@@ -1,12 +1,17 @@
 package com.lawwing.lwdocument;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.base.StaticDatas;
+import com.lawwing.lwdocument.event.DateClickEvent;
+import com.lawwing.lwdocument.event.MonthChangeEvent;
 import com.lawwing.lwdocument.fragment.ContentFragment;
 import com.lawwing.lwdocument.fragment.DateCommentFragment;
+import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -19,6 +24,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import cn.lawwing.homeslidemenu.interfaces.Resourceble;
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
@@ -43,6 +50,8 @@ public class NewAppMainActivity extends AppCompatActivity
     private int res = R.mipmap.content_music;
     
     private LinearLayout linearLayout;
+    
+    private Toolbar toolbar;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,6 +78,14 @@ public class NewAppMainActivity extends AppCompatActivity
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, dateCommentFragment,
                 drawerLayout, this);
+        LWDApp.getEventBus().register(this);
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+        LWDApp.getEventBus().unregister(this);
+        super.onDestroy();
     }
     
     private void createMenuList()
@@ -96,8 +113,10 @@ public class NewAppMainActivity extends AppCompatActivity
      */
     private void setActionBar()
     {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("首页");
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(
+                TimeUtils.milliseconds2String(TimeUtils.getCurTimeMills(),
+                        new SimpleDateFormat("yyyy年MM月", Locale.getDefault())));
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -173,6 +192,9 @@ public class NewAppMainActivity extends AppCompatActivity
         ScreenShotable contentFragment;
         if (name.equals(StaticDatas.DATE_COMMENT))
         {
+            toolbar.setTitle(TimeUtils.milliseconds2String(
+                    TimeUtils.getCurTimeMills(),
+                    new SimpleDateFormat("yyyy年MM月", Locale.getDefault())));
             contentFragment = DateCommentFragment.newInstance();
         }
         else
@@ -216,5 +238,24 @@ public class NewAppMainActivity extends AppCompatActivity
     public void addViewToContainer(View view)
     {
         linearLayout.addView(view);
+    }
+    
+    @Subscribe
+    public void onMonthChangeEventResult(MonthChangeEvent event)
+    {
+        if (event != null)
+        {
+            toolbar.setTitle(event.getYear() + "年" + event.getMonth() + "月");
+        }
+    }
+    
+    @Subscribe
+    public void onDateClickEventResult(DateClickEvent event)
+    {
+        if (event != null)
+        {
+            // toolbar.setTitle(event.getYear() + "年" + event.getMonth() + "月"
+            // + event.getDay() + "日");
+        }
     }
 }

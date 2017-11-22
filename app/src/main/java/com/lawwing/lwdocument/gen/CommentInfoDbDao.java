@@ -32,9 +32,11 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         public final static Property Docpath = new Property(4, String.class, "docpath", false, "DOCPATH");
         public final static Property TypeId = new Property(5, long.class, "typeId", false, "TYPE_ID");
         public final static Property Time = new Property(6, long.class, "time", false, "TIME");
+        public final static Property DateId = new Property(7, long.class, "dateId", false, "DATE_ID");
     };
 
     private Query<CommentInfoDb> commentTypeInfoDb_CommentInfoDbsQuery;
+    private Query<CommentInfoDb> saveDateDb_CommentInfoDbsQuery;
 
     public CommentInfoDbDao(DaoConfig config) {
         super(config);
@@ -54,7 +56,8 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
                 "\"PATH\" TEXT," + // 3: path
                 "\"DOCPATH\" TEXT," + // 4: docpath
                 "\"TYPE_ID\" INTEGER NOT NULL ," + // 5: typeId
-                "\"TIME\" INTEGER NOT NULL );"); // 6: time
+                "\"TIME\" INTEGER NOT NULL ," + // 6: time
+                "\"DATE_ID\" INTEGER NOT NULL );"); // 7: dateId
     }
 
     /** Drops the underlying database table. */
@@ -93,6 +96,7 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         }
         stmt.bindLong(6, entity.getTypeId());
         stmt.bindLong(7, entity.getTime());
+        stmt.bindLong(8, entity.getDateId());
     }
 
     @Override
@@ -125,6 +129,7 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         }
         stmt.bindLong(6, entity.getTypeId());
         stmt.bindLong(7, entity.getTime());
+        stmt.bindLong(8, entity.getDateId());
     }
 
     @Override
@@ -141,7 +146,8 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // path
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // docpath
             cursor.getLong(offset + 5), // typeId
-            cursor.getLong(offset + 6) // time
+            cursor.getLong(offset + 6), // time
+            cursor.getLong(offset + 7) // dateId
         );
         return entity;
     }
@@ -155,6 +161,7 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         entity.setDocpath(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setTypeId(cursor.getLong(offset + 5));
         entity.setTime(cursor.getLong(offset + 6));
+        entity.setDateId(cursor.getLong(offset + 7));
      }
     
     @Override
@@ -188,6 +195,20 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         }
         Query<CommentInfoDb> query = commentTypeInfoDb_CommentInfoDbsQuery.forCurrentThread();
         query.setParameter(0, typeId);
+        return query.list();
+    }
+
+    /** Internal query to resolve the "commentInfoDbs" to-many relationship of SaveDateDb. */
+    public List<CommentInfoDb> _querySaveDateDb_CommentInfoDbs(long dateId) {
+        synchronized (this) {
+            if (saveDateDb_CommentInfoDbsQuery == null) {
+                QueryBuilder<CommentInfoDb> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.DateId.eq(null));
+                saveDateDb_CommentInfoDbsQuery = queryBuilder.build();
+            }
+        }
+        Query<CommentInfoDb> query = saveDateDb_CommentInfoDbsQuery.forCurrentThread();
+        query.setParameter(0, dateId);
         return query.list();
     }
 
