@@ -123,6 +123,7 @@ public class MonthView extends View
             // CalendarUtils.getInstance(getContext()).addTaskHints(mSelYear,
             // mSelMonth,
             // dao.getTaskHintByMonth(mSelYear, mSelMonth));
+
         }
     }
     

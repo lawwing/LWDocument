@@ -1,8 +1,11 @@
 package com.lawwing.lwdocument.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import com.lawwing.lwdocument.model.SaveDateModel;
 
 /**
  * Created by lawwing on 2017/11/8.
@@ -53,4 +56,19 @@ public class TimeUtils
         return format.format(new Date(milliseconds));
     }
     
+    public static SaveDateModel getCurDateModel()
+    {
+        SaveDateModel model = new SaveDateModel();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(getCurTimeMills());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        model.setYear(year);
+        model.setMonth(month);
+        model.setDay(day);
+        model.setTimeString("" + (year * 10000 + month * 100 + day));
+        model.setId((long) (year * 10000 + month * 100 + day));
+        return model;
+    }
 }
