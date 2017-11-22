@@ -1,5 +1,7 @@
 package com.lawwing.lwdocument;
 
+import static com.lawwing.lwdocument.base.StaticDatas.DATE_COMMENT;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +94,7 @@ public class NewAppMainActivity extends AppCompatActivity
     
     private void createMenuList()
     {
-        SlideMenuItem menuItem0 = new SlideMenuItem(StaticDatas.DATE_COMMENT,
+        SlideMenuItem menuItem0 = new SlideMenuItem(DATE_COMMENT,
                 R.mipmap.icn_date_comment);
         list.add(menuItem0);
         SlideMenuItem menuItem = new SlideMenuItem(StaticDatas.TYPE_COMMENT,
@@ -176,11 +178,12 @@ public class NewAppMainActivity extends AppCompatActivity
         drawerToggle.onConfigurationChanged(newConfig);
     }
     
+    private ScreenShotable contentFragment;
+    
     private ScreenShotable replaceFragment(ScreenShotable screenShotable,
             int topPosition, String name)
     {
-        this.res = this.res == R.mipmap.content_music ? R.mipmap.content_films
-                : R.mipmap.content_music;
+        
         View view = findViewById(R.id.content_frame);
         int finalRadius = Math.max(view.getWidth(), view.getHeight());
         SupportAnimator animator = ViewAnimationUtils
@@ -191,8 +194,7 @@ public class NewAppMainActivity extends AppCompatActivity
         findViewById(R.id.content_overlay).setBackgroundDrawable(
                 new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         animator.start();
-        ScreenShotable contentFragment;
-        if (name.equals(StaticDatas.DATE_COMMENT))
+        if (name.equals(DATE_COMMENT))
         {
             toolbar.setTitle(TimeUtils.milliseconds2String(
                     TimeUtils.getCurTimeMills(),
@@ -213,9 +215,14 @@ public class NewAppMainActivity extends AppCompatActivity
         {
             contentFragment = ContentFragment.newInstance(this.res);
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, (BaseFragment) contentFragment)
-                .commit();
+        
+        if (name != nowItemName)
+        {
+            nowItemName = name;
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, (BaseFragment) contentFragment)
+                    .commit();
+        }
         return contentFragment;
     }
     
@@ -227,11 +234,17 @@ public class NewAppMainActivity extends AppCompatActivity
         {
             
             default:
+                if (nowItemName == slideMenuItem.getName())
+                {
+                    return contentFragment;
+                }
                 return replaceFragment(screenShotable,
                         position,
                         slideMenuItem.getName());
         }
     }
+    
+    private String nowItemName = DATE_COMMENT;
     
     @Override
     public void disableHomeButton()

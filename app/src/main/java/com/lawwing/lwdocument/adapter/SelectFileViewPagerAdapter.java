@@ -8,13 +8,14 @@ import com.lawwing.lwdocument.fragment.WordFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 /**
  * Created by lawwing on 2017/11/11.
  */
 
-public class SelectFileViewPagerAdapter extends FragmentPagerAdapter
+public class SelectFileViewPagerAdapter extends FragmentStatePagerAdapter
 {
     private String[] mTitles = new String[] { "文档", "表格", "投影", "电子书" };
     
