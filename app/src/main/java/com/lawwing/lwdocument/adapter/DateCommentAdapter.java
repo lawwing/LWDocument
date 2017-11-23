@@ -52,7 +52,7 @@ public class DateCommentAdapter extends
         if (model != null)
         {
             GlideUtils.loadNormalPicture(model.getPath(), holder.commentImage);
-            holder.fileName.setText(model.getName());
+            holder.fileName.setText(model.getName().split("\\.")[0]);
             holder.docName.setText("原文件：" + model.getDocname());
             holder.createTime
                     .setText(TimeUtils.milliseconds2String(model.getTime()));

@@ -115,7 +115,6 @@ public class DateCommentFragment extends BaseFragment
         public void handleMessage(Message msg)
         {
             // 获取当前的月份
-            showShortToast("初始化成功");
             SaveDateModel nowDate = TimeUtils.getCurDateModel();
             int year = nowDate.getYear();
             int month = nowDate.getMonth();
@@ -273,7 +272,7 @@ public class DateCommentFragment extends BaseFragment
     @Override
     public void onPageChange(int year, int month, int day)
     {
-        initViewPoint(year, month);
+        initViewPoint(year, month + 1);
         LWDApp.getEventBus().post(new MonthChangeEvent(year, month + 1, day));
     }
 }
