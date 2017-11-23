@@ -17,6 +17,7 @@ import com.lawwing.lwdocument.fragment.AboutUsFragment;
 import com.lawwing.lwdocument.fragment.ContentFragment;
 import com.lawwing.lwdocument.fragment.DateCommentFragment;
 import com.lawwing.lwdocument.fragment.SelectFileFragment;
+import com.lawwing.lwdocument.fragment.TypeCommentFragment;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.Manifest;
@@ -236,6 +237,11 @@ public class NewAppMainActivity extends AppCompatActivity implements
         {
             toolbar.setTitle("关于我们");
             contentFragment = AboutUsFragment.newInstance();
+        }
+        else if (name.equals(StaticDatas.TYPE_COMMENT))
+        {
+            toolbar.setTitle("批阅分类-全部");
+            contentFragment = TypeCommentFragment.newInstance();
         }
         else
         {

@@ -15,7 +15,7 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.lawwing.lwdocument"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 3
         versionName "2.0"
@@ -93,6 +93,9 @@ dependencies {
     compile project(':calendarlibrary')
 
     compile 'com.hyman:flowlayout-lib:1.1.2'
+
+    compile 'com.github.open-android:WheelPicker:v1.0.0'
+
 }
 
 apt {
