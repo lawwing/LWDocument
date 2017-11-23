@@ -5,9 +5,11 @@ import java.util.List;
 
 import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
+import com.lawwing.lwdocument.event.SaveCommentClickEvent;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDbDao;
 import com.lawwing.lwdocument.model.CommentTypeInfoModel;
+import com.lawwing.lwdocument.utils.KeyboardUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -112,17 +114,26 @@ public class SaveCommentDialogFragment extends DialogFragment
             @Override
             public void onClick(View v)
             {
-                if (selectBean != null)
+                if (!TextUtils.isEmpty(nameEdittext.getText().toString()))
                 {
-                    Toast.makeText(getActivity(),
-                            selectBean.getTypeName() + " -- "
-                                    + selectBean.getId(),
-                            Toast.LENGTH_SHORT).show();
+                    if (selectBean != null)
+                    {
+                        LWDApp.getEventBus().post(new SaveCommentClickEvent(
+                                selectBean,
+                                nameEdittext.getText().toString().trim()));
+                    }
+                    else
+                    {
+                        Toast.makeText(getActivity(),
+                                "请先选择类型",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else
                 {
-                    Toast.makeText(getActivity(), "请先选择类型", Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(getActivity(),
+                            "请先填写批阅名称",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -146,6 +157,7 @@ public class SaveCommentDialogFragment extends DialogFragment
                     initData();
                     typeInputLayout.setVisibility(View.GONE);
                     typeEdittext.setText("");
+                    KeyboardUtils.hideSoftInput(getActivity());
                     initTypeRecycler();
                     adapter.setSelected(datas.size() - 1,
                             datas.get(datas.size() - 1));
@@ -165,6 +177,7 @@ public class SaveCommentDialogFragment extends DialogFragment
             {
                 typeInputLayout.setVisibility(View.GONE);
                 typeEdittext.setText("");
+                KeyboardUtils.hideSoftInput(getActivity());
             }
         });
         return dialog;

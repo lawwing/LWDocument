@@ -11,7 +11,7 @@ import com.lawwing.lwdocument.base.BaseActivity;
 import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.event.ColorAddEvent;
 import com.lawwing.lwdocument.event.ColorListEvent;
-import com.lawwing.lwdocument.event.CommentTypeClickEvent;
+import com.lawwing.lwdocument.event.SaveCommentClickEvent;
 import com.lawwing.lwdocument.event.SaveCommentEvent;
 import com.lawwing.lwdocument.fragment.PickerColorDialogFragment;
 import com.lawwing.lwdocument.fragment.SaveCommentDialogFragment;
@@ -350,38 +350,38 @@ public class CommentOfficeActivity extends BaseActivity
         return bitmap;
     }
     
-    /**
-     * 点击完成的操作
-     */
-    private void showMyDialog()
-    {
-        long typeId = 0;
-        saveComment(typeId);
-        
-        // new AlertDialog.Builder(this).setTitle("菜单")
-        // .setItems(new String[] { "保存到本地相册" },
-        // new DialogInterface.OnClickListener()
-        // {
-        // @Override
-        // public void onClick(DialogInterface dialog,
-        // int which)
-        // {
-        // switch (which)
-        // {
-        // case 0:
-        //
-        // break;
-        // }
-        // }
-        // })
-        // .show();
-    }
+    // /**
+    // * 点击完成的操作
+    // */
+    // private void showMyDialog()
+    // {
+    // long typeId = 0;
+    // saveComment(typeId);
+    //
+    // // new AlertDialog.Builder(this).setTitle("菜单")
+    // // .setItems(new String[] { "保存到本地相册" },
+    // // new DialogInterface.OnClickListener()
+    // // {
+    // // @Override
+    // // public void onClick(DialogInterface dialog,
+    // // int which)
+    // // {
+    // // switch (which)
+    // // {
+    // // case 0:
+    // //
+    // // break;
+    // // }
+    // // }
+    // // })
+    // // .show();
+    // }
     
-    private void saveComment(long typeId)
+    private void saveComment(long typeId, String name)
     {
         // 保存到本地相册
         bitmap = getBitmapFromView(pv);
-        path = saveImageFile();
+        path = saveImageFile(name);
         // 保存
         if (!TextUtils.isEmpty(path))
         {
@@ -418,18 +418,18 @@ public class CommentOfficeActivity extends BaseActivity
      *
      * @return
      */
-    private String saveImageFile()
+    private String saveImageFile(String name)
     {
         if (null != bitmap)
         {
-            long time = TimeUtils.getCurTimeMills();
+            // long time = TimeUtils.getCurTimeMills();
             if (ImageUtils.save(bitmap,
-                    FileManager.getPhotoFolder().getPath() + "/" + time
+                    FileManager.getPhotoFolder().getPath() + "/" + name
                             + ".jpg",
                     Bitmap.CompressFormat.JPEG))
             {
                 // showShortToast("保存图片成功");
-                return FileManager.getPhotoFolder().getPath() + "/" + time
+                return FileManager.getPhotoFolder().getPath() + "/" + name
                         + ".jpg";
             }
             else
@@ -826,21 +826,34 @@ public class CommentOfficeActivity extends BaseActivity
             }
         }
     }
+    //
+    // @Subscribe
+    // public void onEventMainThread(CommentTypeClickEvent event)
+    // {
+    // if (event != null)
+    // {
+    // if (!TextUtils.isEmpty(event.getType()))
+    // {
+    // switch (event.getType())
+    // {
+    // case "select":
+    // saveComment(event.getModel().getId());
+    // break;
+    // }
+    // }
+    // }
+    // }
     
+    /**
+     * 这里是返回标题和类型，进行存储
+     */
     @Subscribe
-    public void onEventMainThread(CommentTypeClickEvent event)
+    public void onEventMainThread(SaveCommentClickEvent event)
     {
         if (event != null)
         {
-            if (!TextUtils.isEmpty(event.getType()))
-            {
-                switch (event.getType())
-                {
-                    case "select":
-                        saveComment(event.getModel().getId());
-                        break;
-                }
-            }
+            saveComment(event.getSelectBean().getId(), event.getName());
+            
         }
     }
 }
