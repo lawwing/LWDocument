@@ -21,9 +21,11 @@
                 android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
             <RelativeLayout
+                android:id="@+id/wheelLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#55000000"
+                android:clickable="true"
                 android:visibility="gone">
 
                 <!--属性解释:
@@ -36,16 +38,55 @@
                 <com.itheima.wheelpicker.WheelPicker
                     android:id="@+id/wheelPicker"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="180dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/white"
                     app:wheel_atmospheric="true"
                     app:wheel_curved="true"
                     app:wheel_cyclic="false"
                     app:wheel_item_text_color="#cccccc"
-                    app:wheel_item_text_size="16sp"
+                    app:wheel_item_text_size="20sp"
                     app:wheel_selected_item_position="1"
                     app:wheel_selected_item_text_color="#333333" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_above="@id/wheelPicker"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:id="@+id/cancleType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="取消"
+                        android:textColor="@color/gray"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/enterType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="确定"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/gray" />
+                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>

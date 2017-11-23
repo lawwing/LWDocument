@@ -35,7 +35,7 @@
             android:layout_height="48dp"
             android:background="@null"
             android:gravity="center_vertical"
-            android:hint="请输入批阅的名字"
+            android:hint="请输入批阅的名字（不超20个字）"
             android:maxLength="20"
             android:maxLines="1"
             android:paddingLeft="12dp"
@@ -61,11 +61,11 @@
 
             <ImageView
                 android:id="@+id/addTypeBtn"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/add_color" />
+                android:src="@mipmap/black_add_btn" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -76,20 +76,20 @@
 
             <ImageView
                 android:id="@+id/addTypeContentBtn"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
-                android:src="@mipmap/send_btn_normal" />
+                android:src="@mipmap/black_check" />
 
             <ImageView
                 android:id="@+id/addTypeCancleBtn"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/addTypeContentBtn"
-                android:src="@mipmap/icn_close" />
+                android:src="@mipmap/red_close" />
 
             <EditText
                 android:id="@+id/typeEdittext"

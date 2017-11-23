@@ -1,6 +1,9 @@
 package com.lawwing.lwdocument;
 
+import static com.lawwing.lwdocument.base.StaticDatas.CLOSEWHEEL;
 import static com.lawwing.lwdocument.base.StaticDatas.DATE_COMMENT;
+import static com.lawwing.lwdocument.base.StaticDatas.OPENWHEEL;
+import static com.lawwing.lwdocument.base.StaticDatas.TYPE_COMMENT;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,8 +14,10 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.base.StaticDatas;
+import com.lawwing.lwdocument.event.ChangeTitleContent;
 import com.lawwing.lwdocument.event.DateClickEvent;
 import com.lawwing.lwdocument.event.MonthChangeEvent;
+import com.lawwing.lwdocument.event.OpenWheelEvent;
 import com.lawwing.lwdocument.fragment.AboutUsFragment;
 import com.lawwing.lwdocument.fragment.ContentFragment;
 import com.lawwing.lwdocument.fragment.DateCommentFragment;
@@ -124,7 +129,7 @@ public class NewAppMainActivity extends AppCompatActivity implements
         SlideMenuItem menuItem0 = new SlideMenuItem(DATE_COMMENT,
                 R.mipmap.icn_date_comment);
         list.add(menuItem0);
-        SlideMenuItem menuItem = new SlideMenuItem(StaticDatas.TYPE_COMMENT,
+        SlideMenuItem menuItem = new SlideMenuItem(TYPE_COMMENT,
                 R.mipmap.icn_type_comment);
         list.add(menuItem);
         SlideMenuItem menuItem2 = new SlideMenuItem(StaticDatas.FILE_LIST,
@@ -150,6 +155,17 @@ public class NewAppMainActivity extends AppCompatActivity implements
                         new SimpleDateFormat("yyyy年MM月", Locale.getDefault())));
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (nowItemName.equals(TYPE_COMMENT))
+                {
+                    LWDApp.getEventBus().post(new OpenWheelEvent(OPENWHEEL));
+                }
+            }
+        });
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
@@ -185,6 +201,7 @@ public class NewAppMainActivity extends AppCompatActivity implements
             @Override
             public void onDrawerOpened(View drawerView)
             {
+                LWDApp.getEventBus().post(new OpenWheelEvent(CLOSEWHEEL));
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -238,7 +255,7 @@ public class NewAppMainActivity extends AppCompatActivity implements
             toolbar.setTitle("关于我们");
             contentFragment = AboutUsFragment.newInstance();
         }
-        else if (name.equals(StaticDatas.TYPE_COMMENT))
+        else if (name.equals(TYPE_COMMENT))
         {
             toolbar.setTitle("批阅分类-全部");
             contentFragment = TypeCommentFragment.newInstance();
@@ -399,5 +416,14 @@ public class NewAppMainActivity extends AppCompatActivity implements
         
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         
+    }
+    
+    @Subscribe
+    public void changeTitleContent(ChangeTitleContent event)
+    {
+        if (event != null)
+        {
+            toolbar.setTitle(event.getTitle());
+        }
     }
 }

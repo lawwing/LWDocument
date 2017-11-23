@@ -1,18 +1,26 @@
 package com.lawwing.lwdocument.fragment;
 
+import static com.lawwing.lwdocument.base.StaticDatas.CLOSEWHEEL;
+import static com.lawwing.lwdocument.base.StaticDatas.OPENWHEEL;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import com.itheima.wheelpicker.WheelPicker;
 import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.adapter.DateCommentAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
+import com.lawwing.lwdocument.event.ChangeTitleContent;
+import com.lawwing.lwdocument.event.OpenWheelEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDbDao;
 import com.lawwing.lwdocument.model.CommentInfoModel;
+import com.lawwing.lwdocument.model.CommentTypeInfoModel;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -20,9 +28,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
 
@@ -40,7 +51,13 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
     
     private RecyclerView recyclerView;
     
-    private List<String> datas;
+    private RelativeLayout wheelLayout;
+    
+    private TextView cancleType;
+    
+    private TextView enterType;
+    
+    private List<CommentTypeInfoModel> datas;
     
     private CommentTypeInfoDbDao mCommentTypeInfoDbDao;
     
@@ -49,6 +66,10 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
     private DateCommentAdapter adapter;
     
     private ArrayList<CommentInfoModel> listDatas;
+    
+    private int wheelPoi = 0;
+    
+    private int selectPoi = 0;
     
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
@@ -75,14 +96,43 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
         
         wheelPicker = (WheelPicker) rootView.findViewById(R.id.wheelPicker);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        wheelLayout = (RelativeLayout) rootView.findViewById(R.id.wheelLayout);
+        cancleType = (TextView) rootView.findViewById(R.id.cancleType);
+        enterType = (TextView) rootView.findViewById(R.id.enterType);
         mCommentTypeInfoDbDao = LWDApp.get()
                 .getDaoSession()
                 .getCommentTypeInfoDbDao();
         mCommentInfoDbDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
+        
+        listDatas = new ArrayList<>();
         initWheelPicker();
         initCommentListData();
         initRecyclerView();
+        LWDApp.getEventBus().register(this);
         return rootView;
+    }
+    
+    @Override
+    public void onDestroy()
+    {
+        LWDApp.getEventBus().unregister(this);
+        super.onDestroy();
+    }
+    
+    @Subscribe
+    public void openWheel(OpenWheelEvent event)
+    {
+        if (event != null)
+        {
+            if (OPENWHEEL.equals(event.getType()))
+            {
+                wheelLayout.setVisibility(View.VISIBLE);
+            }
+            else if (CLOSEWHEEL.equals(event.getType()))
+            {
+                wheelLayout.setVisibility(View.GONE);
+            }
+        }
     }
     
     private void initWheelPicker()
@@ -90,6 +140,83 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
         initDbDatas();
         wheelPicker.setData(datas);
         wheelPicker.setSelectedItemPosition(0);
+        wheelPicker.setOnItemSelectedListener(
+                new WheelPicker.OnItemSelectedListener()
+                {
+                    @Override
+                    public void onItemSelected(WheelPicker wheelPicker,
+                            Object o, int i)
+                    {
+                        wheelPoi = i;
+                    }
+                });
+        cancleType.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                wheelLayout.setVisibility(View.GONE);
+            }
+        });
+        enterType.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                selectPoi = wheelPoi;
+                if (selectPoi == 0)
+                {
+                    // 加载全部
+                    initCommentListData();
+                    adapter.notifyDataSetChanged();
+                    LWDApp.getEventBus()
+                            .post(new ChangeTitleContent("批阅分类-全部"));
+                }
+                else
+                {
+                    CommentTypeInfoModel model = datas.get(selectPoi);
+                    getDataByTypeId(model.getId());
+                    adapter.notifyDataSetChanged();
+                    LWDApp.getEventBus().post(new ChangeTitleContent(
+                            "批阅分类-" + model.getTypeName()));
+                }
+                wheelLayout.setVisibility(View.GONE);
+                recyclerView.scrollToPosition(0);
+            }
+        });
+        wheelLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                wheelLayout.setVisibility(View.GONE);
+            }
+        });
+    }
+    
+    private void getDataByTypeId(long typeId)
+    {
+        listDatas.clear();
+        List<CommentTypeInfoDb> dbs = mCommentTypeInfoDbDao.queryBuilder()
+                .where(CommentTypeInfoDbDao.Properties.Id.eq(typeId))
+                .list();
+        for (CommentTypeInfoDb db : dbs)
+        {
+            List<CommentInfoDb> commentInfoDbs = db.getCommentInfoDbs();
+            
+            for (CommentInfoDb commentInfoDb : commentInfoDbs)
+            {
+                CommentInfoModel model = new CommentInfoModel();
+                model.setDocname(commentInfoDb.getDocname());
+                model.setDocpath(commentInfoDb.getDocpath());
+                model.setId(commentInfoDb.getId());
+                model.setName(commentInfoDb.getName());
+                model.setPath(commentInfoDb.getPath());
+                model.setTime(commentInfoDb.getTime());
+                model.setTypeId(commentInfoDb.getTypeId());
+                listDatas.add(model);
+            }
+        }
     }
     
     private void initRecyclerView()
@@ -104,7 +231,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
     
     private void initCommentListData()
     {
-        listDatas = new ArrayList<>();
+        listDatas.clear();
         List<CommentInfoDb> dbs = mCommentInfoDbDao.queryBuilder()
                 .orderDesc(CommentInfoDbDao.Properties.Time)
                 .list();
@@ -126,11 +253,22 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
     private void initDbDatas()
     {
         datas = new ArrayList<>();
-        datas.add("全部");
+        CommentTypeInfoModel allmodel = new CommentTypeInfoModel();
+        allmodel.setCreateTime(0);
+        allmodel.setEdit(false);
+        allmodel.setTypeName("全部");
+        allmodel.setId((long) -1);
+        datas.add(allmodel);
+        // datas.add("全部");
         List<CommentTypeInfoDb> dbs = mCommentTypeInfoDbDao.loadAll();
         for (CommentTypeInfoDb db : dbs)
         {
-            datas.add(db.getTypeName());
+            CommentTypeInfoModel model = new CommentTypeInfoModel();
+            model.setCreateTime(db.getCreateTime());
+            model.setEdit(db.getIsEdit());
+            model.setTypeName(db.getTypeName());
+            model.setId(db.getId());
+            datas.add(model);
         }
     }
     

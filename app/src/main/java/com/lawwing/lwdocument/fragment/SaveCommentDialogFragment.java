@@ -143,7 +143,16 @@ public class SaveCommentDialogFragment extends DialogFragment
             @Override
             public void onClick(View v)
             {
-                typeInputLayout.setVisibility(View.VISIBLE);
+                if (datas.size() < 10)
+                {
+                    typeInputLayout.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(),
+                            "您最多能添加十个分类，如需要管理分类，回到首页进入相关管理页面",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
         addTypeContentBtn.setOnClickListener(new View.OnClickListener()
@@ -158,7 +167,7 @@ public class SaveCommentDialogFragment extends DialogFragment
                     initData();
                     typeInputLayout.setVisibility(View.GONE);
                     typeEdittext.setText("");
-                    KeyboardUtils.hideSoftInput(getActivity());
+                    KeyboardUtils.hideSoftInput(getActivity(), typeEdittext);
                     initTypeRecycler();
                     adapter.setSelected(datas.size() - 1,
                             datas.get(datas.size() - 1));
@@ -178,7 +187,7 @@ public class SaveCommentDialogFragment extends DialogFragment
             {
                 typeInputLayout.setVisibility(View.GONE);
                 typeEdittext.setText("");
-                KeyboardUtils.hideSoftInput(getActivity());
+                KeyboardUtils.hideSoftInput(getActivity(), typeEdittext);
             }
         });
         return dialog;

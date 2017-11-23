@@ -54,4 +54,10 @@ public class CommentTypeInfoModel
     {
         isEdit = edit;
     }
+    
+    @Override
+    public String toString()
+    {
+        return typeName;
+    }
 }

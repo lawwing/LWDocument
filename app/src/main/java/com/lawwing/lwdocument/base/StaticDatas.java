@@ -31,4 +31,8 @@ public class StaticDatas
     public static final String ABOUT_US = "about_us";
     
     public static final String SETTING = "setting";
+    
+    public static final String OPENWHEEL = "openwheel";
+    
+    public static final String CLOSEWHEEL = "closewheel";
 }
