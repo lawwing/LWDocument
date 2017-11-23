@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -50,7 +51,7 @@
             android:paddingRight="12dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
@@ -66,8 +67,54 @@
                 android:layout_centerVertical="true"
                 android:src="@mipmap/add_color" />
         </RelativeLayout>
-        <!--分类列表-->
 
+        <RelativeLayout
+            android:id="@+id/typeInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/addTypeContentBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:src="@mipmap/send_btn_normal" />
+
+            <ImageView
+                android:id="@+id/addTypeCancleBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/addTypeContentBtn"
+                android:src="@mipmap/icn_close" />
+
+            <EditText
+                android:id="@+id/typeEdittext"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/addTypeCancleBtn"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="类型名（不超10个字）"
+                android:maxLength="10"
+                android:maxLines="1"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+        </RelativeLayout>
+        <!--分类列表-->
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:id="@+id/tagFlowlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:max_select="1"></com.zhy.view.flowlayout.TagFlowLayout>
 
     </LinearLayout>
     <!--确定按钮-->

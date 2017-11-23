@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lableText"
+    android:layout_width="wrap_content"
+    android:layout_height="70px"
+    android:layout_marginBottom="20px"
+    android:layout_marginRight="30px"
+    android:background="@drawable/lable_bg_selector"
+    android:gravity="center"
+    android:paddingLeft="44px"
+    android:paddingRight="44px"
+    android:textColor="@drawable/lable_text_selector"
+    android:textSize="14sp" />

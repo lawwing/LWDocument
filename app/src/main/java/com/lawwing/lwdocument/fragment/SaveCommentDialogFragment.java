@@ -1,10 +1,22 @@
 package com.lawwing.lwdocument.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
+import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
+import com.lawwing.lwdocument.gen.CommentTypeInfoDbDao;
+import com.lawwing.lwdocument.model.CommentTypeInfoModel;
+import com.lawwing.lwdocument.utils.TimeUtils;
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +26,9 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,11 +45,34 @@ public class SaveCommentDialogFragment extends DialogFragment
     @BindView(R.id.nameEdittext)
     EditText nameEdittext;
     
+    @BindView(R.id.typeEdittext)
+    EditText typeEdittext;
+    
     @BindView(R.id.addTypeBtn)
     ImageView addTypeBtn;
     
     @BindView(R.id.saveBtn)
     TextView saveBtn;
+    
+    @BindView(R.id.tagFlowlayout)
+    TagFlowLayout tagFlowlayout;
+    
+    @BindView(R.id.typeInputLayout)
+    RelativeLayout typeInputLayout;
+    
+    @BindView(R.id.addTypeCancleBtn)
+    ImageView addTypeCancleBtn;
+    
+    @BindView(R.id.addTypeContentBtn)
+    ImageView addTypeContentBtn;
+    
+    private CommentTypeInfoDbDao mCommentTypeInfoDbDao;
+    
+    private ArrayList<CommentTypeInfoModel> datas;
+    
+    private TagAdapter<CommentTypeInfoModel> adapter;
+    
+    private CommentTypeInfoModel selectBean;
     
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
@@ -55,7 +92,12 @@ public class SaveCommentDialogFragment extends DialogFragment
         window.setAttributes(lp);
         window.setBackgroundDrawableResource(R.drawable.bg_menu_more_list);
         ButterKnife.bind(this, dialog); // Dialog即View
+        mCommentTypeInfoDbDao = LWDApp.get()
+                .getDaoSession()
+                .getCommentTypeInfoDbDao();
         
+        initData();
+        initTypeRecycler();
         contentLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -70,7 +112,18 @@ public class SaveCommentDialogFragment extends DialogFragment
             @Override
             public void onClick(View v)
             {
-                
+                if (selectBean != null)
+                {
+                    Toast.makeText(getActivity(),
+                            selectBean.getTypeName() + " -- "
+                                    + selectBean.getId(),
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "请先选择类型", Toast.LENGTH_SHORT)
+                            .show();
+                }
             }
         });
         addTypeBtn.setOnClickListener(new View.OnClickListener()
@@ -78,10 +131,113 @@ public class SaveCommentDialogFragment extends DialogFragment
             @Override
             public void onClick(View v)
             {
-                
+                typeInputLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        addTypeContentBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (!TextUtils.isEmpty(typeEdittext.getText().toString()))
+                {
+                    insertCommentType(typeEdittext.getText().toString());
+                    // 刷新列表
+                    initData();
+                    typeInputLayout.setVisibility(View.GONE);
+                    typeEdittext.setText("");
+                    initTypeRecycler();
+                    adapter.setSelected(datas.size() - 1,
+                            datas.get(datas.size() - 1));
+                    adapter.notifyDataChanged();
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "请输入类型名称", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        });
+        addTypeCancleBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                typeInputLayout.setVisibility(View.GONE);
+                typeEdittext.setText("");
             }
         });
         return dialog;
+    }
+    
+    private void insertCommentType(String name)
+    {
+        CommentTypeInfoDb commentTypeDb = new CommentTypeInfoDb();
+        commentTypeDb.setCreateTime(TimeUtils.getCurTimeMills());
+        commentTypeDb.setTypeName(name);
+        commentTypeDb.setIsEdit(true);
+        mCommentTypeInfoDbDao.insertOrReplace(commentTypeDb);
+    }
+    
+    private void initTypeRecycler()
+    {
+        adapter = new TagAdapter<CommentTypeInfoModel>(datas)
+        {
+            @Override
+            public View getView(FlowLayout parent, int position,
+                    CommentTypeInfoModel commentTypeInfoModel)
+            {
+                TextView textView = (TextView) LayoutInflater
+                        .from(getActivity())
+                        .inflate(R.layout.lable_item, tagFlowlayout, false);
+                textView.setText(commentTypeInfoModel.getTypeName());
+                return textView;
+            }
+            
+        };
+        tagFlowlayout.setAdapter(adapter);
+        tagFlowlayout
+                .setOnTagClickListener(new TagFlowLayout.OnTagClickListener()
+                {
+                    @Override
+                    public boolean onTagClick(View view, int position,
+                            FlowLayout parent)
+                    {
+                        if (selectBean == null)
+                        {
+                            selectBean = datas.get(position);
+                        }
+                        else
+                        {
+                            if (selectBean.getId() == datas.get(position)
+                                    .getId())
+                            {
+                                selectBean = null;
+                            }
+                            else
+                            {
+                                selectBean = datas.get(position);
+                            }
+                        }
+                        return true;
+                    }
+                });
+    }
+    
+    private void initData()
+    {
+        datas = new ArrayList<>();
+        List<CommentTypeInfoDb> dbs = mCommentTypeInfoDbDao.loadAll();
+        
+        for (CommentTypeInfoDb temp : dbs)
+        {
+            CommentTypeInfoModel model = new CommentTypeInfoModel();
+            model.setId(temp.getId());
+            model.setCreateTime(temp.getCreateTime());
+            model.setEdit(temp.getIsEdit());
+            model.setTypeName(temp.getTypeName());
+            datas.add(model);
+        }
     }
     
     @Override
