@@ -3,6 +3,7 @@ package com.lawwing.lwdocument;
 import static com.lawwing.lwdocument.base.StaticDatas.CLOSEWHEEL;
 import static com.lawwing.lwdocument.base.StaticDatas.DATE_COMMENT;
 import static com.lawwing.lwdocument.base.StaticDatas.OPENWHEEL;
+import static com.lawwing.lwdocument.base.StaticDatas.SETTING;
 import static com.lawwing.lwdocument.base.StaticDatas.TYPE_COMMENT;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +24,7 @@ import com.lawwing.lwdocument.fragment.ContentFragment;
 import com.lawwing.lwdocument.fragment.DateCommentFragment;
 import com.lawwing.lwdocument.fragment.SelectFileFragment;
 import com.lawwing.lwdocument.fragment.TypeCommentFragment;
+import com.lawwing.lwdocument.fragment.TypeManagerFragment;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.Manifest;
@@ -135,12 +137,12 @@ public class NewAppMainActivity extends AppCompatActivity implements
         SlideMenuItem menuItem2 = new SlideMenuItem(StaticDatas.FILE_LIST,
                 R.mipmap.icn_file_list);
         list.add(menuItem2);
-        SlideMenuItem menuItem3 = new SlideMenuItem(StaticDatas.ABOUT_US,
-                R.mipmap.icn_about_us);
-        list.add(menuItem3);
         SlideMenuItem menuItem4 = new SlideMenuItem(StaticDatas.SETTING,
                 R.mipmap.icn_setting);
         list.add(menuItem4);
+        SlideMenuItem menuItem3 = new SlideMenuItem(StaticDatas.ABOUT_US,
+                R.mipmap.icn_about_us);
+        list.add(menuItem3);
         
     }
     
@@ -259,6 +261,11 @@ public class NewAppMainActivity extends AppCompatActivity implements
         {
             toolbar.setTitle("批阅分类-全部");
             contentFragment = TypeCommentFragment.newInstance();
+        }
+        else if (name.equals(SETTING))
+        {
+            toolbar.setTitle("分类管理");
+            contentFragment = TypeManagerFragment.newInstance();
         }
         else
         {
