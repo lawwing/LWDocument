@@ -28,8 +28,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Created by lawwing on 2017/11/22.
  */
 
-public class SelectFileFragment extends BaseFragment
-        implements ScreenShotable, EasyPermissions.PermissionCallbacks
+public class SelectFileFragment extends BaseFragment implements ScreenShotable
 {
     private View containerView;
     
@@ -71,20 +70,9 @@ public class SelectFileFragment extends BaseFragment
                 false);
         mTablayout = (TabLayout) rootView.findViewById(R.id.tablayout);
         mViewpager = (ViewPager) rootView.findViewById(R.id.viewpager);
-        String[] perms = new String[] {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE };
-        if (!EasyPermissions.hasPermissions(getActivity(), perms))
-        {
-            EasyPermissions.requestPermissions(getActivity(),
-                    "需要访问手机存储权限！",
-                    10086,
-                    perms);
-        }
-        else
-        {
-            setViewPager(0);
-        }
+        
+        setViewPager(0);
+        
         return rootView;
     }
     
@@ -117,13 +105,11 @@ public class SelectFileFragment extends BaseFragment
     @Override
     public void loadData()
     {
-        setViewPager(0);
     }
     
     @Override
     public void loadSubData()
     {
-        setViewPager(0);
     }
     
     private void setViewPager(int i)
@@ -189,45 +175,6 @@ public class SelectFileFragment extends BaseFragment
         ImageView img_title = (ImageView) view.findViewById(R.id.tab_img);
         img_title.setImageResource(tabIcons[position]);
         return view;
-    }
-    
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms)
-    {
-        // 成功
-        if (requestCode == 10086)
-        {
-            if (perms.size() == 2)
-            {
-                setViewPager(0);
-            }
-        }
-    }
-    
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms)
-    {
-        
-        // 失败
-        if (requestCode == 10086)
-        {
-            showShortToast("请务必打开全部权限才能扫描文档");
-        }
-    }
-    
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-            String[] permissions, int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode,
-                permissions,
-                grantResults);
-        
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode,
-                permissions,
-                grantResults,
-                this);
     }
     
 }

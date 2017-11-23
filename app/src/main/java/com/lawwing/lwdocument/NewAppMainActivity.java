@@ -19,6 +19,7 @@ import com.lawwing.lwdocument.fragment.DateCommentFragment;
 import com.lawwing.lwdocument.fragment.SelectFileFragment;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
+import android.Manifest;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -40,9 +41,10 @@ import cn.lawwing.homeslidemenu.model.SlideMenuItem;
 import cn.lawwing.homeslidemenu.util.ViewAnimator;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class NewAppMainActivity extends AppCompatActivity
-        implements ViewAnimator.ViewAnimatorListener
+public class NewAppMainActivity extends AppCompatActivity implements
+        ViewAnimator.ViewAnimatorListener, EasyPermissions.PermissionCallbacks
 {
     private DrawerLayout drawerLayout;
     
@@ -83,9 +85,28 @@ public class NewAppMainActivity extends AppCompatActivity
         
         setActionBar();
         createMenuList();
+        
         viewAnimator = new ViewAnimator<>(this, list, dateCommentFragment,
                 drawerLayout, this);
         LWDApp.getEventBus().register(this);
+        
+        String[] perms = new String[] {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        if (!EasyPermissions.hasPermissions(this, perms))
+        {
+            EasyPermissions
+                    .requestPermissions(this, "需要访问手机存储权限！", 10086, perms);
+        }
+        else
+        {
+            initView();
+        }
+    }
+    
+    private void initView()
+    {
+        
     }
     
     @Override
@@ -324,5 +345,51 @@ public class NewAppMainActivity extends AppCompatActivity
         }
         
         return super.onKeyUp(keyCode, event);
+    }
+    
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms)
+    {
+        // 成功
+        if (requestCode == 10086)
+        {
+            if (perms.size() == 2)
+            {
+                initView();
+            }
+        }
+    }
+    
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms)
+    {
+        
+        // 失败
+        if (requestCode == 10086)
+        {
+            showShortToast("请务必打开全部权限才能扫描文档");
+        }
+    }
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+            String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
+        
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults,
+                this);
+    }
+    
+    protected void showShortToast(String message)
+    {
+        
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        
     }
 }
