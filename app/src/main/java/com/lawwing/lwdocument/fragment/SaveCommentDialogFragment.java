@@ -114,6 +114,7 @@ public class SaveCommentDialogFragment extends DialogFragment
             @Override
             public void onClick(View v)
             {
+                KeyboardUtils.hideSoftInput(getActivity(), nameEdittext);
                 if (!TextUtils.isEmpty(nameEdittext.getText().toString()))
                 {
                     if (selectBean != null)

@@ -25,6 +25,7 @@ import com.lawwing.lwdocument.model.SaveDateModel;
 import com.lawwing.lwdocument.utils.DbUtils;
 import com.lawwing.lwdocument.utils.FileManager;
 import com.lawwing.lwdocument.utils.ImageUtils;
+import com.lawwing.lwdocument.utils.KeyboardUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
 import com.lawwing.lwdocument.widget.PaintView;
 
@@ -398,7 +399,7 @@ public class CommentOfficeActivity extends BaseActivity
             model.setPath(path);
             model.setDocname(docname);
             model.setDocpath(docpath);
-            model.setTime(file.lastModified() - 150 * 60 * 60 * 1000);
+            model.setTime(file.lastModified());
             model.setTypeId(typeId);
             model.setDateId(id);
             mCommentInfoDao.insertOrReplace(model);
@@ -852,6 +853,8 @@ public class CommentOfficeActivity extends BaseActivity
     {
         if (event != null)
         {
+            KeyboardUtils.hideSoftInput(this);
+            
             saveComment(event.getSelectBean().getId(), event.getName());
             
         }

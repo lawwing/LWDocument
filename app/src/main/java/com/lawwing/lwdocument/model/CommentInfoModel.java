@@ -20,6 +20,18 @@ public class CommentInfoModel extends HomeBaseModel
     
     private long typeId;
     
+    private long dateId;
+    
+    public long getDateId()
+    {
+        return dateId;
+    }
+    
+    public void setDateId(long dateId)
+    {
+        this.dateId = dateId;
+    }
+    
     public String getName()
     {
         return name;
