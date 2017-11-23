@@ -68,6 +68,8 @@ public class NewAppMainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_app_main);
         dateCommentFragment = DateCommentFragment.newInstance();
+        // 修复BUG
+        contentFragment = dateCommentFragment;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, dateCommentFragment)
                 .commit();

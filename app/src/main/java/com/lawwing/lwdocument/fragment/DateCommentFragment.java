@@ -228,7 +228,8 @@ public class DateCommentFragment extends BaseFragment
     {
         dateText.setText(year + "年" + (month + 1) + "月" + day + "日");
         initDateList(year, month + 1, day);
-        
+        mcvCalendar.getCurrentMonthView().setSelectYearMonth(year, month, day);
+        wcvCalendar.getCurrentWeekView().setSelectYearMonth(year, month, day);
         LWDApp.getEventBus().post(new DateClickEvent(year, month + 1, day));
     }
     

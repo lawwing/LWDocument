@@ -14,6 +14,7 @@ import com.lawwing.lwdocument.event.ColorListEvent;
 import com.lawwing.lwdocument.event.CommentTypeClickEvent;
 import com.lawwing.lwdocument.event.SaveCommentEvent;
 import com.lawwing.lwdocument.fragment.PickerColorDialogFragment;
+import com.lawwing.lwdocument.fragment.SaveCommentDialogFragment;
 import com.lawwing.lwdocument.gen.ColorInfoDb;
 import com.lawwing.lwdocument.gen.ColorInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
@@ -268,8 +269,9 @@ public class CommentOfficeActivity extends BaseActivity
                 break;
             case R.id.complete:
                 // 完成的点击事件
-                startActivity(CommentTypeListActivity
-                        .newInstance(CommentOfficeActivity.this, "select"));
+                // startActivity(CommentTypeListActivity
+                // .newInstance(CommentOfficeActivity.this, "select"));
+                showSaveDialog();
                 // showMyDialog();
                 break;
             case R.id.iv_redo:
@@ -295,6 +297,12 @@ public class CommentOfficeActivity extends BaseActivity
                 }
                 break;
         }
+    }
+    
+    private void showSaveDialog()
+    {
+        SaveCommentDialogFragment saveCommentDialogFragment = new SaveCommentDialogFragment();
+        saveCommentDialogFragment.show(getFragmentManager(), "保存批阅");
     }
     
     /**
