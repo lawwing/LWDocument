@@ -119,9 +119,11 @@ public class SaveCommentDialogFragment extends DialogFragment
                 {
                     if (selectBean != null)
                     {
+                        
                         LWDApp.getEventBus().post(new SaveCommentClickEvent(
                                 selectBean,
                                 nameEdittext.getText().toString().trim()));
+                        
                     }
                     else
                     {
@@ -140,6 +142,7 @@ public class SaveCommentDialogFragment extends DialogFragment
         });
         addTypeBtn.setOnClickListener(new View.OnClickListener()
         {
+            
             @Override
             public void onClick(View v)
             {
@@ -149,9 +152,11 @@ public class SaveCommentDialogFragment extends DialogFragment
                 }
                 else
                 {
+                    
                     Toast.makeText(getActivity(),
                             "您最多能添加十个分类，如需要管理分类，回到首页进入相关管理页面",
                             Toast.LENGTH_SHORT).show();
+                    
                 }
             }
         });
@@ -162,16 +167,30 @@ public class SaveCommentDialogFragment extends DialogFragment
             {
                 if (!TextUtils.isEmpty(typeEdittext.getText().toString()))
                 {
-                    insertCommentType(typeEdittext.getText().toString());
-                    // 刷新列表
-                    initData();
-                    typeInputLayout.setVisibility(View.GONE);
-                    typeEdittext.setText("");
-                    KeyboardUtils.hideSoftInput(getActivity(), typeEdittext);
-                    initTypeRecycler();
-                    adapter.setSelected(datas.size() - 1,
-                            datas.get(datas.size() - 1));
-                    adapter.notifyDataChanged();
+                    long count = mCommentTypeInfoDbDao.queryBuilder()
+                            .where(CommentTypeInfoDbDao.Properties.TypeName.eq(
+                                    typeEdittext.getText().toString().trim()))
+                            .count();
+                    if (count != 0)
+                    {
+                        Toast.makeText(getActivity(),
+                                "类型名不能与已有的重复",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        insertCommentType(typeEdittext.getText().toString());
+                        // 刷新列表
+                        initData();
+                        typeInputLayout.setVisibility(View.GONE);
+                        typeEdittext.setText("");
+                        KeyboardUtils.hideSoftInput(getActivity(),
+                                typeEdittext);
+                        initTypeRecycler();
+                        adapter.setSelected(datas.size() - 1,
+                                datas.get(datas.size() - 1));
+                        adapter.notifyDataChanged();
+                    }
                 }
                 else
                 {
