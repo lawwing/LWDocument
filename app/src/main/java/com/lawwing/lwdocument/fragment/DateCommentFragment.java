@@ -22,6 +22,7 @@ import com.lawwing.lwdocument.gen.SaveDateDb;
 import com.lawwing.lwdocument.gen.SaveDateDbDao;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.model.SaveDateModel;
+import com.lawwing.lwdocument.utils.SortUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.graphics.Bitmap;
@@ -135,7 +136,11 @@ public class DateCommentFragment extends BaseFragment
                 .list();
         for (SaveDateDb temp : saveDbs)
         {
-            dates.add(temp.getDay());
+            if (temp.getCommentInfoDbs() != null
+                    && temp.getCommentInfoDbs().size() != 0)
+            {
+                dates.add(temp.getDay());
+            }
         }
         mcvCalendar.getCurrentMonthView().addTaskHints(dates);
         wcvCalendar.getCurrentWeekView().addTaskHints(dates);
@@ -258,6 +263,8 @@ public class DateCommentFragment extends BaseFragment
                 datas.add(model);
             }
         }
+        
+        SortUtils.sortData(datas);
         if (datas.size() > 0)
         {
             rlNoTask.setVisibility(View.GONE);

@@ -1,5 +1,6 @@
 package com.lawwing.lwdocument.utils;
 
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,21 +12,19 @@ import com.lawwing.lwdocument.model.SaveDateModel;
  * Created by lawwing on 2017/11/8.
  */
 
-public class TimeUtils
-{
+public class TimeUtils {
     public static final SimpleDateFormat DEFAULT_SDF = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-    
+
     /**
      * 获取当前时间
      *
      * @return 毫秒时间戳
      */
-    public static long getCurTimeMills()
-    {
+    public static long getCurTimeMills() {
         return System.currentTimeMillis();
     }
-    
+
     /**
      * 将时间戳转为时间字符串
      * <p>
@@ -35,11 +34,10 @@ public class TimeUtils
      * @param milliseconds 毫秒时间戳
      * @return 时间字符串
      */
-    public static String milliseconds2String(long milliseconds)
-    {
+    public static String milliseconds2String(long milliseconds) {
         return milliseconds2String(milliseconds, DEFAULT_SDF);
     }
-    
+
     /**
      * 将时间戳转为时间字符串
      * <p>
@@ -47,17 +45,15 @@ public class TimeUtils
      * </p>
      *
      * @param milliseconds 毫秒时间戳
-     * @param format 时间格式
+     * @param format       时间格式
      * @return 时间字符串
      */
     public static String milliseconds2String(long milliseconds,
-            SimpleDateFormat format)
-    {
+                                             SimpleDateFormat format) {
         return format.format(new Date(milliseconds));
     }
-    
-    public static SaveDateModel getCurDateModel()
-    {
+
+    public static SaveDateModel getCurDateModel() {
         SaveDateModel model = new SaveDateModel();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(getCurTimeMills());
@@ -70,5 +66,10 @@ public class TimeUtils
         model.setTimeString("" + (year * 10000 + month * 100 + day));
         model.setId((long) (year * 10000 + month * 100 + day));
         return model;
+    }
+
+    public static Date millsToDate(long time) {
+        Date dateValue = new Date(time);
+        return dateValue;
     }
 }

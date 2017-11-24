@@ -4,6 +4,9 @@ import static com.lawwing.lwdocument.base.StaticDatas.CLOSEWHEEL;
 import static com.lawwing.lwdocument.base.StaticDatas.OPENWHEEL;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -21,6 +24,8 @@ import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDbDao;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.model.CommentTypeInfoModel;
+import com.lawwing.lwdocument.utils.SortUtils;
+import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -28,6 +33,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -217,6 +223,8 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                 listDatas.add(model);
             }
         }
+        SortUtils.sortData(listDatas);
+        
     }
     
     private void initRecyclerView()
