@@ -13,6 +13,7 @@ import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,8 @@ public class DateCommentAdapter extends
     }
     
     @Override
-    public void onBindViewHolder(DateCommentHolder holder, final int position)
+    public void onBindViewHolder(final DateCommentHolder holder,
+            final int position)
     {
         final CommentInfoModel model = datas.get(position);
         if (model != null)
@@ -73,8 +75,12 @@ public class DateCommentAdapter extends
                 @Override
                 public void onClick(View v)
                 {
-                    LWDApp.getEventBus().post(
-                            new CommentListMoreEvent("更多操作", model, position));
+                    int[] location = new int[2];
+                    holder.moreBtn.getLocationOnScreen(location);
+                    int x = location[0];
+                    int y = location[1];
+                    LWDApp.getEventBus().post(new CommentListMoreEvent("更多操作",
+                            model, position, x, y));
                 }
             });
         }
@@ -96,7 +102,7 @@ public class DateCommentAdapter extends
         
         TextView createTime;
         
-        TextView moreBtn;
+        ImageView moreBtn;
         
         TextView typeName;
         
@@ -107,7 +113,7 @@ public class DateCommentAdapter extends
             super(itemView);
             commentImage = (ImageView) itemView.findViewById(R.id.commentImage);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
-            moreBtn = (TextView) itemView.findViewById(R.id.moreBtn);
+            moreBtn = (ImageView) itemView.findViewById(R.id.moreBtn);
             docName = (TextView) itemView.findViewById(R.id.docName);
             typeName = (TextView) itemView.findViewById(R.id.typeName);
             createTime = (TextView) itemView.findViewById(R.id.createTime);

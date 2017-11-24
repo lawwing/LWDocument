@@ -37,13 +37,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -346,13 +343,36 @@ public class DateCommentFragment extends BaseFragment
             {
                 case "更多操作":
                     itemMenuLayout.setVisibility(View.VISIBLE);
-                    AnimationSet animationSet = new AnimationSet(true);
-                    ScaleAnimation translateAnimation = new ScaleAnimation(1f,
-                            1f, 0, 0, Animation.RELATIVE_TO_PARENT, -1f,
-                            Animation.RELATIVE_TO_PARENT, 0f);
-                    translateAnimation.setDuration(1000);
-                    animationSet.addAnimation(translateAnimation);
-                    animlayout.startAnimation(animationSet);
+                    Log.e("test", 1920 - event.getY() + "ss");
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) animlayout
+                            .getLayoutParams();
+                    int baseX = event.getY() - getResources()
+                            .getDimensionPixelSize(R.dimen.image_height) * 2;
+                    if (1920 - baseX < getResources()
+                            .getDimensionPixelSize(R.dimen.menulayout_height))
+                    {
+                        params.topMargin = event.getY()
+                                - getResources().getDimensionPixelSize(
+                                        R.dimen.image_height) * 2
+                                - getResources().getDimensionPixelSize(
+                                        R.dimen.menulayout_height);
+                    }
+                    else
+                    {
+                        params.topMargin = event.getY()
+                                - getResources().getDimensionPixelSize(
+                                        R.dimen.image_height) * 2;
+                    }
+                    animlayout.setLayoutParams(params);
+                    
+                    // AnimationSet animationSet = new AnimationSet(true);
+                    // ScaleAnimation translateAnimation = new
+                    // ScaleAnimation(1f,
+                    // 1f, 0, 0, Animation.RELATIVE_TO_PARENT, -1f,
+                    // Animation.RELATIVE_TO_PARENT, 0f);
+                    // translateAnimation.setDuration(1000);
+                    // animationSet.addAnimation(translateAnimation);
+                    // animlayout.startAnimation(animationSet);
                     break;
                 default:
                     break;

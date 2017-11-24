@@ -38,9 +38,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import cn.lawwing.homeslidemenu.interfaces.Resourceble;
@@ -55,6 +57,8 @@ public class NewAppMainActivity extends AppCompatActivity implements
         ViewAnimator.ViewAnimatorListener, EasyPermissions.PermissionCallbacks
 {
     private DrawerLayout drawerLayout;
+    
+    private RelativeLayout container_frame;
     
     private ActionBarDrawerToggle drawerToggle;
     
@@ -82,6 +86,7 @@ public class NewAppMainActivity extends AppCompatActivity implements
                 .replace(R.id.content_frame, dateCommentFragment)
                 .commit();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        container_frame = (RelativeLayout) findViewById(R.id.container_frame);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
         linearLayout = (LinearLayout) findViewById(R.id.left_drawer);
         linearLayout.setOnClickListener(new View.OnClickListener()
@@ -92,7 +97,6 @@ public class NewAppMainActivity extends AppCompatActivity implements
                 drawerLayout.closeDrawers();
             }
         });
-        
         setActionBar();
         createMenuList();
         
@@ -283,6 +287,12 @@ public class NewAppMainActivity extends AppCompatActivity implements
     }
     
     @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        return super.onTouchEvent(event);
+    }
+    
+    @Override
     public ScreenShotable onSwitch(Resourceble slideMenuItem,
             ScreenShotable screenShotable, int position)
     {
@@ -433,4 +443,5 @@ public class NewAppMainActivity extends AppCompatActivity implements
             toolbar.setTitle(event.getTitle());
         }
     }
+    
 }
