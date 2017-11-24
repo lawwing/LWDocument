@@ -11,119 +11,147 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <com.lawwing.calendarlibrary.ScheduleLayout
-            android:id="@+id/slSchedule"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:auto_change_month_row="true"
-            app:default_view="month">
+            android:layout_height="match_parent">
 
-            <com.lawwing.calendarlibrary.WeekTitleView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/week_bar_height"
-                android:background="@color/calendar_bg_color"
-                app:week_text_size="@integer/calendar_text_size" />
-
-            <LinearLayout
+            <com.lawwing.calendarlibrary.ScheduleLayout
+                android:id="@+id/slSchedule"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/week_bar_height"
-                android:orientation="vertical">
+                app:auto_change_month_row="true"
+                app:default_view="month">
 
-
-                <RelativeLayout
+                <com.lawwing.calendarlibrary.WeekTitleView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/week_bar_height"
+                    android:background="@color/calendar_bg_color"
+                    app:week_text_size="@integer/calendar_text_size" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/week_bar_height"
+                    android:orientation="vertical">
+
 
                     <RelativeLayout
-                        android:id="@+id/rlMonthCalendar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <com.lawwing.calendarlibrary.MonthCalendarView
-                            android:id="@+id/mcvCalendar"
+                        <RelativeLayout
+                            android:id="@+id/rlMonthCalendar"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/month_calendar_height"
+                            android:layout_height="wrap_content">
+
+                            <com.lawwing.calendarlibrary.MonthCalendarView
+                                android:id="@+id/mcvCalendar"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/month_calendar_height"
+                                android:background="@color/calendar_bg_color"
+                                android:overScrollMode="never"
+                                app:month_count="1000"
+                                app:month_day_text_size="@integer/calendar_text_size"
+                                app:month_holiday_color="@color/holiday_text_color"
+                                app:month_selected_circle_color="@color/colorPrimary"
+                                app:month_selected_circle_today_color="@color/colorAccent"
+                                app:month_show_holiday_hint="false"
+                                app:month_show_lunar="false"
+                                app:month_show_task_hint="true"
+                                app:month_today_text_color="@color/colorAccent" />
+                        </RelativeLayout>
+
+                        <com.lawwing.calendarlibrary.WeekCalendarView
+                            android:id="@+id/wcvCalendar"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/week_calendar_height"
                             android:background="@color/calendar_bg_color"
                             android:overScrollMode="never"
-                            app:month_count="1000"
-                            app:month_day_text_size="@integer/calendar_text_size"
-                            app:month_holiday_color="@color/holiday_text_color"
-                            app:month_selected_circle_color="@color/colorPrimary"
-                            app:month_selected_circle_today_color="@color/colorAccent"
-                            app:month_show_holiday_hint="false"
-                            app:month_show_lunar="false"
-                            app:month_show_task_hint="true"
-                            app:month_today_text_color="@color/colorAccent" />
+                            android:visibility="gone"
+                            app:month_selected_circle_today_color="@color/colorPrimary"
+                            app:week_count="10000"
+                            app:week_day_text_size="@integer/calendar_text_size"
+                            app:week_holiday_color="@color/holiday_text_color"
+                            app:week_selected_circle_color="@color/colorPrimary"
+                            app:week_selected_circle_today_color="@color/colorAccent"
+                            app:week_show_holiday_hint="false"
+                            app:week_show_lunar="false"
+                            app:week_show_task_hint="true"
+                            app:week_today_text_color="@color/colorAccent" />
+
                     </RelativeLayout>
 
-                    <com.lawwing.calendarlibrary.WeekCalendarView
-                        android:id="@+id/wcvCalendar"
+
+                    <RelativeLayout
+                        android:id="@+id/rlScheduleList"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/week_calendar_height"
-                        android:background="@color/calendar_bg_color"
-                        android:overScrollMode="never"
-                        android:visibility="gone"
-                        app:month_selected_circle_today_color="@color/colorPrimary"
-                        app:week_count="10000"
-                        app:week_day_text_size="@integer/calendar_text_size"
-                        app:week_holiday_color="@color/holiday_text_color"
-                        app:week_selected_circle_color="@color/colorPrimary"
-                        app:week_selected_circle_today_color="@color/colorAccent"
-                        app:week_show_holiday_hint="false"
-                        app:week_show_lunar="false"
-                        app:week_show_task_hint="true"
-                        app:week_today_text_color="@color/colorAccent" />
+                        android:layout_height="match_parent"
+                        android:background="@color/colorBackground"
+                        android:clickable="true">
 
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/dateText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:padding="5dp"
+                            android:textColor="#333333" />
+
+                        <com.lawwing.calendarlibrary.ScheduleRecyclerView
+                            android:id="@+id/rvScheduleList"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@id/dateText"
+                            android:orientation="vertical"
+                            android:overScrollMode="never" />
+
+                        <LinearLayout
+                            android:id="@+id/rlNoTask"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@id/dateText"
+                            android:background="@color/colorBackground"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
 
 
-                <RelativeLayout
-                    android:id="@+id/rlScheduleList"
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="50dp"
+                                android:src="@mipmap/bg_no_comment" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </com.lawwing.calendarlibrary.ScheduleLayout>
+
+            <LinearLayout
+                android:id="@+id/itemMenuLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#33000000"
+                android:gravity="bottom"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/animlayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorBackground"
-                    android:clickable="true">
+                    android:layout_height="200dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/dateText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:padding="5dp"
-                        android:textColor="#333333" />
-
-                    <com.lawwing.calendarlibrary.ScheduleRecyclerView
-                        android:id="@+id/rvScheduleList"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_below="@id/dateText"
-                        android:orientation="vertical"
-                        android:overScrollMode="never" />
-
-                    <LinearLayout
-                        android:id="@+id/rlNoTask"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@id/dateText"
-                        android:background="@color/colorBackground"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="50dp"
-                            android:src="@mipmap/bg_no_comment" />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-
+                        android:gravity="center"
+                        android:text="内容66666666" />
+                </LinearLayout>
             </LinearLayout>
-        </com.lawwing.calendarlibrary.ScheduleLayout>
+        </RelativeLayout>
     </FrameLayout>
 </LinearLayout>

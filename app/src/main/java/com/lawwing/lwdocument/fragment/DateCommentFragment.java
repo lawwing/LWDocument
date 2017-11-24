@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import com.lawwing.calendarlibrary.MonthCalendarView;
 import com.lawwing.calendarlibrary.ScheduleLayout;
 import com.lawwing.calendarlibrary.ScheduleRecyclerView;
@@ -14,6 +16,7 @@ import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.adapter.DateCommentAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
+import com.lawwing.lwdocument.event.CommentListMoreEvent;
 import com.lawwing.lwdocument.event.DateClickEvent;
 import com.lawwing.lwdocument.event.MonthChangeEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
@@ -32,10 +35,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -63,6 +69,10 @@ public class DateCommentFragment extends BaseFragment
     private TextView dateText;
     
     private LinearLayout rlNoTask;
+    
+    private LinearLayout itemMenuLayout;
+    
+    private LinearLayout animlayout;
     
     private SaveDateDbDao mSaveDateDbDao;
     
@@ -168,6 +178,9 @@ public class DateCommentFragment extends BaseFragment
                 .findViewById(R.id.rvScheduleList);
         slSchedule = (ScheduleLayout) rootView.findViewById(R.id.slSchedule);
         rlNoTask = (LinearLayout) rootView.findViewById(R.id.rlNoTask);
+        itemMenuLayout = (LinearLayout) rootView
+                .findViewById(R.id.itemMenuLayout);
+        animlayout = (LinearLayout) rootView.findViewById(R.id.animlayout);
         dateText = (TextView) rootView.findViewById(R.id.dateText);
         dateText.setText(TimeUtils.milliseconds2String(
                 TimeUtils.getCurTimeMills(),
@@ -175,8 +188,26 @@ public class DateCommentFragment extends BaseFragment
         mcvCalendar.setOnCalendarClickListener(this);
         wcvCalendar.setOnCalendarClickListener(this);
         slSchedule.setOnCalendarClickListener(this);
+        
+        itemMenuLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                itemMenuLayout.setVisibility(View.GONE);
+            }
+        });
+        
         initRecycler();
+        LWDApp.getEventBus().register(this);
         return rootView;
+    }
+    
+    @Override
+    public void onDestroy()
+    {
+        LWDApp.getEventBus().unregister(this);
+        super.onDestroy();
     }
     
     private void initRecycler()
@@ -283,5 +314,28 @@ public class DateCommentFragment extends BaseFragment
     {
         initViewPoint(year, month + 1);
         LWDApp.getEventBus().post(new MonthChangeEvent(year, month + 1, day));
+    }
+    
+    @Subscribe
+    public void moreClick(CommentListMoreEvent event)
+    {
+        if (event != null)
+        {
+            switch (event.getFlag())
+            {
+                case "更多操作":
+                    itemMenuLayout.setVisibility(View.VISIBLE);
+                    AnimationSet animationSet = new AnimationSet(true);
+                    ScaleAnimation translateAnimation = new ScaleAnimation(1f,
+                            1f, 0, 0, Animation.RELATIVE_TO_PARENT, -1f,
+                            Animation.RELATIVE_TO_PARENT, 0f);
+                    translateAnimation.setDuration(1000);
+                    animationSet.addAnimation(translateAnimation);
+                    animlayout.startAnimation(animationSet);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import com.lawwing.calendarlibrary.ScheduleRecyclerView;
 import com.lawwing.lwdocument.CheckCommentPicActivity;
+import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
+import com.lawwing.lwdocument.event.CommentListMoreEvent;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.utils.GlideUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
@@ -46,7 +48,7 @@ public class DateCommentAdapter extends
     }
     
     @Override
-    public void onBindViewHolder(DateCommentHolder holder, int position)
+    public void onBindViewHolder(DateCommentHolder holder, final int position)
     {
         final CommentInfoModel model = datas.get(position);
         if (model != null)
@@ -63,6 +65,15 @@ public class DateCommentAdapter extends
                 {
                     activity.startActivity(CheckCommentPicActivity
                             .newInstance(activity, model.getPath()));
+                }
+            });
+            holder.moreBtn.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    LWDApp.getEventBus().post(
+                            new CommentListMoreEvent("更多操作", model, position));
                 }
             });
         }
@@ -84,6 +95,8 @@ public class DateCommentAdapter extends
         
         TextView createTime;
         
+        TextView moreBtn;
+        
         LinearLayout bossLayout;
         
         public DateCommentHolder(View itemView)
@@ -91,6 +104,7 @@ public class DateCommentAdapter extends
             super(itemView);
             commentImage = (ImageView) itemView.findViewById(R.id.commentImage);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
+            moreBtn = (TextView) itemView.findViewById(R.id.moreBtn);
             docName = (TextView) itemView.findViewById(R.id.docName);
             createTime = (TextView) itemView.findViewById(R.id.createTime);
             bossLayout = (LinearLayout) itemView.findViewById(R.id.bossLayout);
