@@ -26,6 +26,7 @@ public class CommentTypeInfoDbDao extends AbstractDao<CommentTypeInfoDb, Long> {
         public final static Property TypeName = new Property(1, String.class, "typeName", false, "TYPE_NAME");
         public final static Property CreateTime = new Property(2, long.class, "createTime", false, "CREATE_TIME");
         public final static Property IsEdit = new Property(3, boolean.class, "isEdit", false, "IS_EDIT");
+        public final static Property IsShow = new Property(4, boolean.class, "isShow", false, "IS_SHOW");
     };
 
     private DaoSession daoSession;
@@ -47,7 +48,8 @@ public class CommentTypeInfoDbDao extends AbstractDao<CommentTypeInfoDb, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"TYPE_NAME\" TEXT," + // 1: typeName
                 "\"CREATE_TIME\" INTEGER NOT NULL ," + // 2: createTime
-                "\"IS_EDIT\" INTEGER NOT NULL );"); // 3: isEdit
+                "\"IS_EDIT\" INTEGER NOT NULL ," + // 3: isEdit
+                "\"IS_SHOW\" INTEGER NOT NULL );"); // 4: isShow
     }
 
     /** Drops the underlying database table. */
@@ -71,6 +73,7 @@ public class CommentTypeInfoDbDao extends AbstractDao<CommentTypeInfoDb, Long> {
         }
         stmt.bindLong(3, entity.getCreateTime());
         stmt.bindLong(4, entity.getIsEdit() ? 1L: 0L);
+        stmt.bindLong(5, entity.getIsShow() ? 1L: 0L);
     }
 
     @Override
@@ -88,6 +91,7 @@ public class CommentTypeInfoDbDao extends AbstractDao<CommentTypeInfoDb, Long> {
         }
         stmt.bindLong(3, entity.getCreateTime());
         stmt.bindLong(4, entity.getIsEdit() ? 1L: 0L);
+        stmt.bindLong(5, entity.getIsShow() ? 1L: 0L);
     }
 
     @Override
@@ -107,7 +111,8 @@ public class CommentTypeInfoDbDao extends AbstractDao<CommentTypeInfoDb, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // typeName
             cursor.getLong(offset + 2), // createTime
-            cursor.getShort(offset + 3) != 0 // isEdit
+            cursor.getShort(offset + 3) != 0, // isEdit
+            cursor.getShort(offset + 4) != 0 // isShow
         );
         return entity;
     }
@@ -118,6 +123,7 @@ public class CommentTypeInfoDbDao extends AbstractDao<CommentTypeInfoDb, Long> {
         entity.setTypeName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setCreateTime(cursor.getLong(offset + 2));
         entity.setIsEdit(cursor.getShort(offset + 3) != 0);
+        entity.setIsShow(cursor.getShort(offset + 4) != 0);
      }
     
     @Override

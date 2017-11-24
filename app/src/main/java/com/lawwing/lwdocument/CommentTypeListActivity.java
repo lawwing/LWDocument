@@ -123,6 +123,7 @@ public class CommentTypeListActivity extends BaseActivity
         commentTypeDb.setCreateTime(TimeUtils.getCurTimeMills());
         commentTypeDb.setTypeName(name);
         commentTypeDb.setIsEdit(true);
+        commentTypeDb.setIsShow(true);
         mCommentTypeInfoDbDao.insertOrReplace(commentTypeDb);
         getDataByDb();
     }
@@ -138,6 +139,7 @@ public class CommentTypeListActivity extends BaseActivity
             model.setCreateTime(commentType.getCreateTime());
             model.setTypeName(commentType.getTypeName());
             model.setEdit(commentType.getIsEdit());
+            model.setShow(commentType.getIsShow());
             Log.e("test", commentType.getCommentInfoDbs().toString());
             datas.add(model);
         }

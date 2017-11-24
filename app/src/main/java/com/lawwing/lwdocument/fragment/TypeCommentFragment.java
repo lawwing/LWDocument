@@ -266,6 +266,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
         allmodel.setEdit(false);
         allmodel.setTypeName("全部");
         allmodel.setId((long) -1);
+        allmodel.setShow(true);
         datas.add(allmodel);
         // datas.add("全部");
         List<CommentTypeInfoDb> dbs = mCommentTypeInfoDbDao.loadAll();
@@ -276,6 +277,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
             model.setEdit(db.getIsEdit());
             model.setTypeName(db.getTypeName());
             model.setId(db.getId());
+            model.setShow(db.getIsShow());
             datas.add(model);
         }
     }

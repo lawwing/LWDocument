@@ -15,6 +15,18 @@ public class CommentTypeInfoModel
     // 是否可编辑
     private boolean isEdit = true;
     
+    private boolean isShow = true;
+    
+    public boolean isShow()
+    {
+        return isShow;
+    }
+    
+    public void setShow(boolean show)
+    {
+        isShow = show;
+    }
+    
     public Long getId()
     {
         return id;

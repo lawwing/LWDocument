@@ -28,6 +28,8 @@ public class CommentTypeInfoDb
     // 是否可编辑
     private boolean isEdit = true;
     
+    private boolean isShow = true;
+    
     /** Used for active entity operations. */
     @Generated(hash = 2146236101)
     private transient CommentTypeInfoDbDao myDao;
@@ -169,14 +171,25 @@ public class CommentTypeInfoDb
                 : null;
     }
     
-    @Generated(hash = 1703824513)
+    public boolean getIsShow()
+    {
+        return this.isShow;
+    }
+    
+    public void setIsShow(boolean isShow)
+    {
+        this.isShow = isShow;
+    }
+    
+    @Generated(hash = 1113551157)
     public CommentTypeInfoDb(Long id, String typeName, long createTime,
-            boolean isEdit)
+            boolean isEdit, boolean isShow)
     {
         this.id = id;
         this.typeName = typeName;
         this.createTime = createTime;
         this.isEdit = isEdit;
+        this.isShow = isShow;
     }
     
     @Generated(hash = 416910148)

@@ -104,6 +104,7 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
             model.setCreateTime(db.getCreateTime());
             model.setTypeName(db.getTypeName());
             model.setEdit(db.getIsEdit());
+            model.setShow(db.getIsShow());
             datas.add(model);
         }
     }
@@ -214,6 +215,7 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
         commentTypeDb.setCreateTime(TimeUtils.getCurTimeMills());
         commentTypeDb.setTypeName(name);
         commentTypeDb.setIsEdit(true);
+        commentTypeDb.setIsShow(true);
         mCommentTypeInfoDbDao.insertOrReplace(commentTypeDb);
     }
 }

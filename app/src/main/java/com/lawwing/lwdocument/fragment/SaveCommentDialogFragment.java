@@ -218,6 +218,7 @@ public class SaveCommentDialogFragment extends DialogFragment
         commentTypeDb.setCreateTime(TimeUtils.getCurTimeMills());
         commentTypeDb.setTypeName(name);
         commentTypeDb.setIsEdit(true);
+        commentTypeDb.setIsShow(true);
         mCommentTypeInfoDbDao.insertOrReplace(commentTypeDb);
     }
     
@@ -278,6 +279,7 @@ public class SaveCommentDialogFragment extends DialogFragment
             model.setCreateTime(temp.getCreateTime());
             model.setEdit(temp.getIsEdit());
             model.setTypeName(temp.getTypeName());
+            model.setShow(temp.getIsShow());
             datas.add(model);
         }
     }
