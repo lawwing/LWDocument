@@ -43,4 +43,55 @@ public class ScheduleRecyclerView extends RecyclerView
         }
     }
     
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+    {
+        setMeasuredDimension(measureWidth(widthMeasureSpec),
+                measureHeight(heightMeasureSpec) - 1);
+    }
+    
+    private int measureHeight(int measureSpec)
+    {
+        int result = 0;
+        int mode = MeasureSpec.getMode(measureSpec);
+        int size = MeasureSpec.getSize(measureSpec);
+        
+        if (mode == MeasureSpec.EXACTLY)
+        {
+            result = size;
+        }
+        else
+        {
+            result = 75;
+            if (mode == MeasureSpec.AT_MOST)
+            {
+                result = Math.min(result, size);
+            }
+        }
+        return result;
+        
+    }
+    
+    private int measureWidth(int measureSpec)
+    {
+        int result = 0;
+        int mode = MeasureSpec.getMode(measureSpec);
+        int size = MeasureSpec.getSize(measureSpec);
+        
+        if (mode == MeasureSpec.EXACTLY)
+        {
+            result = size;
+        }
+        else
+        {
+            result = 75;// 根据自己的需要更改
+            if (mode == MeasureSpec.AT_MOST)
+            {
+                result = Math.min(result, size);
+            }
+        }
+        return result;
+        
+    }
+    
 }

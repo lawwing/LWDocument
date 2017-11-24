@@ -12,9 +12,9 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/activity_title_height"
             android:background="#333333"
-            android:minHeight="48dp"
+            android:minHeight="@dimen/activity_title_height"
             android:title="首页"
             android:titleTextColor="@color/white" />
 

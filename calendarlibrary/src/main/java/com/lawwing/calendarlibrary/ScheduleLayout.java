@@ -52,6 +52,8 @@ public class ScheduleLayout extends FrameLayout
     
     private int mRowSize;
     
+    private int mTitleSize;
+    
     private int mMinDistance;
     
     private int mAutoScrollDistance;
@@ -102,6 +104,8 @@ public class ScheduleLayout extends FrameLayout
         mState = ScheduleState.OPEN;
         mRowSize = getResources()
                 .getDimensionPixelSize(R.dimen.week_calendar_height);
+        mTitleSize = getResources()
+                .getDimensionPixelSize(R.dimen.activity_title_height);
         mMinDistance = getResources()
                 .getDimensionPixelSize(R.dimen.calendar_min_distance);
         mAutoScrollDistance = getResources()
@@ -321,7 +325,7 @@ public class ScheduleLayout extends FrameLayout
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        resetViewHeight(rlScheduleList, height - mRowSize);
+        resetViewHeight(rlScheduleList, height - mRowSize - mTitleSize);
         resetViewHeight(this, height);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
