@@ -140,6 +140,7 @@ public class CommentTypeListActivity extends BaseActivity
             model.setTypeName(commentType.getTypeName());
             model.setEdit(commentType.getIsEdit());
             model.setShow(commentType.getIsShow());
+            model.setCount(commentType.getCommentInfoDbs().size());
             Log.e("test", commentType.getCommentInfoDbs().toString());
             datas.add(model);
         }

@@ -7,6 +7,7 @@ import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.event.AddTypeEvent;
 import com.lawwing.lwdocument.model.CommentTypeInfoModel;
+import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.app.Activity;
 import android.support.v7.widget.CardView;
@@ -57,7 +58,10 @@ public class CommentTypeManagerAdapter extends
             CommentTypeInfoModel model = datas.get(position);
             if (model != null)
             {
-                holder.typeNameText.setText(model.getTypeName());
+                holder.typeNameText.setText(
+                        model.getTypeName() + "（" + model.getCount() + "）");
+                holder.timeText.setText(
+                        TimeUtils.milliseconds2String(model.getCreateTime()));
             }
         }
         else
@@ -94,6 +98,8 @@ public class CommentTypeManagerAdapter extends
         
         TextView typeNameText;
         
+        TextView timeText;
+        
         public CommentTypeManagerHolder(View itemView)
         {
             super(itemView);
@@ -101,6 +107,7 @@ public class CommentTypeManagerAdapter extends
                     .findViewById(R.id.contentLayout);
             addLayout = (LinearLayout) itemView.findViewById(R.id.addLayout);
             typeNameText = (TextView) itemView.findViewById(R.id.typeNameText);
+            timeText = (TextView) itemView.findViewById(R.id.timeText);
         }
     }
 }

@@ -280,6 +280,7 @@ public class SaveCommentDialogFragment extends DialogFragment
             model.setEdit(temp.getIsEdit());
             model.setTypeName(temp.getTypeName());
             model.setShow(temp.getIsShow());
+            model.setCount(temp.getCommentInfoDbs().size());
             datas.add(model);
         }
     }

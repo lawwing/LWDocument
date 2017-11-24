@@ -212,7 +212,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
             
             for (CommentInfoDb commentInfoDb : commentInfoDbs)
             {
-                CommentInfoModel model = new CommentInfoModel();
+                CommentInfoModel model = new CommentInfoModel(db.getTypeName());
                 model.setDocname(commentInfoDb.getDocname());
                 model.setDocpath(commentInfoDb.getDocpath());
                 model.setId(commentInfoDb.getId());
@@ -245,7 +245,20 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                 .list();
         for (CommentInfoDb comment : dbs)
         {
-            CommentInfoModel model = new CommentInfoModel();
+            CommentTypeInfoDb typeInfoDb = mCommentTypeInfoDbDao.queryBuilder()
+                    .where(CommentTypeInfoDbDao.Properties.Id
+                            .eq(comment.getTypeId()))
+                    .list()
+                    .get(0);
+            CommentInfoModel model;
+            if (typeInfoDb != null)
+            {
+                model = new CommentInfoModel(typeInfoDb.getTypeName());
+            }
+            else
+            {
+                model = new CommentInfoModel("Unknow");
+            }
             model.setName(comment.getName());
             model.setPath(comment.getPath());
             model.setDocpath(comment.getDocpath());
@@ -267,6 +280,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
         allmodel.setTypeName("全部");
         allmodel.setId((long) -1);
         allmodel.setShow(true);
+        allmodel.setCount(0);
         datas.add(allmodel);
         // datas.add("全部");
         List<CommentTypeInfoDb> dbs = mCommentTypeInfoDbDao.loadAll();
@@ -278,6 +292,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
             model.setTypeName(db.getTypeName());
             model.setId(db.getId());
             model.setShow(db.getIsShow());
+            model.setCount(db.getCommentInfoDbs().size());
             datas.add(model);
         }
     }

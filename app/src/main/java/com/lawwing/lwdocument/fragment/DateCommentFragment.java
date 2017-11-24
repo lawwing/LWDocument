@@ -21,6 +21,8 @@ import com.lawwing.lwdocument.event.DateClickEvent;
 import com.lawwing.lwdocument.event.MonthChangeEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
+import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
+import com.lawwing.lwdocument.gen.CommentTypeInfoDbDao;
 import com.lawwing.lwdocument.gen.SaveDateDb;
 import com.lawwing.lwdocument.gen.SaveDateDbDao;
 import com.lawwing.lwdocument.model.CommentInfoModel;
@@ -76,6 +78,8 @@ public class DateCommentFragment extends BaseFragment
     
     private SaveDateDbDao mSaveDateDbDao;
     
+    private CommentTypeInfoDbDao mCommentTypeInfoDbDao;
+    
     private CommentInfoDbDao mCommentInfoDbDao;
     
     private DateCommentAdapter adapter;
@@ -99,6 +103,9 @@ public class DateCommentFragment extends BaseFragment
         this.containerView = view.findViewById(R.id.container);
         mSaveDateDbDao = LWDApp.get().getDaoSession().getSaveDateDbDao();
         mCommentInfoDbDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
+        mCommentTypeInfoDbDao = LWDApp.get()
+                .getDaoSession()
+                .getCommentTypeInfoDbDao();
         // DbUtils.saveDateDb(mSaveDateDbDao, 2017, 11, 28);
         new Thread()
         {
@@ -284,7 +291,21 @@ public class DateCommentFragment extends BaseFragment
             List<CommentInfoDb> commentInfoDbs = db.getCommentInfoDbs();
             for (CommentInfoDb commentInfoDb : commentInfoDbs)
             {
-                CommentInfoModel model = new CommentInfoModel();
+                CommentTypeInfoDb typeInfoDb = mCommentTypeInfoDbDao
+                        .queryBuilder()
+                        .where(CommentTypeInfoDbDao.Properties.Id
+                                .eq(commentInfoDb.getTypeId()))
+                        .list()
+                        .get(0);
+                CommentInfoModel model;
+                if (typeInfoDb != null)
+                {
+                    model = new CommentInfoModel(typeInfoDb.getTypeName());
+                }
+                else
+                {
+                    model = new CommentInfoModel("Unknow");
+                }
                 model.setDocname(commentInfoDb.getDocname());
                 model.setDocpath(commentInfoDb.getDocpath());
                 model.setId(commentInfoDb.getId());

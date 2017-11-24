@@ -56,6 +56,7 @@ public class DateCommentAdapter extends
             GlideUtils.loadNormalPicture(model.getPath(), holder.commentImage);
             holder.fileName.setText(model.getName().split("\\.")[0]);
             holder.docName.setText("原文件：" + model.getDocname());
+            holder.typeName.setText("分类：" + model.getTypeName());
             holder.createTime
                     .setText(TimeUtils.milliseconds2String(model.getTime()));
             holder.bossLayout.setOnClickListener(new View.OnClickListener()
@@ -97,6 +98,8 @@ public class DateCommentAdapter extends
         
         TextView moreBtn;
         
+        TextView typeName;
+        
         LinearLayout bossLayout;
         
         public DateCommentHolder(View itemView)
@@ -106,6 +109,7 @@ public class DateCommentAdapter extends
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             moreBtn = (TextView) itemView.findViewById(R.id.moreBtn);
             docName = (TextView) itemView.findViewById(R.id.docName);
+            typeName = (TextView) itemView.findViewById(R.id.typeName);
             createTime = (TextView) itemView.findViewById(R.id.createTime);
             bossLayout = (LinearLayout) itemView.findViewById(R.id.bossLayout);
         }

@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
@@ -105,13 +106,15 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
             model.setTypeName(db.getTypeName());
             model.setEdit(db.getIsEdit());
             model.setShow(db.getIsShow());
+            model.setCount(db.getCommentInfoDbs().size());
             datas.add(model);
         }
     }
     
     private void initRecyclerView()
     {
-        GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
+        // GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         typeRecyclerView.setLayoutManager(manager);
         adapter = new CommentTypeManagerAdapter(datas, getActivity());
