@@ -176,7 +176,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                     initCommentListData();
                     adapter.notifyDataSetChanged();
                     LWDApp.getEventBus()
-                            .post(new ChangeTitleContent("批阅分类-全部"));
+                            .post(new ChangeTitleContent("批阅分类-全部 ⇓"));
                 }
                 else
                 {
@@ -184,7 +184,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                     getDataByTypeId(model.getId());
                     adapter.notifyDataSetChanged();
                     LWDApp.getEventBus().post(new ChangeTitleContent(
-                            "批阅分类-" + model.getTypeName()));
+                            "批阅分类-" + model.getTypeName() + " ⇓"));
                 }
                 wheelLayout.setVisibility(View.GONE);
                 recyclerView.scrollToPosition(0);

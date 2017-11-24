@@ -259,7 +259,7 @@ public class NewAppMainActivity extends AppCompatActivity implements
         }
         else if (name.equals(TYPE_COMMENT))
         {
-            toolbar.setTitle("批阅分类-全部");
+            toolbar.setTitle("批阅分类-全部 ⇓");
             contentFragment = TypeCommentFragment.newInstance();
         }
         else if (name.equals(SETTING))
