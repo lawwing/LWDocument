@@ -3,6 +3,7 @@ package com.lawwing.lwdocument.fragment;
 import static com.lawwing.lwdocument.base.StaticDatas.CLOSEWHEEL;
 import static com.lawwing.lwdocument.base.StaticDatas.OPENWHEEL;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,6 +18,7 @@ import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.adapter.DateCommentAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.event.ChangeTitleContent;
+import com.lawwing.lwdocument.event.DeleteCommentEvent;
 import com.lawwing.lwdocument.event.OpenWheelEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
@@ -333,5 +335,23 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
     public Bitmap getBitmap()
     {
         return bitmap;
+    }
+    
+    @Subscribe
+    public void deleteComment(DeleteCommentEvent event)
+    {
+        if (event != null)
+        {
+            mCommentInfoDbDao.deleteByKey(event.getSelectCommentInfo().getId());
+            listDatas.remove(event.getSelectPoision());
+            // 删除卡片操作
+            adapter.notifyItemRemoved(event.getSelectPoision());
+            adapter.notifyDataSetChanged();
+            File file = new File(event.getSelectCommentInfo().getPath());
+            if (file.exists())
+            {
+                file.delete();
+            }
+        }
     }
 }

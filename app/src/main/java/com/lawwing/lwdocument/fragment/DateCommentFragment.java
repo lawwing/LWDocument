@@ -1,5 +1,6 @@
 package com.lawwing.lwdocument.fragment;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,8 @@ import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.adapter.DateCommentAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
-import com.lawwing.lwdocument.event.CommentListMoreEvent;
 import com.lawwing.lwdocument.event.DateClickEvent;
+import com.lawwing.lwdocument.event.DeleteCommentEvent;
 import com.lawwing.lwdocument.event.MonthChangeEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
@@ -27,8 +28,6 @@ import com.lawwing.lwdocument.gen.SaveDateDb;
 import com.lawwing.lwdocument.gen.SaveDateDbDao;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.model.SaveDateModel;
-import com.lawwing.lwdocument.utils.ScaleAnimationUtils;
-import com.lawwing.lwdocument.utils.ScreenUtils;
 import com.lawwing.lwdocument.utils.SortUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
@@ -42,8 +41,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -54,45 +51,47 @@ import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
  */
 
 public class DateCommentFragment extends BaseFragment
-        implements ScreenShotable, OnCalendarClickListener {
+        implements ScreenShotable, OnCalendarClickListener
+{
     private View containerView;
-
+    
     private Bitmap bitmap;
-
+    
     private MonthCalendarView mcvCalendar;
-
+    
     private WeekCalendarView wcvCalendar;
-
+    
     private ScheduleRecyclerView rvScheduleList;
-
+    
     private ScheduleLayout slSchedule;
-
+    
     private TextView dateText;
-
+    
     private LinearLayout rlNoTask;
-
-
+    
     private SaveDateDbDao mSaveDateDbDao;
-
+    
     private CommentTypeInfoDbDao mCommentTypeInfoDbDao;
-
+    
     private CommentInfoDbDao mCommentInfoDbDao;
-
+    
     private DateCommentAdapter adapter;
-
+    
     private ArrayList<CommentInfoModel> datas;
-
-    public static DateCommentFragment newInstance() {
+    
+    public static DateCommentFragment newInstance()
+    {
         DateCommentFragment contentFragment = new DateCommentFragment();
         Bundle bundle = new Bundle();
         contentFragment.setArguments(bundle);
         return contentFragment;
     }
-
+    
     private boolean isInit = false;
-
+    
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
         this.containerView = view.findViewById(R.id.container);
         mSaveDateDbDao = LWDApp.get().getDaoSession().getSaveDateDbDao();
@@ -101,26 +100,32 @@ public class DateCommentFragment extends BaseFragment
                 .getDaoSession()
                 .getCommentTypeInfoDbDao();
         // DbUtils.saveDateDb(mSaveDateDbDao, 2017, 11, 28);
-        new Thread() {
+        new Thread()
+        {
             @Override
-            public void run() {
-                while (!isInit) {
-                    if (mcvCalendar.getCurrentMonthView() != null) {
+            public void run()
+            {
+                while (!isInit)
+                {
+                    if (mcvCalendar.getCurrentMonthView() != null)
+                    {
                         handler.sendMessage(new Message());
                         isInit = true;
                         break;
                     }
-
+                    
                 }
                 super.run();
             }
         }.start();
-
+        
     }
-
-    private Handler handler = new Handler() {
+    
+    private Handler handler = new Handler()
+    {
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(Message msg)
+        {
             // 获取当前的月份
             SaveDateModel nowDate = TimeUtils.getCurDateModel();
             int year = nowDate.getYear();
@@ -131,35 +136,40 @@ public class DateCommentFragment extends BaseFragment
             super.handleMessage(msg);
         }
     };
-
-    private void initViewPoint(int year, int month) {
+    
+    private void initViewPoint(int year, int month)
+    {
         List<Integer> dates = new ArrayList<>();
         List<SaveDateDb> saveDbs = mSaveDateDbDao.queryBuilder()
                 .where(SaveDateDbDao.Properties.Year.eq(year))
                 .where(SaveDateDbDao.Properties.Month.eq(month))
                 .build()
                 .list();
-        for (SaveDateDb temp : saveDbs) {
+        for (SaveDateDb temp : saveDbs)
+        {
             if (temp.getCommentInfoDbs() != null
-                    && temp.getCommentInfoDbs().size() != 0) {
+                    && temp.getCommentInfoDbs().size() != 0)
+            {
                 dates.add(temp.getDay());
             }
         }
         mcvCalendar.getCurrentMonthView().addTaskHints(dates);
         wcvCalendar.getCurrentWeekView().addTaskHints(dates);
     }
-
+    
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState)
+    {
         View rootView = inflater
                 .inflate(R.layout.fragment_date_comment_list, container, false);
-
+        
         mcvCalendar = (MonthCalendarView) rootView
                 .findViewById(R.id.mcvCalendar);
         wcvCalendar = (WeekCalendarView) rootView
@@ -175,31 +185,38 @@ public class DateCommentFragment extends BaseFragment
         mcvCalendar.setOnCalendarClickListener(this);
         wcvCalendar.setOnCalendarClickListener(this);
         slSchedule.setOnCalendarClickListener(this);
-
+        
         initRecycler();
+        LWDApp.getEventBus().register(this);
         return rootView;
     }
-
+    
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
+        LWDApp.getEventBus().unregister(this);
         super.onDestroy();
     }
-
-    private void initRecycler() {
+    
+    private void initRecycler()
+    {
         datas = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         rvScheduleList.setLayoutManager(manager);
-
-        adapter = new DateCommentAdapter(datas, getActivity(),"日历更多操作");
+        
+        adapter = new DateCommentAdapter(datas, getActivity(), "日历更多操作");
         rvScheduleList.setAdapter(adapter);
     }
-
+    
     @Override
-    public void takeScreenShot() {
-        Thread thread = new Thread() {
+    public void takeScreenShot()
+    {
+        Thread thread = new Thread()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 Bitmap bitmap = Bitmap.createBitmap(containerView.getWidth(),
                         containerView.getHeight(),
                         Bitmap.Config.ARGB_8888);
@@ -208,46 +225,53 @@ public class DateCommentFragment extends BaseFragment
                 DateCommentFragment.this.bitmap = bitmap;
             }
         };
-
+        
         thread.start();
-
+        
     }
-
+    
     @Override
-    public Bitmap getBitmap() {
+    public Bitmap getBitmap()
+    {
         return bitmap;
     }
-
+    
     @Override
-    public void loadData() {
-
+    public void loadData()
+    {
+        
     }
-
+    
     @Override
-    public void loadSubData() {
-
+    public void loadSubData()
+    {
+        
     }
-
+    
     @Override
-    public void onClickDate(int year, int month, int day) {
+    public void onClickDate(int year, int month, int day)
+    {
         dateText.setText(year + "年" + (month + 1) + "月" + day + "日");
         initDateList(year, month + 1, day);
         mcvCalendar.getCurrentMonthView().setSelectYearMonth(year, month, day);
         wcvCalendar.getCurrentWeekView().setSelectYearMonth(year, month, day);
         LWDApp.getEventBus().post(new DateClickEvent(year, month + 1, day));
     }
-
-    private void initDateList(int year, int month, int day) {
+    
+    private void initDateList(int year, int month, int day)
+    {
         datas.clear();
         List<SaveDateDb> resultDatas = mSaveDateDbDao.queryBuilder()
                 .where(SaveDateDbDao.Properties.Year.eq(year))
                 .where(SaveDateDbDao.Properties.Month.eq(month))
                 .where(SaveDateDbDao.Properties.Day.eq(day))
                 .list();
-
-        for (SaveDateDb db : resultDatas) {
+        
+        for (SaveDateDb db : resultDatas)
+        {
             List<CommentInfoDb> commentInfoDbs = db.getCommentInfoDbs();
-            for (CommentInfoDb commentInfoDb : commentInfoDbs) {
+            for (CommentInfoDb commentInfoDb : commentInfoDbs)
+            {
                 CommentTypeInfoDb typeInfoDb = mCommentTypeInfoDbDao
                         .queryBuilder()
                         .where(CommentTypeInfoDbDao.Properties.Id
@@ -255,9 +279,12 @@ public class DateCommentFragment extends BaseFragment
                         .list()
                         .get(0);
                 CommentInfoModel model;
-                if (typeInfoDb != null) {
+                if (typeInfoDb != null)
+                {
                     model = new CommentInfoModel(typeInfoDb.getTypeName());
-                } else {
+                }
+                else
+                {
                     model = new CommentInfoModel("Unknow");
                 }
                 model.setDocname(commentInfoDb.getDocname());
@@ -270,23 +297,50 @@ public class DateCommentFragment extends BaseFragment
                 datas.add(model);
             }
         }
-
+        
         SortUtils.sortData(datas);
-        if (datas.size() > 0) {
+        if (datas.size() > 0)
+        {
             rlNoTask.setVisibility(View.GONE);
-        } else {
+        }
+        else
+        {
             rlNoTask.setVisibility(View.VISIBLE);
-
+            
         }
         adapter.notifyDataSetChanged();
     }
-
+    
     @Override
-    public void onPageChange(int year, int month, int day) {
+    public void onPageChange(int year, int month, int day)
+    {
         initViewPoint(year, month + 1);
         LWDApp.getEventBus().post(new MonthChangeEvent(year, month + 1, day));
     }
-
-
-
+    
+    @Subscribe
+    public void deleteComment(DeleteCommentEvent event)
+    {
+        if (event != null)
+        {
+            mCommentInfoDbDao.deleteByKey(event.getSelectCommentInfo().getId());
+            datas.remove(event.getSelectPoision());
+            // 删除卡片操作
+            adapter.notifyItemRemoved(event.getSelectPoision());
+            adapter.notifyDataSetChanged();
+            File file = new File(event.getSelectCommentInfo().getPath());
+            if (file.exists())
+            {
+                file.delete();
+            }
+            if (datas.size() > 0)
+            {
+                rlNoTask.setVisibility(View.GONE);
+            }
+            else
+            {
+                rlNoTask.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 }
