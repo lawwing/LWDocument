@@ -27,6 +27,8 @@ import com.lawwing.lwdocument.gen.SaveDateDb;
 import com.lawwing.lwdocument.gen.SaveDateDbDao;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.model.SaveDateModel;
+import com.lawwing.lwdocument.utils.ScaleAnimationUtils;
+import com.lawwing.lwdocument.utils.ScreenUtils;
 import com.lawwing.lwdocument.utils.SortUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
@@ -37,10 +39,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,51 +54,48 @@ import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
  */
 
 public class DateCommentFragment extends BaseFragment
-        implements ScreenShotable, OnCalendarClickListener
-{
+        implements ScreenShotable, OnCalendarClickListener {
     private View containerView;
-    
+
     private Bitmap bitmap;
-    
+
     private MonthCalendarView mcvCalendar;
-    
+
     private WeekCalendarView wcvCalendar;
-    
+
     private ScheduleRecyclerView rvScheduleList;
-    
+
     private ScheduleLayout slSchedule;
-    
+
     private TextView dateText;
-    
+
     private LinearLayout rlNoTask;
-    
+
     private LinearLayout itemMenuLayout;
-    
+
     private LinearLayout animlayout;
-    
+
     private SaveDateDbDao mSaveDateDbDao;
-    
+
     private CommentTypeInfoDbDao mCommentTypeInfoDbDao;
-    
+
     private CommentInfoDbDao mCommentInfoDbDao;
-    
+
     private DateCommentAdapter adapter;
-    
+
     private ArrayList<CommentInfoModel> datas;
-    
-    public static DateCommentFragment newInstance()
-    {
+
+    public static DateCommentFragment newInstance() {
         DateCommentFragment contentFragment = new DateCommentFragment();
         Bundle bundle = new Bundle();
         contentFragment.setArguments(bundle);
         return contentFragment;
     }
-    
+
     private boolean isInit = false;
-    
+
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.containerView = view.findViewById(R.id.container);
         mSaveDateDbDao = LWDApp.get().getDaoSession().getSaveDateDbDao();
@@ -104,32 +104,26 @@ public class DateCommentFragment extends BaseFragment
                 .getDaoSession()
                 .getCommentTypeInfoDbDao();
         // DbUtils.saveDateDb(mSaveDateDbDao, 2017, 11, 28);
-        new Thread()
-        {
+        new Thread() {
             @Override
-            public void run()
-            {
-                while (!isInit)
-                {
-                    if (mcvCalendar.getCurrentMonthView() != null)
-                    {
+            public void run() {
+                while (!isInit) {
+                    if (mcvCalendar.getCurrentMonthView() != null) {
                         handler.sendMessage(new Message());
                         isInit = true;
                         break;
                     }
-                    
+
                 }
                 super.run();
             }
         }.start();
-        
+
     }
-    
-    private Handler handler = new Handler()
-    {
+
+    private Handler handler = new Handler() {
         @Override
-        public void handleMessage(Message msg)
-        {
+        public void handleMessage(Message msg) {
             // 获取当前的月份
             SaveDateModel nowDate = TimeUtils.getCurDateModel();
             int year = nowDate.getYear();
@@ -140,40 +134,35 @@ public class DateCommentFragment extends BaseFragment
             super.handleMessage(msg);
         }
     };
-    
-    private void initViewPoint(int year, int month)
-    {
+
+    private void initViewPoint(int year, int month) {
         List<Integer> dates = new ArrayList<>();
         List<SaveDateDb> saveDbs = mSaveDateDbDao.queryBuilder()
                 .where(SaveDateDbDao.Properties.Year.eq(year))
                 .where(SaveDateDbDao.Properties.Month.eq(month))
                 .build()
                 .list();
-        for (SaveDateDb temp : saveDbs)
-        {
+        for (SaveDateDb temp : saveDbs) {
             if (temp.getCommentInfoDbs() != null
-                    && temp.getCommentInfoDbs().size() != 0)
-            {
+                    && temp.getCommentInfoDbs().size() != 0) {
                 dates.add(temp.getDay());
             }
         }
         mcvCalendar.getCurrentMonthView().addTaskHints(dates);
         wcvCalendar.getCurrentWeekView().addTaskHints(dates);
     }
-    
+
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         View rootView = inflater
                 .inflate(R.layout.fragment_date_comment_list, container, false);
-        
+
         mcvCalendar = (MonthCalendarView) rootView
                 .findViewById(R.id.mcvCalendar);
         wcvCalendar = (WeekCalendarView) rootView
@@ -192,47 +181,71 @@ public class DateCommentFragment extends BaseFragment
         mcvCalendar.setOnCalendarClickListener(this);
         wcvCalendar.setOnCalendarClickListener(this);
         slSchedule.setOnCalendarClickListener(this);
-        
-        itemMenuLayout.setOnClickListener(new View.OnClickListener()
-        {
+
+        itemMenuLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                itemMenuLayout.setVisibility(View.GONE);
+            public void onClick(View v) {
+                closeMenu();
             }
         });
-        
+
         initRecycler();
         LWDApp.getEventBus().register(this);
         return rootView;
     }
-    
+
+    private void closeMenu() {
+        if (isUpMenu) {
+            AnimationSet animationSet = new AnimationSet(true);
+            animationSet.addAnimation(ScaleAnimationUtils.leftUpToRightDownSmallAnimation(closeListen, 500));
+            animlayout.startAnimation(animationSet);
+        } else {
+
+            AnimationSet animationSet = new AnimationSet(true);
+            animationSet.addAnimation(ScaleAnimationUtils.leftDownToRightUpSmallAnimation(closeListen, 500));
+            animlayout.startAnimation(animationSet);
+        }
+    }
+
+    private Animation.AnimationListener closeListen = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            itemMenuLayout.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    };
+
+
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         LWDApp.getEventBus().unregister(this);
         super.onDestroy();
     }
-    
-    private void initRecycler()
-    {
+
+    private void initRecycler() {
         datas = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         rvScheduleList.setLayoutManager(manager);
-        
+
         adapter = new DateCommentAdapter(datas, getActivity());
         rvScheduleList.setAdapter(adapter);
     }
-    
+
     @Override
-    public void takeScreenShot()
-    {
-        Thread thread = new Thread()
-        {
+    public void takeScreenShot() {
+        Thread thread = new Thread() {
             @Override
-            public void run()
-            {
+            public void run() {
                 Bitmap bitmap = Bitmap.createBitmap(containerView.getWidth(),
                         containerView.getHeight(),
                         Bitmap.Config.ARGB_8888);
@@ -241,53 +254,46 @@ public class DateCommentFragment extends BaseFragment
                 DateCommentFragment.this.bitmap = bitmap;
             }
         };
-        
+
         thread.start();
-        
+
     }
-    
+
     @Override
-    public Bitmap getBitmap()
-    {
+    public Bitmap getBitmap() {
         return bitmap;
     }
-    
+
     @Override
-    public void loadData()
-    {
-        
+    public void loadData() {
+
     }
-    
+
     @Override
-    public void loadSubData()
-    {
-        
+    public void loadSubData() {
+
     }
-    
+
     @Override
-    public void onClickDate(int year, int month, int day)
-    {
+    public void onClickDate(int year, int month, int day) {
         dateText.setText(year + "年" + (month + 1) + "月" + day + "日");
         initDateList(year, month + 1, day);
         mcvCalendar.getCurrentMonthView().setSelectYearMonth(year, month, day);
         wcvCalendar.getCurrentWeekView().setSelectYearMonth(year, month, day);
         LWDApp.getEventBus().post(new DateClickEvent(year, month + 1, day));
     }
-    
-    private void initDateList(int year, int month, int day)
-    {
+
+    private void initDateList(int year, int month, int day) {
         datas.clear();
         List<SaveDateDb> resultDatas = mSaveDateDbDao.queryBuilder()
                 .where(SaveDateDbDao.Properties.Year.eq(year))
                 .where(SaveDateDbDao.Properties.Month.eq(month))
                 .where(SaveDateDbDao.Properties.Day.eq(day))
                 .list();
-        
-        for (SaveDateDb db : resultDatas)
-        {
+
+        for (SaveDateDb db : resultDatas) {
             List<CommentInfoDb> commentInfoDbs = db.getCommentInfoDbs();
-            for (CommentInfoDb commentInfoDb : commentInfoDbs)
-            {
+            for (CommentInfoDb commentInfoDb : commentInfoDbs) {
                 CommentTypeInfoDb typeInfoDb = mCommentTypeInfoDbDao
                         .queryBuilder()
                         .where(CommentTypeInfoDbDao.Properties.Id
@@ -295,12 +301,9 @@ public class DateCommentFragment extends BaseFragment
                         .list()
                         .get(0);
                 CommentInfoModel model;
-                if (typeInfoDb != null)
-                {
+                if (typeInfoDb != null) {
                     model = new CommentInfoModel(typeInfoDb.getTypeName());
-                }
-                else
-                {
+                } else {
                     model = new CommentInfoModel("Unknow");
                 }
                 model.setDocname(commentInfoDb.getDocname());
@@ -313,70 +316,105 @@ public class DateCommentFragment extends BaseFragment
                 datas.add(model);
             }
         }
-        
+
         SortUtils.sortData(datas);
-        if (datas.size() > 0)
-        {
+        if (datas.size() > 0) {
             rlNoTask.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             rlNoTask.setVisibility(View.VISIBLE);
-            
+
         }
         adapter.notifyDataSetChanged();
     }
-    
+
     @Override
-    public void onPageChange(int year, int month, int day)
-    {
+    public void onPageChange(int year, int month, int day) {
         initViewPoint(year, month + 1);
         LWDApp.getEventBus().post(new MonthChangeEvent(year, month + 1, day));
     }
-    
+
+    private boolean isUpMenu = true;
+
     @Subscribe
-    public void moreClick(CommentListMoreEvent event)
-    {
-        if (event != null)
-        {
-            switch (event.getFlag())
-            {
+    public void moreClick(CommentListMoreEvent event) {
+        if (event != null) {
+            switch (event.getFlag()) {
                 case "更多操作":
                     itemMenuLayout.setVisibility(View.VISIBLE);
-                    Log.e("test", 1920 - event.getY() + "ss");
                     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) animlayout
                             .getLayoutParams();
-                    int baseX = event.getY() - getResources()
-                            .getDimensionPixelSize(R.dimen.image_height) * 2;
-                    if (1920 - baseX < getResources()
-                            .getDimensionPixelSize(R.dimen.menulayout_height))
-                    {
-                        params.topMargin = event.getY()
-                                - getResources().getDimensionPixelSize(
-                                        R.dimen.image_height) * 2
-                                - getResources().getDimensionPixelSize(
-                                        R.dimen.menulayout_height);
-                    }
-                    else
-                    {
-                        params.topMargin = event.getY()
-                                - getResources().getDimensionPixelSize(
-                                        R.dimen.image_height) * 2;
+                    int baseY = event.getY()
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.activity_title_height);
+                    AnimationSet animationSet = new AnimationSet(true);
+                    if (ScreenUtils.getScreenHeight(getActivity())
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.activity_title_height) * 1.5
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.menulayout_height) < baseY) {
+                        isUpMenu = true;
+                        params.topMargin = baseY
+                                - getResources().getDimensionPixelOffset(
+                                R.dimen.menulayout_height)
+                                - getResources().getDimensionPixelOffset(
+                                R.dimen.image_height);
+                        // 上面
+                        animationSet.addAnimation(
+                                ScaleAnimationUtils.rightDownToLeftUpBiggerAnimation(
+                                        new Animation.AnimationListener() {
+                                            @Override
+                                            public void onAnimationStart(
+                                                    Animation animation) {
+
+                                            }
+
+                                            @Override
+                                            public void onAnimationEnd(
+                                                    Animation animation) {
+                                            }
+
+                                            @Override
+                                            public void onAnimationRepeat(
+                                                    Animation animation) {
+
+                                            }
+                                        },
+                                        500));
+
+                    } else {
+                        params.topMargin = baseY + 10;
+
+                        isUpMenu = false;
+                        animationSet.addAnimation(
+                                ScaleAnimationUtils.rightUpToLeftDownBiggerAnimation(
+                                        new Animation.AnimationListener() {
+                                            @Override
+                                            public void onAnimationStart(
+                                                    Animation animation) {
+
+                                            }
+
+                                            @Override
+                                            public void onAnimationEnd(
+                                                    Animation animation) {
+                                            }
+
+                                            @Override
+                                            public void onAnimationRepeat(
+                                                    Animation animation) {
+
+                                            }
+                                        },
+                                        500));
                     }
                     animlayout.setLayoutParams(params);
-                    
-                    // AnimationSet animationSet = new AnimationSet(true);
-                    // ScaleAnimation translateAnimation = new
-                    // ScaleAnimation(1f,
-                    // 1f, 0, 0, Animation.RELATIVE_TO_PARENT, -1f,
-                    // Animation.RELATIVE_TO_PARENT, 0f);
-                    // translateAnimation.setDuration(1000);
-                    // animationSet.addAnimation(translateAnimation);
-                    // animlayout.startAnimation(animationSet);
+
+                    animlayout.startAnimation(animationSet);
                     break;
                 default:
                     break;
             }
         }
     }
+
 }
