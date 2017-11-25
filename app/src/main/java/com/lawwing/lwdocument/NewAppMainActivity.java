@@ -751,7 +751,7 @@ public class NewAppMainActivity extends AppCompatActivity implements
                             - getResources().getDimensionPixelOffset(
                                     R.dimen.menulayout_height)
                             - getResources().getDimensionPixelOffset(
-                                    R.dimen.image_height);
+                                    R.dimen.image_height) * 2;
                     
                     break;
                 case "类型更多操作":
@@ -765,7 +765,7 @@ public class NewAppMainActivity extends AppCompatActivity implements
                             - getResources().getDimensionPixelOffset(
                                     R.dimen.menulayout_height)
                             - getResources().getDimensionPixelOffset(
-                                    R.dimen.image_height);
+                                    R.dimen.image_height) * 2;
                     
                     break;
                 default:

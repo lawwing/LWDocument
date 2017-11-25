@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/activity_title_height"
-            android:background="#333333"
+            android:background="@color/titleBarColor"
             android:minHeight="@dimen/activity_title_height"
             android:title="首页"
             android:titleTextColor="@color/white" />

@@ -13,5 +13,7 @@
     <color name="color5">#ffffff</color>
 
     <color name="gray">#cccccc</color>
+    <color name="midderTextColor">#999999</color>
     <color name="scrollbarThumbVerticalColor">#00000000</color>
+    <color name="titleBarColor">#FFD01111</color>
 </resources>

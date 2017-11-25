@@ -6,7 +6,7 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="sliding_menu_width">80dp</dimen>
-    <dimen name="image_height">32dp</dimen>
+    <dimen name="image_height">16dp</dimen>
     <dimen name="menulayout_height">171dp</dimen>
     <dimen name="menu_item_height">42dp</dimen>
 </resources>

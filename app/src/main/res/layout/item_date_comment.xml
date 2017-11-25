@@ -47,7 +47,7 @@
 
                 <ImageView
                     android:id="@+id/moreBtn"
-                    android:layout_width="@dimen/image_height"
+                    android:layout_width="32dp"
                     android:layout_height="@dimen/image_height"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"

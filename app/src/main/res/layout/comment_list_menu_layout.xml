@@ -19,16 +19,30 @@
             android:orientation="horizontal"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:weightSum="10">
+            android:weightSum="11">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:gravity="center_vertical"
-                android:text="分享到"
-                android:textColor="@color/gray"
-                android:textSize="12sp" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@mipmap/share_menu_img" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="分享到"
+                    android:textColor="@color/midderTextColor"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/shareQQLayout"
@@ -105,10 +119,16 @@
             android:id="@+id/checkOfficeBtn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_item_height"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:weightSum="10">
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="5dp"
+                android:src="@mipmap/checkdoc_menu_img" />
 
             <TextView
                 android:layout_width="0dp"
@@ -116,7 +136,7 @@
                 android:layout_weight="10"
                 android:gravity="center_vertical"
                 android:text="查看原文件"
-                android:textColor="@color/gray"
+                android:textColor="@color/midderTextColor"
                 android:textSize="12sp" />
         </LinearLayout>
         <!--移动到-->
@@ -129,10 +149,16 @@
             android:id="@+id/moveToOtherType"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_item_height"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:weightSum="10">
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="5dp"
+                android:src="@mipmap/transtype_menu_img" />
 
             <TextView
                 android:layout_width="0dp"
@@ -140,7 +166,7 @@
                 android:layout_weight="10"
                 android:gravity="center_vertical"
                 android:text="移动到其他分类"
-                android:textColor="@color/gray"
+                android:textColor="@color/midderTextColor"
                 android:textSize="12sp" />
         </LinearLayout>
         <!--删除-->
@@ -153,10 +179,16 @@
             android:id="@+id/deleteComment"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_item_height"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:weightSum="10">
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="5dp"
+                android:src="@mipmap/delete_menu_img" />
 
             <TextView
                 android:layout_width="0dp"
@@ -164,7 +196,7 @@
                 android:layout_weight="10"
                 android:gravity="center_vertical"
                 android:text="删除批阅"
-                android:textColor="@color/gray"
+                android:textColor="@color/midderTextColor"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
