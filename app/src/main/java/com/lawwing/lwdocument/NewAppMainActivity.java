@@ -6,7 +6,6 @@ import static com.lawwing.lwdocument.base.StaticDatas.OPENWHEEL;
 import static com.lawwing.lwdocument.base.StaticDatas.SETTING;
 import static com.lawwing.lwdocument.base.StaticDatas.TYPE_COMMENT;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,15 +22,13 @@ import com.lawwing.lwdocument.event.DateClickEvent;
 import com.lawwing.lwdocument.event.DeleteCommentEvent;
 import com.lawwing.lwdocument.event.MonthChangeEvent;
 import com.lawwing.lwdocument.event.OpenWheelEvent;
-import com.lawwing.lwdocument.event.SaveCommentEvent;
 import com.lawwing.lwdocument.fragment.AboutUsFragment;
 import com.lawwing.lwdocument.fragment.ContentFragment;
 import com.lawwing.lwdocument.fragment.DateCommentFragment;
 import com.lawwing.lwdocument.fragment.SelectFileFragment;
+import com.lawwing.lwdocument.fragment.TransTypeDialogFragment;
 import com.lawwing.lwdocument.fragment.TypeCommentFragment;
 import com.lawwing.lwdocument.fragment.TypeManagerFragment;
-import com.lawwing.lwdocument.gen.CommentInfoDb;
-import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.utils.ScaleAnimationUtils;
 import com.lawwing.lwdocument.utils.ScreenUtils;
@@ -116,6 +113,8 @@ public class NewAppMainActivity extends AppCompatActivity implements
     
     private Toolbar toolbar;
     
+    private TransTypeDialogFragment transTypeFragment;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -198,6 +197,7 @@ public class NewAppMainActivity extends AppCompatActivity implements
                                     selectCommentInfo.getDocpath()));
                     break;
                 case R.id.moveToOtherType:
+                    isMoveToOther = true;
                     break;
                 case R.id.deleteComment:
                     new AlertDialog.Builder(NewAppMainActivity.this)
@@ -225,6 +225,15 @@ public class NewAppMainActivity extends AppCompatActivity implements
             closeMenu();
         }
     };
+    
+    private boolean isMoveToOther = false;
+    
+    private void showTransTypeDialog()
+    {
+        transTypeFragment = new TransTypeDialogFragment(selectCommentInfo,
+                selectPoision);
+        transTypeFragment.show(getFragmentManager(), "更换分类");
+    }
     
     private void initShareEvent()
     {
@@ -354,6 +363,11 @@ public class NewAppMainActivity extends AppCompatActivity implements
         public void onAnimationEnd(Animation animation)
         {
             itemMenuLayout.setVisibility(View.GONE);
+            if (isMoveToOther)
+            {
+                showTransTypeDialog();
+            }
+            isMoveToOther = false;
         }
         
         @Override

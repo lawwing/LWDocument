@@ -20,6 +20,7 @@ import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.event.DateClickEvent;
 import com.lawwing.lwdocument.event.DeleteCommentEvent;
 import com.lawwing.lwdocument.event.MonthChangeEvent;
+import com.lawwing.lwdocument.event.TransTypeEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
@@ -333,6 +334,31 @@ public class DateCommentFragment extends BaseFragment
             {
                 file.delete();
             }
+            if (datas.size() > 0)
+            {
+                rlNoTask.setVisibility(View.GONE);
+            }
+            else
+            {
+                rlNoTask.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+    
+    @Subscribe
+    public void transComment(TransTypeEvent event)
+    {
+        if (event != null)
+        {
+            CommentInfoDb commentInfoDb = mCommentInfoDbDao
+                    .load(event.getSelectCommentInfo().getId());
+            commentInfoDb.setTypeId(event.getSelectTypeBean().getId());
+            mCommentInfoDbDao.insertOrReplace(commentInfoDb);
+            datas.get(event.getSelectPoision())
+                    .setTypeId(event.getSelectTypeBean().getId());
+            datas.get(event.getSelectPoision())
+                    .setTypeName(event.getSelectTypeBean().getTypeName());
+            adapter.notifyDataSetChanged();
             if (datas.size() > 0)
             {
                 rlNoTask.setVisibility(View.GONE);

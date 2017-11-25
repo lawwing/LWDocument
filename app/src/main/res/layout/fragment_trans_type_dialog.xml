@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/contentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_round_bg"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="请选择要移动到的分类"
+            android:textColor="#333333" />
+        <!--分类列表-->
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:id="@+id/tagFlowlayout"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:max_select="1"></com.zhy.view.flowlayout.TagFlowLayout>
+        <!--确定按钮-->
+        <View
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+
+        <TextView
+            android:id="@+id/saveBtn"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>

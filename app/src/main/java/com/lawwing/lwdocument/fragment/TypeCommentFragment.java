@@ -5,9 +5,6 @@ import static com.lawwing.lwdocument.base.StaticDatas.OPENWHEEL;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -20,6 +17,7 @@ import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.event.ChangeTitleContent;
 import com.lawwing.lwdocument.event.DeleteCommentEvent;
 import com.lawwing.lwdocument.event.OpenWheelEvent;
+import com.lawwing.lwdocument.event.TransTypeEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
@@ -27,16 +25,15 @@ import com.lawwing.lwdocument.gen.CommentTypeInfoDbDao;
 import com.lawwing.lwdocument.model.CommentInfoModel;
 import com.lawwing.lwdocument.model.CommentTypeInfoModel;
 import com.lawwing.lwdocument.utils.SortUtils;
-import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,10 +176,12 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                     adapter.notifyDataSetChanged();
                     LWDApp.getEventBus()
                             .post(new ChangeTitleContent("批阅分类-全部 ⇓"));
+                    selectTypeId = -1;
                 }
                 else
                 {
                     CommentTypeInfoModel model = datas.get(selectPoi);
+                    selectTypeId = model.getId();
                     getDataByTypeId(model.getId());
                     adapter.notifyDataSetChanged();
                     LWDApp.getEventBus().post(new ChangeTitleContent(
@@ -201,6 +200,8 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
             }
         });
     }
+    
+    private long selectTypeId = -1;
     
     private void getDataByTypeId(long typeId)
     {
@@ -354,4 +355,58 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
             }
         }
     }
+    
+    @Subscribe
+    public void transComment(TransTypeEvent event)
+    {
+        if (event != null)
+        {
+            CommentInfoDb commentInfoDb = mCommentInfoDbDao
+                    .load(event.getSelectCommentInfo().getId());
+            commentInfoDb.setTypeId(event.getSelectTypeBean().getId());
+            mCommentInfoDbDao.insertOrReplace(commentInfoDb);
+            
+            CommentTypeInfoDb commentTypeInfoDb = mCommentTypeInfoDbDao
+                    .load(event.getSelectTypeBean().getId());
+            commentTypeInfoDb.getCommentInfoDbs().add(commentInfoDb);
+            mCommentTypeInfoDbDao.insertOrReplace(commentTypeInfoDb);
+            
+            if (selectTypeId != -1)
+            {
+                CommentTypeInfoDb removeTypeInfoDb = mCommentTypeInfoDbDao
+                        .load(selectTypeId);
+                removeTypeInfoDb.getCommentInfoDbs().remove(commentInfoDb);
+                mCommentTypeInfoDbDao.insertOrReplace(removeTypeInfoDb);
+                if (selectTypeId != event.getSelectTypeBean().getId())
+                {
+                    listDatas.remove(event.getSelectPoision());
+                    adapter.notifyItemRemoved(event.getSelectPoision());
+                    adapter.notifyDataSetChanged();
+                }
+            }
+            else
+            {
+                CommentTypeInfoDb removeTypeInfoDb = mCommentTypeInfoDbDao
+                        .load(event.getSelectCommentInfo().getTypeId());
+                removeTypeInfoDb.getCommentInfoDbs().remove(commentInfoDb);
+                mCommentTypeInfoDbDao.insertOrReplace(removeTypeInfoDb);
+                listDatas.get(event.getSelectPoision())
+                        .setTypeId(event.getSelectTypeBean().getId());
+                listDatas.get(event.getSelectPoision())
+                        .setTypeName(event.getSelectTypeBean().getTypeName());
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+    
+    private Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            getDataByTypeId(selectTypeId);
+            adapter.notifyDataSetChanged();
+            super.handleMessage(msg);
+        }
+    };
 }
