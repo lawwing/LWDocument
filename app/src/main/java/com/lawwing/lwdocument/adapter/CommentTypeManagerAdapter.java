@@ -6,6 +6,7 @@ import com.lawwing.lwdocument.AboutUsActivity;
 import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.event.AddTypeEvent;
+import com.lawwing.lwdocument.event.CommentTypeChangeEvent;
 import com.lawwing.lwdocument.model.CommentTypeInfoModel;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,19 +51,40 @@ public class CommentTypeManagerAdapter extends
     }
     
     @Override
-    public void onBindViewHolder(CommentTypeManagerHolder holder, int position)
+    public void onBindViewHolder(CommentTypeManagerHolder holder,
+            final int position)
     {
         if (datas != null && position < datas.size())
         {
             holder.addLayout.setVisibility(View.GONE);
             holder.contentLayout.setVisibility(View.VISIBLE);
-            CommentTypeInfoModel model = datas.get(position);
+            final CommentTypeInfoModel model = datas.get(position);
             if (model != null)
             {
                 holder.typeNameText.setText(
                         model.getTypeName() + "（" + model.getCount() + "）");
                 holder.timeText.setText(
                         TimeUtils.milliseconds2String(model.getCreateTime()));
+                holder.editTypeBtn.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        LWDApp.getEventBus().post(new CommentTypeChangeEvent(
+                                "edit", model, position));
+                    }
+                });
+                holder.deleteTypeBtn
+                        .setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                LWDApp.getEventBus().post(
+                                        new CommentTypeChangeEvent("delete",
+                                                model, position));
+                            }
+                        });
             }
         }
         else
@@ -100,6 +123,10 @@ public class CommentTypeManagerAdapter extends
         
         TextView timeText;
         
+        ImageView deleteTypeBtn;
+        
+        ImageView editTypeBtn;
+        
         public CommentTypeManagerHolder(View itemView)
         {
             super(itemView);
@@ -108,6 +135,9 @@ public class CommentTypeManagerAdapter extends
             addLayout = (LinearLayout) itemView.findViewById(R.id.addLayout);
             typeNameText = (TextView) itemView.findViewById(R.id.typeNameText);
             timeText = (TextView) itemView.findViewById(R.id.timeText);
+            deleteTypeBtn = (ImageView) itemView
+                    .findViewById(R.id.deleteTypeBtn);
+            editTypeBtn = (ImageView) itemView.findViewById(R.id.editTypeBtn);
         }
     }
 }

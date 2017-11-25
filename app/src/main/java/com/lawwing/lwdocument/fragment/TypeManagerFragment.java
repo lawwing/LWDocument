@@ -10,6 +10,7 @@ import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.adapter.CommentTypeManagerAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.event.AddTypeEvent;
+import com.lawwing.lwdocument.event.CommentTypeChangeEvent;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDbDao;
 import com.lawwing.lwdocument.model.CommentTypeInfoModel;
@@ -24,6 +25,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -220,5 +222,71 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
         commentTypeDb.setIsEdit(true);
         commentTypeDb.setIsShow(true);
         mCommentTypeInfoDbDao.insertOrReplace(commentTypeDb);
+    }
+    
+    @Subscribe
+    public void changeType(final CommentTypeChangeEvent event)
+    {
+        if (event != null)
+        {
+            switch (event.getFlag())
+            {
+                case "edit":
+                    // 编辑名称
+                    final EditText editText = new EditText(getActivity());
+                    editText.setText(event.getTypeInfoModel().getTypeName());
+                    editText.setSelection(
+                            editText.getText().toString().length());
+                    editText.setFilters(new InputFilter[] {
+                            new InputFilter.LengthFilter(10) });
+                    new AlertDialog.Builder(getActivity()).setTitle("编辑分类名称")
+                            .setView(editText)
+                            .setPositiveButton("确定",
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which)
+                                        {
+                                            if (!TextUtils
+                                                    .isEmpty(editText.getText()
+                                                            .toString()
+                                                            .trim()))
+                                            {
+                                                CommentTypeInfoDb commentTypeInfoDb = mCommentTypeInfoDbDao
+                                                        .load(event
+                                                                .getTypeInfoModel()
+                                                                .getId());
+                                                commentTypeInfoDb.setTypeName(
+                                                        editText.getText()
+                                                                .toString()
+                                                                .trim());
+                                                mCommentTypeInfoDbDao
+                                                        .insertOrReplace(
+                                                                commentTypeInfoDb);
+                                                
+                                                datas.get(event.getPosition())
+                                                        .setTypeName(editText
+                                                                .getText()
+                                                                .toString()
+                                                                .trim());
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                            else
+                                            {
+                                                showShortToast("名称不能为空！");
+                                            }
+                                        }
+                                    })
+                            .setNegativeButton("取消", null)
+                            .show();
+                    break;
+                
+                case "delete":
+                    // 删除类型
+                    break;
+            }
+        }
     }
 }
