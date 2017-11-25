@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.event.ChangeTitleContent;
+import com.lawwing.lwdocument.event.CommentListMoreEvent;
 import com.lawwing.lwdocument.event.DateClickEvent;
 import com.lawwing.lwdocument.event.MonthChangeEvent;
 import com.lawwing.lwdocument.event.OpenWheelEvent;
@@ -25,6 +26,8 @@ import com.lawwing.lwdocument.fragment.DateCommentFragment;
 import com.lawwing.lwdocument.fragment.SelectFileFragment;
 import com.lawwing.lwdocument.fragment.TypeCommentFragment;
 import com.lawwing.lwdocument.fragment.TypeManagerFragment;
+import com.lawwing.lwdocument.utils.ScaleAnimationUtils;
+import com.lawwing.lwdocument.utils.ScreenUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;
 
 import android.Manifest;
@@ -41,6 +44,8 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -54,29 +59,31 @@ import io.codetail.animation.ViewAnimationUtils;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class NewAppMainActivity extends AppCompatActivity implements
-        ViewAnimator.ViewAnimatorListener, EasyPermissions.PermissionCallbacks
-{
+        ViewAnimator.ViewAnimatorListener, EasyPermissions.PermissionCallbacks {
     private DrawerLayout drawerLayout;
-    
+
     private RelativeLayout container_frame;
-    
+
     private ActionBarDrawerToggle drawerToggle;
-    
+
     private List<SlideMenuItem> list = new ArrayList<>();
-    
+
     private DateCommentFragment dateCommentFragment;
-    
+
     private ViewAnimator viewAnimator;
-    
+
     private int res = R.mipmap.content_music;
-    
+
     private LinearLayout linearLayout;
-    
+
+    private LinearLayout itemMenuLayout;
+
+    private LinearLayout animlayout;
+
     private Toolbar toolbar;
-    
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_app_main);
         dateCommentFragment = DateCommentFragment.newInstance();
@@ -87,51 +94,85 @@ public class NewAppMainActivity extends AppCompatActivity implements
                 .commit();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         container_frame = (RelativeLayout) findViewById(R.id.container_frame);
+        itemMenuLayout = (LinearLayout) findViewById(R.id.itemMenuLayout);
+        animlayout = (LinearLayout) findViewById(R.id.animlayout);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
         linearLayout = (LinearLayout) findViewById(R.id.left_drawer);
-        linearLayout.setOnClickListener(new View.OnClickListener()
-        {
+        linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 drawerLayout.closeDrawers();
             }
         });
         setActionBar();
         createMenuList();
-        
+
         viewAnimator = new ViewAnimator<>(this, list, dateCommentFragment,
                 drawerLayout, this);
+
+        itemMenuLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeMenu();
+            }
+        });
+
         LWDApp.getEventBus().register(this);
-        
-        String[] perms = new String[] {
+
+        String[] perms = new String[]{
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE };
-        if (!EasyPermissions.hasPermissions(this, perms))
-        {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (!EasyPermissions.hasPermissions(this, perms)) {
             EasyPermissions
                     .requestPermissions(this, "需要访问手机存储权限！", 10086, perms);
-        }
-        else
-        {
+        } else {
             initView();
         }
     }
-    
-    private void initView()
-    {
-        
+
+    private void closeMenu() {
+        if (isUpMenu) {
+            AnimationSet animationSet = new AnimationSet(true);
+            animationSet.addAnimation(ScaleAnimationUtils
+                    .leftUpToRightDownSmallAnimation(closeListen, 500));
+            animlayout.startAnimation(animationSet);
+        } else {
+
+            AnimationSet animationSet = new AnimationSet(true);
+            animationSet.addAnimation(ScaleAnimationUtils
+                    .leftDownToRightUpSmallAnimation(closeListen, 500));
+            animlayout.startAnimation(animationSet);
+        }
     }
-    
+
+    private Animation.AnimationListener closeListen = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            itemMenuLayout.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    };
+
+    private void initView() {
+
+    }
+
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         LWDApp.getEventBus().unregister(this);
         super.onDestroy();
     }
-    
-    private void createMenuList()
-    {
+
+    private void createMenuList() {
         SlideMenuItem menuItem0 = new SlideMenuItem(DATE_COMMENT,
                 R.mipmap.icn_date_comment);
         list.add(menuItem0);
@@ -147,27 +188,23 @@ public class NewAppMainActivity extends AppCompatActivity implements
         SlideMenuItem menuItem3 = new SlideMenuItem(StaticDatas.ABOUT_US,
                 R.mipmap.icn_about_us);
         list.add(menuItem3);
-        
+
     }
-    
+
     /**
      * 设置titlebar
      */
-    private void setActionBar()
-    {
+    private void setActionBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(
                 TimeUtils.milliseconds2String(TimeUtils.getCurTimeMills(),
                         new SimpleDateFormat("yyyy年MM月", Locale.getDefault())));
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
-        toolbar.setOnClickListener(new View.OnClickListener()
-        {
+        toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (nowItemName.equals(TYPE_COMMENT))
-                {
+            public void onClick(View v) {
+                if (nowItemName.equals(TYPE_COMMENT)) {
                     LWDApp.getEventBus().post(new OpenWheelEvent(OPENWHEEL));
                 }
             }
@@ -179,105 +216,85 @@ public class NewAppMainActivity extends AppCompatActivity implements
                 toolbar, /* nav drawer icon to replace 'Up' caret */
                 R.string.drawer_open, /* "open drawer" description */
                 R.string.drawer_close /* "close drawer" description */
-        )
-        {
-            
+        ) {
+
             /**
              * Called when a drawer has settled in a completely closed state.
              */
             @Override
-            public void onDrawerClosed(View view)
-            {
+            public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 linearLayout.removeAllViews();
                 linearLayout.invalidate();
             }
-            
+
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset)
-            {
+            public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                if (slideOffset > 0.6 && linearLayout.getChildCount() == 0)
-                {
+                if (slideOffset > 0.6 && linearLayout.getChildCount() == 0) {
                     viewAnimator.showMenuContent();
                 }
             }
-            
+
             /** Called when a drawer has settled in a completely open state. */
             @Override
-            public void onDrawerOpened(View drawerView)
-            {
+            public void onDrawerOpened(View drawerView) {
                 LWDApp.getEventBus().post(new OpenWheelEvent(CLOSEWHEEL));
                 super.onDrawerOpened(drawerView);
             }
         };
         drawerLayout.setDrawerListener(drawerToggle);
     }
-    
+
     @Override
-    protected void onPostCreate(Bundle savedInstanceState)
-    {
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
     }
-    
+
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
     }
-    
+
     private ScreenShotable contentFragment;
-    
+
     private ScreenShotable replaceFragment(ScreenShotable screenShotable,
-            int topPosition, String name)
-    {
-        
+                                           int topPosition, String name) {
+
         View view = findViewById(R.id.content_frame);
         int finalRadius = Math.max(view.getWidth(), view.getHeight());
         SupportAnimator animator = ViewAnimationUtils
                 .createCircularReveal(view, 0, topPosition, 0, finalRadius);
         animator.setInterpolator(new AccelerateInterpolator());
         animator.setDuration(ViewAnimator.CIRCULAR_REVEAL_ANIMATION_DURATION);
-        
+
         findViewById(R.id.content_overlay).setBackgroundDrawable(
                 new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         animator.start();
-        if (name.equals(DATE_COMMENT))
-        {
+        if (name.equals(DATE_COMMENT)) {
             toolbar.setTitle(TimeUtils.milliseconds2String(
                     TimeUtils.getCurTimeMills(),
                     new SimpleDateFormat("yyyy年MM月", Locale.getDefault())));
             contentFragment = DateCommentFragment.newInstance();
-        }
-        else if (name.equals(StaticDatas.FILE_LIST))
-        {
+        } else if (name.equals(StaticDatas.FILE_LIST)) {
             toolbar.setTitle("文档列表");
             contentFragment = SelectFileFragment.newInstance();
-        }
-        else if (name.equals(StaticDatas.ABOUT_US))
-        {
+        } else if (name.equals(StaticDatas.ABOUT_US)) {
             toolbar.setTitle("关于我们");
             contentFragment = AboutUsFragment.newInstance();
-        }
-        else if (name.equals(TYPE_COMMENT))
-        {
+        } else if (name.equals(TYPE_COMMENT)) {
             toolbar.setTitle("批阅分类-全部 ⇓");
             contentFragment = TypeCommentFragment.newInstance();
-        }
-        else if (name.equals(SETTING))
-        {
+        } else if (name.equals(SETTING)) {
             toolbar.setTitle("分类管理");
             contentFragment = TypeManagerFragment.newInstance();
-        }
-        else
-        {
+        } else {
             contentFragment = ContentFragment.newInstance(this.res);
         }
-        
-        if (name != nowItemName)
-        {
+
+        if (name != nowItemName) {
             nowItemName = name;
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, (BaseFragment) contentFragment)
@@ -285,23 +302,19 @@ public class NewAppMainActivity extends AppCompatActivity implements
         }
         return contentFragment;
     }
-    
+
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
+    public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
     }
-    
+
     @Override
     public ScreenShotable onSwitch(Resourceble slideMenuItem,
-            ScreenShotable screenShotable, int position)
-    {
-        switch (slideMenuItem.getName())
-        {
-            
+                                   ScreenShotable screenShotable, int position) {
+        switch (slideMenuItem.getName()) {
+
             default:
-                if (nowItemName == slideMenuItem.getName())
-                {
+                if (nowItemName == slideMenuItem.getName()) {
                     return contentFragment;
                 }
                 return replaceFragment(screenShotable,
@@ -309,139 +322,232 @@ public class NewAppMainActivity extends AppCompatActivity implements
                         slideMenuItem.getName());
         }
     }
-    
+
     private String nowItemName = DATE_COMMENT;
-    
+
     @Override
-    public void disableHomeButton()
-    {
+    public void disableHomeButton() {
         getSupportActionBar().setHomeButtonEnabled(false);
     }
-    
+
     @Override
-    public void enableHomeButton()
-    {
+    public void enableHomeButton() {
         getSupportActionBar().setHomeButtonEnabled(true);
         drawerLayout.closeDrawers();
     }
-    
+
     @Override
-    public void addViewToContainer(View view)
-    {
+    public void addViewToContainer(View view) {
         linearLayout.addView(view);
     }
-    
+
     @Subscribe
-    public void onMonthChangeEventResult(MonthChangeEvent event)
-    {
-        if (event != null)
-        {
+    public void onMonthChangeEventResult(MonthChangeEvent event) {
+        if (event != null) {
             toolbar.setTitle(event.getYear() + "年" + event.getMonth() + "月");
         }
     }
-    
+
     @Subscribe
-    public void onDateClickEventResult(DateClickEvent event)
-    {
-        if (event != null)
-        {
+    public void onDateClickEventResult(DateClickEvent event) {
+        if (event != null) {
             // toolbar.setTitle(event.getYear() + "年" + event.getMonth() + "月"
             // + event.getDay() + "日");
         }
     }
-    
+
     // 记录用户首次点击返回键的时间
     private long firstTime = 0;
-    
+
     /**
      * 第一种解决办法 onKeyDown
-     * 
+     *
      * @param keyCode
      * @param event
      * @return
      */
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.getAction() == KeyEvent.ACTION_DOWN)
-        {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START))
-            {
+                && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 drawerLayout.closeDrawers();
                 return true;
             }
+            if (isOpenMenu()) {
+                closeMenu();
+                return true;
+            }
             long secondTime = System.currentTimeMillis();
-            if (secondTime - firstTime > 2000)
-            {
+            if (secondTime - firstTime > 2000) {
                 Toast.makeText(NewAppMainActivity.this,
                         "再按一次退出程序",
                         Toast.LENGTH_SHORT).show();
                 firstTime = secondTime;
                 return true;
-            }
-            else
-            {
+            } else {
                 System.exit(0);
             }
         }
-        
+
         return super.onKeyUp(keyCode, event);
     }
-    
+
+    private boolean isOpenMenu() {
+        if (itemMenuLayout.getVisibility() == View.VISIBLE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms)
-    {
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
         // 成功
-        if (requestCode == 10086)
-        {
-            if (perms.size() == 2)
-            {
+        if (requestCode == 10086) {
+            if (perms.size() == 2) {
                 initView();
             }
         }
     }
-    
+
     @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms)
-    {
-        
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
         // 失败
-        if (requestCode == 10086)
-        {
+        if (requestCode == 10086) {
             showShortToast("请务必打开全部权限才能扫描文档");
         }
     }
-    
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
-            String[] permissions, int[] grantResults)
-    {
+                                           String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode,
                 permissions,
                 grantResults);
-        
+
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode,
                 permissions,
                 grantResults,
                 this);
     }
-    
-    protected void showShortToast(String message)
-    {
-        
+
+    protected void showShortToast(String message) {
+
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        
+
     }
-    
+
     @Subscribe
-    public void changeTitleContent(ChangeTitleContent event)
-    {
-        if (event != null)
-        {
+    public void changeTitleContent(ChangeTitleContent event) {
+        if (event != null) {
             toolbar.setTitle(event.getTitle());
         }
     }
-    
+
+    @Subscribe
+    public void moreClick(CommentListMoreEvent event) {
+        if (event != null) {
+
+            itemMenuLayout.setVisibility(View.VISIBLE);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) animlayout
+                    .getLayoutParams();
+            AnimationSet animationSet = new AnimationSet(true);
+            int baseY = 0;
+            int marginTop = 0;
+            int bijiaoY = 0;
+            switch (event.getFlag()) {
+                case "日历更多操作":
+                    baseY = event.getY();
+                    bijiaoY = (int) (ScreenUtils.getScreenHeight(this)
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.activity_title_height) * 1.5
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.menulayout_height));
+                    marginTop = baseY
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.menulayout_height)
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.image_height);
+
+
+                    break;
+                case "类型更多操作":
+                    baseY = event.getY();
+                    bijiaoY = (int) ScreenUtils.getScreenHeight(this)
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.menulayout_height) - getResources().getDimensionPixelOffset(
+                            R.dimen.menu_item_height);
+                    marginTop = baseY
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.menulayout_height)
+                            - getResources().getDimensionPixelOffset(
+                            R.dimen.image_height);
+
+                    break;
+                default:
+                    break;
+            }
+
+            if (bijiaoY < baseY) {
+                isUpMenu = true;
+                params.topMargin = marginTop;
+                // 上面
+                animationSet.addAnimation(ScaleAnimationUtils
+                        .rightDownToLeftUpBiggerAnimation(
+                                new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(
+                                            Animation animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(
+                                            Animation animation) {
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(
+                                            Animation animation) {
+
+                                    }
+                                },
+                                500));
+
+            } else {
+                params.topMargin = baseY + 10;
+
+                isUpMenu = false;
+                animationSet.addAnimation(ScaleAnimationUtils
+                        .rightUpToLeftDownBiggerAnimation(
+                                new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(
+                                            Animation animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(
+                                            Animation animation) {
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(
+                                            Animation animation) {
+
+                                    }
+                                },
+                                500));
+            }
+            animlayout.setLayoutParams(params);
+
+            animlayout.startAnimation(animationSet);
+        }
+    }
+
+    private boolean isUpMenu = true;
 }

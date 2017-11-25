@@ -32,7 +32,15 @@
             android:layout_below="@id/toolbar"
             android:orientation="vertical" />
 
+        <LinearLayout
+            android:id="@+id/itemMenuLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#33000000"
+            android:visibility="gone">
 
+            <include layout="@layout/comment_list_menu_layout" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ScrollView

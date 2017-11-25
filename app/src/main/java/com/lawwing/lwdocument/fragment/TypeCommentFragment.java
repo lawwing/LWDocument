@@ -233,7 +233,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
         
-        adapter = new DateCommentAdapter(listDatas, getActivity());
+        adapter = new DateCommentAdapter(listDatas, getActivity(), "类型更多操作");
         recyclerView.setAdapter(adapter);
     }
     

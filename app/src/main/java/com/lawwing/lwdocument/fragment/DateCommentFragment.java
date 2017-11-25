@@ -71,9 +71,6 @@ public class DateCommentFragment extends BaseFragment
 
     private LinearLayout rlNoTask;
 
-    private LinearLayout itemMenuLayout;
-
-    private LinearLayout animlayout;
 
     private SaveDateDbDao mSaveDateDbDao;
 
@@ -171,9 +168,6 @@ public class DateCommentFragment extends BaseFragment
                 .findViewById(R.id.rvScheduleList);
         slSchedule = (ScheduleLayout) rootView.findViewById(R.id.slSchedule);
         rlNoTask = (LinearLayout) rootView.findViewById(R.id.rlNoTask);
-        itemMenuLayout = (LinearLayout) rootView
-                .findViewById(R.id.itemMenuLayout);
-        animlayout = (LinearLayout) rootView.findViewById(R.id.animlayout);
         dateText = (TextView) rootView.findViewById(R.id.dateText);
         dateText.setText(TimeUtils.milliseconds2String(
                 TimeUtils.getCurTimeMills(),
@@ -182,52 +176,12 @@ public class DateCommentFragment extends BaseFragment
         wcvCalendar.setOnCalendarClickListener(this);
         slSchedule.setOnCalendarClickListener(this);
 
-        itemMenuLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeMenu();
-            }
-        });
-
         initRecycler();
-        LWDApp.getEventBus().register(this);
         return rootView;
     }
 
-    private void closeMenu() {
-        if (isUpMenu) {
-            AnimationSet animationSet = new AnimationSet(true);
-            animationSet.addAnimation(ScaleAnimationUtils.leftUpToRightDownSmallAnimation(closeListen, 500));
-            animlayout.startAnimation(animationSet);
-        } else {
-
-            AnimationSet animationSet = new AnimationSet(true);
-            animationSet.addAnimation(ScaleAnimationUtils.leftDownToRightUpSmallAnimation(closeListen, 500));
-            animlayout.startAnimation(animationSet);
-        }
-    }
-
-    private Animation.AnimationListener closeListen = new Animation.AnimationListener() {
-        @Override
-        public void onAnimationStart(Animation animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            itemMenuLayout.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
-    };
-
-
     @Override
     public void onDestroy() {
-        LWDApp.getEventBus().unregister(this);
         super.onDestroy();
     }
 
@@ -237,7 +191,7 @@ public class DateCommentFragment extends BaseFragment
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         rvScheduleList.setLayoutManager(manager);
 
-        adapter = new DateCommentAdapter(datas, getActivity());
+        adapter = new DateCommentAdapter(datas, getActivity(),"日历更多操作");
         rvScheduleList.setAdapter(adapter);
     }
 
@@ -333,88 +287,6 @@ public class DateCommentFragment extends BaseFragment
         LWDApp.getEventBus().post(new MonthChangeEvent(year, month + 1, day));
     }
 
-    private boolean isUpMenu = true;
 
-    @Subscribe
-    public void moreClick(CommentListMoreEvent event) {
-        if (event != null) {
-            switch (event.getFlag()) {
-                case "更多操作":
-                    itemMenuLayout.setVisibility(View.VISIBLE);
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) animlayout
-                            .getLayoutParams();
-                    int baseY = event.getY()
-                            - getResources().getDimensionPixelOffset(
-                            R.dimen.activity_title_height);
-                    AnimationSet animationSet = new AnimationSet(true);
-                    if (ScreenUtils.getScreenHeight(getActivity())
-                            - getResources().getDimensionPixelOffset(
-                            R.dimen.activity_title_height) * 1.5
-                            - getResources().getDimensionPixelOffset(
-                            R.dimen.menulayout_height) < baseY) {
-                        isUpMenu = true;
-                        params.topMargin = baseY
-                                - getResources().getDimensionPixelOffset(
-                                R.dimen.menulayout_height)
-                                - getResources().getDimensionPixelOffset(
-                                R.dimen.image_height);
-                        // 上面
-                        animationSet.addAnimation(
-                                ScaleAnimationUtils.rightDownToLeftUpBiggerAnimation(
-                                        new Animation.AnimationListener() {
-                                            @Override
-                                            public void onAnimationStart(
-                                                    Animation animation) {
-
-                                            }
-
-                                            @Override
-                                            public void onAnimationEnd(
-                                                    Animation animation) {
-                                            }
-
-                                            @Override
-                                            public void onAnimationRepeat(
-                                                    Animation animation) {
-
-                                            }
-                                        },
-                                        500));
-
-                    } else {
-                        params.topMargin = baseY + 10;
-
-                        isUpMenu = false;
-                        animationSet.addAnimation(
-                                ScaleAnimationUtils.rightUpToLeftDownBiggerAnimation(
-                                        new Animation.AnimationListener() {
-                                            @Override
-                                            public void onAnimationStart(
-                                                    Animation animation) {
-
-                                            }
-
-                                            @Override
-                                            public void onAnimationEnd(
-                                                    Animation animation) {
-                                            }
-
-                                            @Override
-                                            public void onAnimationRepeat(
-                                                    Animation animation) {
-
-                                            }
-                                        },
-                                        500));
-                    }
-                    animlayout.setLayoutParams(params);
-
-                    animlayout.startAnimation(animationSet);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
 
 }

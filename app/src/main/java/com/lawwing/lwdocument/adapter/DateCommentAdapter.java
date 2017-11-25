@@ -33,11 +33,14 @@ public class DateCommentAdapter extends
     
     private LayoutInflater inflater;
     
+    private String type;
+    
     public DateCommentAdapter(ArrayList<CommentInfoModel> datas,
-            Activity activity)
+            Activity activity, String type)
     {
         this.datas = datas;
         this.activity = activity;
+        this.type = type;
         inflater = LayoutInflater.from(activity);
     }
     
@@ -79,7 +82,7 @@ public class DateCommentAdapter extends
                     holder.moreBtn.getLocationOnScreen(location);
                     int x = location[0];
                     int y = location[1];
-                    LWDApp.getEventBus().post(new CommentListMoreEvent("更多操作",
+                    LWDApp.getEventBus().post(new CommentListMoreEvent(type,
                             model, position, x, y));
                 }
             });
