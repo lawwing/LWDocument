@@ -167,6 +167,13 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
     {
         if (event != null)
         {
+            int ccount = datas.size();
+            
+            if (ccount == 10)
+            {
+                showShortToast("最多只能添加十个分类，请删除其他分类再添加！");
+                return;
+            }
             final EditText editText = new EditText(getActivity());
             editText.setFilters(
                     new InputFilter[] { new InputFilter.LengthFilter(10) });
@@ -188,6 +195,8 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
                                                         .eq(editText.getText()
                                                                 .toString()
                                                                 .trim()))
+                                                .where(CommentTypeInfoDbDao.Properties.IsShow
+                                                        .eq(true))
                                                 .count();
                                         if (count != 0)
                                         {
@@ -293,7 +302,7 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
                     String message = "";
                     if (hasComment)
                     {
-                        message = "是否删除该分类？\n删除后分类下的批阅将移动到回收站，可以从回收站恢复批阅文件！";
+                        message = "是否删除该分类？\n删除后分类下的批阅将移动到回收站，可以从右上角回收站恢复批阅文件！";
                     }
                     else
                     {

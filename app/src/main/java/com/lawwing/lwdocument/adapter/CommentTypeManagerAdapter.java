@@ -115,11 +115,12 @@ public class CommentTypeManagerAdapter extends
     @Override
     public int getItemCount()
     {
-        int count = datas != null ? datas.size() + 1 : 1;
-        if (datas.size() >= 10)
-        {
-            count = 10;
-        }
+        // int count = datas != null ? datas.size() + 1 : 1;
+        // if (datas.size() >= 10)
+        // {
+        // count = 10;
+        // }
+        int count = datas != null ? datas.size() : 0;
         return count;
     }
     

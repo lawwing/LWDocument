@@ -170,6 +170,8 @@ public class SaveCommentDialogFragment extends DialogFragment
                     long count = mCommentTypeInfoDbDao.queryBuilder()
                             .where(CommentTypeInfoDbDao.Properties.TypeName.eq(
                                     typeEdittext.getText().toString().trim()))
+                            .where(CommentTypeInfoDbDao.Properties.IsShow
+                                    .eq(true))
                             .count();
                     if (count != 0)
                     {

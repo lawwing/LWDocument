@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.base.StaticDatas;
+import com.lawwing.lwdocument.event.AddTypeEvent;
 import com.lawwing.lwdocument.event.ChangeTitleContent;
 import com.lawwing.lwdocument.event.CommentListMoreEvent;
 import com.lawwing.lwdocument.event.DateClickEvent;
@@ -53,6 +54,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -111,6 +113,10 @@ public class NewAppMainActivity extends AppCompatActivity implements
     
     private LinearLayout deleteComment;
     
+    private ImageView rightTwoBtn;
+    
+    private ImageView rightOneBtn;
+    
     private Toolbar toolbar;
     
     private TransTypeDialogFragment transTypeFragment;
@@ -130,6 +136,8 @@ public class NewAppMainActivity extends AppCompatActivity implements
         container_frame = (RelativeLayout) findViewById(R.id.container_frame);
         itemMenuLayout = (LinearLayout) findViewById(R.id.itemMenuLayout);
         animlayout = (LinearLayout) findViewById(R.id.animlayout);
+        rightTwoBtn = (ImageView) findViewById(R.id.rightTwoBtn);
+        rightOneBtn = (ImageView) findViewById(R.id.rightOneBtn);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
         linearLayout = (LinearLayout) findViewById(R.id.left_drawer);
         initShareEvent();
@@ -157,7 +165,22 @@ public class NewAppMainActivity extends AppCompatActivity implements
                 closeMenu();
             }
         });
-        
+        rightOneBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                LWDApp.getEventBus().post(new AddTypeEvent());
+            }
+        });
+        rightTwoBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                
+            }
+        });
         LWDApp.getEventBus().register(this);
         
         String[] perms = new String[] {
@@ -503,6 +526,19 @@ public class NewAppMainActivity extends AppCompatActivity implements
         findViewById(R.id.content_overlay).setBackgroundDrawable(
                 new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         animator.start();
+        
+        if (name.equals(SETTING))
+        {
+            rightOneBtn.setVisibility(View.VISIBLE);
+            rightTwoBtn.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            rightOneBtn.setVisibility(View.GONE);
+            rightTwoBtn.setVisibility(View.GONE);
+            
+        }
+        
         if (name.equals(DATE_COMMENT))
         {
             toolbar.setTitle(TimeUtils.milliseconds2String(
