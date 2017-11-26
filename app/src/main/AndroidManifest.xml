@@ -31,10 +31,6 @@
             android:name=".CommentOfficeActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".AppMainActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme" />
         <activity android:name=".CheckCommentPicActivity" />
         <activity android:name=".GuideActivity">
             <intent-filter>
@@ -61,14 +57,12 @@
                 <data android:pathPattern=".*\\.pdf" />
             </intent-filter>
         </activity>
-        <activity android:name=".CheckCommentPicListActivity" />
         <activity android:name=".AboutUsActivity" />
         <activity android:name=".ShowDocumentListActivity" />
         <activity
             android:name=".XjbPaintActivity"
             android:launchMode="singleTask" />
         <activity android:name=".XjbPaintGalleryActivity" />
-        <activity android:name=".EditPictureActivity" />
         <activity android:name=".SelectPictureActivity" />
         <!-- 填写您从Mob开发者后台中得到的Appkey和AppSecret -->
         <meta-data
@@ -118,7 +112,8 @@
         <activity android:name=".CommentTypeListActivity" />
         <activity
             android:name=".NewAppMainActivity"
-            android:theme="@style/AppTheme.Navigatheme"></activity>
+            android:theme="@style/AppTheme.Navigatheme" />
+        <activity android:name=".CommentRecycleActivity"></activity>
     </application>
 
 </manifest>

@@ -178,7 +178,8 @@ public class NewAppMainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v)
             {
-                
+                startActivity(CommentRecycleActivity
+                        .newInstance(NewAppMainActivity.this));
             }
         });
         LWDApp.getEventBus().register(this);

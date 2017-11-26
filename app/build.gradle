@@ -71,6 +71,12 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-Core-2.8.3.jar')
     compile files('libs/ShareSDK-Wechat-Favorite-2.8.3.jar')
     compile files('libs/ShareSDK-Wechat-Moments-2.8.3.jar')
+
+    compile project(':homeslidemenu')
+    compile project(':calendarlibrary')
+
+
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -84,18 +90,12 @@ dependencies {
     compile 'org.greenrobot:greendao-generator:3.0.0'
     compile 'com.hannesdorfmann:adapterdelegates3:3.0.1'
     compile 'com.tubb.smrv:swipemenu-recyclerview:5.4.0'
+    compile 'com.github.ozodrukh:CircularReveal:1.0.4'
+    compile 'com.hyman:flowlayout-lib:1.1.2'
+    compile 'com.github.open-android:WheelPicker:v1.0.0'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     apt 'org.greenrobot:eventbus-annotation-processor:3.0.1'
-
-    compile 'com.github.ozodrukh:CircularReveal:1.0.4'
-    compile project(':homeslidemenu')
-    compile project(':calendarlibrary')
-
-    compile 'com.hyman:flowlayout-lib:1.1.2'
-
-    compile 'com.github.open-android:WheelPicker:v1.0.0'
-
 }
 
 apt {
