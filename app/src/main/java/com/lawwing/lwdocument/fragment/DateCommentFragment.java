@@ -279,23 +279,26 @@ public class DateCommentFragment extends BaseFragment
                                 .eq(commentInfoDb.getTypeId()))
                         .list()
                         .get(0);
-                CommentInfoModel model;
-                if (typeInfoDb != null)
+                if (typeInfoDb.getIsShow())
                 {
-                    model = new CommentInfoModel(typeInfoDb.getTypeName());
+                    CommentInfoModel model;
+                    if (typeInfoDb != null)
+                    {
+                        model = new CommentInfoModel(typeInfoDb.getTypeName());
+                    }
+                    else
+                    {
+                        model = new CommentInfoModel("Unknow");
+                    }
+                    model.setDocname(commentInfoDb.getDocname());
+                    model.setDocpath(commentInfoDb.getDocpath());
+                    model.setId(commentInfoDb.getId());
+                    model.setName(commentInfoDb.getName());
+                    model.setPath(commentInfoDb.getPath());
+                    model.setTime(commentInfoDb.getTime());
+                    model.setTypeId(commentInfoDb.getTypeId());
+                    datas.add(model);
                 }
-                else
-                {
-                    model = new CommentInfoModel("Unknow");
-                }
-                model.setDocname(commentInfoDb.getDocname());
-                model.setDocpath(commentInfoDb.getDocpath());
-                model.setId(commentInfoDb.getId());
-                model.setName(commentInfoDb.getName());
-                model.setPath(commentInfoDb.getPath());
-                model.setTime(commentInfoDb.getTime());
-                model.setTypeId(commentInfoDb.getTypeId());
-                datas.add(model);
             }
         }
         

@@ -22,7 +22,6 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -31,7 +30,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import cn.lawwing.homeslidemenu.interfaces.ScreenShotable;
@@ -109,7 +107,10 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
             model.setEdit(db.getIsEdit());
             model.setShow(db.getIsShow());
             model.setCount(db.getCommentInfoDbs().size());
-            datas.add(model);
+            if (db.getIsShow())
+            {
+                datas.add(model);
+            }
         }
     }
     
@@ -167,6 +168,8 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
         if (event != null)
         {
             final EditText editText = new EditText(getActivity());
+            editText.setFilters(
+                    new InputFilter[] { new InputFilter.LengthFilter(10) });
             new AlertDialog.Builder(getActivity()).setTitle("请输入类型名称（10个字以内）")
                     .setView(editText)
                     .setPositiveButton("确定",
@@ -284,7 +287,44 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
                     break;
                 
                 case "delete":
-                    // 删除类型
+                    // 删除类型,实际上是隐藏。。。
+                    boolean hasComment = event.getTypeInfoModel()
+                            .getCount() == 0 ? false : true;
+                    String message = "";
+                    if (hasComment)
+                    {
+                        message = "是否删除该分类？\n删除后分类下的批阅将移动到回收站，可以从回收站恢复批阅文件！";
+                    }
+                    else
+                    {
+                        message = "是否删除该分类？";
+                    }
+                    new AlertDialog.Builder(getActivity()).setTitle("警告")
+                            .setMessage(message)
+                            .setNegativeButton("取消", null)
+                            .setPositiveButton("删除",
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which)
+                                        {
+                                            CommentTypeInfoDb commentTypeInfoDb = mCommentTypeInfoDbDao
+                                                    .load(event
+                                                            .getTypeInfoModel()
+                                                            .getId());
+                                            commentTypeInfoDb.setIsShow(false);
+                                            mCommentTypeInfoDbDao
+                                                    .update(commentTypeInfoDb);
+                                            datas.get(event.getPosition())
+                                                    .setShow(false);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    })
+                            .create()
+                            .show();
+                    
                     break;
             }
         }

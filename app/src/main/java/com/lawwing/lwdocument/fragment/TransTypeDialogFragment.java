@@ -132,7 +132,10 @@ public class TransTypeDialogFragment extends DialogFragment
             model.setTypeName(temp.getTypeName());
             model.setShow(temp.getIsShow());
             model.setCount(temp.getCommentInfoDbs().size());
-            datas.add(model);
+            if (temp.getIsShow())
+            {
+                datas.add(model);
+            }
         }
     }
     

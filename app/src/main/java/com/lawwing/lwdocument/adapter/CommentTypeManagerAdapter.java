@@ -2,7 +2,6 @@ package com.lawwing.lwdocument.adapter;
 
 import java.util.ArrayList;
 
-import com.lawwing.lwdocument.AboutUsActivity;
 import com.lawwing.lwdocument.LWDApp;
 import com.lawwing.lwdocument.R;
 import com.lawwing.lwdocument.event.AddTypeEvent;
@@ -56,35 +55,46 @@ public class CommentTypeManagerAdapter extends
     {
         if (datas != null && position < datas.size())
         {
-            holder.addLayout.setVisibility(View.GONE);
-            holder.contentLayout.setVisibility(View.VISIBLE);
             final CommentTypeInfoModel model = datas.get(position);
             if (model != null)
             {
-                holder.typeNameText.setText(
-                        model.getTypeName() + "（" + model.getCount() + "）");
-                holder.timeText.setText(
-                        TimeUtils.milliseconds2String(model.getCreateTime()));
-                holder.editTypeBtn.setOnClickListener(new View.OnClickListener()
+                if (model.isShow())
                 {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        LWDApp.getEventBus().post(new CommentTypeChangeEvent(
-                                "edit", model, position));
-                    }
-                });
-                holder.deleteTypeBtn
-                        .setOnClickListener(new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
+                    holder.addLayout.setVisibility(View.GONE);
+                    holder.contentLayout.setVisibility(View.VISIBLE);
+                    holder.typeNameText.setText(
+                            model.getTypeName() + "（" + model.getCount() + "）");
+                    holder.timeText.setText(TimeUtils
+                            .milliseconds2String(model.getCreateTime()));
+                    holder.editTypeBtn
+                            .setOnClickListener(new View.OnClickListener()
                             {
-                                LWDApp.getEventBus().post(
-                                        new CommentTypeChangeEvent("delete",
-                                                model, position));
-                            }
-                        });
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    LWDApp.getEventBus().post(
+                                            new CommentTypeChangeEvent("edit",
+                                                    model, position));
+                                }
+                            });
+                    holder.deleteTypeBtn
+                            .setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    LWDApp.getEventBus().post(
+                                            new CommentTypeChangeEvent("delete",
+                                                    model, position));
+                                }
+                            });
+                }
+                else
+                {
+                    
+                    holder.addLayout.setVisibility(View.GONE);
+                    holder.contentLayout.setVisibility(View.GONE);
+                }
             }
         }
         else

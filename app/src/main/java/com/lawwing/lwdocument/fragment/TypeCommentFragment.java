@@ -253,24 +253,27 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                             .eq(comment.getTypeId()))
                     .list()
                     .get(0);
-            CommentInfoModel model;
-            if (typeInfoDb != null)
+            if (typeInfoDb.getIsShow())
             {
-                model = new CommentInfoModel(typeInfoDb.getTypeName());
+                CommentInfoModel model;
+                if (typeInfoDb != null)
+                {
+                    model = new CommentInfoModel(typeInfoDb.getTypeName());
+                }
+                else
+                {
+                    model = new CommentInfoModel("Unknow");
+                }
+                model.setName(comment.getName());
+                model.setPath(comment.getPath());
+                model.setDocpath(comment.getDocpath());
+                model.setDocname(comment.getDocname());
+                model.setId(comment.getId());
+                model.setTime(comment.getTime());
+                model.setTypeId(comment.getTypeId());
+                model.setDateId(comment.getDateId());
+                listDatas.add(model);
             }
-            else
-            {
-                model = new CommentInfoModel("Unknow");
-            }
-            model.setName(comment.getName());
-            model.setPath(comment.getPath());
-            model.setDocpath(comment.getDocpath());
-            model.setDocname(comment.getDocname());
-            model.setId(comment.getId());
-            model.setTime(comment.getTime());
-            model.setTypeId(comment.getTypeId());
-            model.setDateId(comment.getDateId());
-            listDatas.add(model);
         }
     }
     
@@ -296,7 +299,10 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
             model.setId(db.getId());
             model.setShow(db.getIsShow());
             model.setCount(db.getCommentInfoDbs().size());
-            datas.add(model);
+            if (db.getIsShow())
+            {
+                datas.add(model);
+            }
         }
     }
     
