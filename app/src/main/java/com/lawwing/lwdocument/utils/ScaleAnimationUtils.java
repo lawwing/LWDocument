@@ -72,6 +72,24 @@ public class ScaleAnimationUtils
     }
     
     /**
+     * 从中间到两边放大
+     * 
+     * @param listener
+     * @param duration
+     * @return
+     */
+    public static ScaleAnimation centerBiggerAnimation(
+            Animation.AnimationListener listener, int duration)
+    {
+        ScaleAnimation scaleAnimation = new ScaleAnimation(0f, 1.1f, 0f, 1.1f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        scaleAnimation.setDuration(duration);
+        scaleAnimation.setAnimationListener(listener);
+        return scaleAnimation;
+    }
+    
+    /**
      * =====================================================================
      * =====================================================================
      * 
@@ -140,6 +158,24 @@ public class ScaleAnimationUtils
         // 右下左上
         ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 0f, 1f, 0f,
                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        scaleAnimation.setDuration(duration);
+        scaleAnimation.setAnimationListener(listener);
+        return scaleAnimation;
+    }
+    
+    /**
+     * 从两边到中间缩小
+     *
+     * @param listener
+     * @param duration
+     * @return
+     */
+    public static ScaleAnimation centerSmallAnimation(
+            Animation.AnimationListener listener, int duration)
+    {
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 0f, 1f, 0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
         scaleAnimation.setDuration(duration);
         scaleAnimation.setAnimationListener(listener);
         return scaleAnimation;
