@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import com.lawwing.lwdocument.animations.ScaleAnimationUtils;
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.base.StaticDatas;
 import com.lawwing.lwdocument.event.AddTypeEvent;
@@ -31,7 +32,6 @@ import com.lawwing.lwdocument.fragment.TransTypeDialogFragment;
 import com.lawwing.lwdocument.fragment.TypeCommentFragment;
 import com.lawwing.lwdocument.fragment.TypeManagerFragment;
 import com.lawwing.lwdocument.model.CommentInfoModel;
-import com.lawwing.lwdocument.utils.ScaleAnimationUtils;
 import com.lawwing.lwdocument.utils.ScreenUtils;
 import com.lawwing.lwdocument.utils.ShareUtils;
 import com.lawwing.lwdocument.utils.TimeUtils;

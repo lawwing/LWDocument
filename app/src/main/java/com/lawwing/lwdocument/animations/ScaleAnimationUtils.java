@@ -1,4 +1,4 @@
-package com.lawwing.lwdocument.utils;
+package com.lawwing.lwdocument.animations;
 
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
