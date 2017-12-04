@@ -29,6 +29,18 @@ public class CommentInfoDb
     
     private long dateId;
     
+    private boolean isTrueDelete = false;
+    
+    public boolean isTrueDelete()
+    {
+        return isTrueDelete;
+    }
+    
+    public void setTrueDelete(boolean trueDelete)
+    {
+        isTrueDelete = trueDelete;
+    }
+    
     public long getTime()
     {
         return this.time;
@@ -99,10 +111,10 @@ public class CommentInfoDb
         this.typeId = typeId;
     }
     
-    @Generated(hash = 453917774)
+    @Generated(hash = 1576395114)
     public CommentInfoDb(Long id, String name, String docname, String path,
-            String docpath, long typeId, long time, long dateId)
-    {
+            String docpath, long typeId, long time, long dateId,
+            boolean isTrueDelete) {
         this.id = id;
         this.name = name;
         this.docname = docname;
@@ -111,8 +123,9 @@ public class CommentInfoDb
         this.typeId = typeId;
         this.time = time;
         this.dateId = dateId;
+        this.isTrueDelete = isTrueDelete;
     }
-    
+
     @Generated(hash = 1788982875)
     public CommentInfoDb()
     {
@@ -135,5 +148,13 @@ public class CommentInfoDb
     public void setDateId(long dateId)
     {
         this.dateId = dateId;
+    }
+
+    public boolean getIsTrueDelete() {
+        return this.isTrueDelete;
+    }
+
+    public void setIsTrueDelete(boolean isTrueDelete) {
+        this.isTrueDelete = isTrueDelete;
     }
 }

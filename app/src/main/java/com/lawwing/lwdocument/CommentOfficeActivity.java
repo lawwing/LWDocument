@@ -402,6 +402,7 @@ public class CommentOfficeActivity extends BaseActivity
             model.setTime(file.lastModified());
             model.setTypeId(typeId);
             model.setDateId(id);
+            model.setTrueDelete(false);
             mCommentInfoDao.insertOrReplace(model);
             
             showLongToast("批阅成功");

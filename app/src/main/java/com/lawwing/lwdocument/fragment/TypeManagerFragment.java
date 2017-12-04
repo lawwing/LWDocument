@@ -11,6 +11,8 @@ import com.lawwing.lwdocument.adapter.CommentTypeManagerAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.event.AddTypeEvent;
 import com.lawwing.lwdocument.event.CommentTypeChangeEvent;
+import com.lawwing.lwdocument.gen.CommentInfoDb;
+import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDbDao;
 import com.lawwing.lwdocument.model.CommentTypeInfoModel;
@@ -52,6 +54,8 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
     
     private CommentTypeInfoDbDao mCommentTypeInfoDbDao;
     
+    private CommentInfoDbDao mCommentInfoDbDao;
+    
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
@@ -79,6 +83,7 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
         mCommentTypeInfoDbDao = LWDApp.get()
                 .getDaoSession()
                 .getCommentTypeInfoDbDao();
+        mCommentInfoDbDao = LWDApp.get().getDaoSession().getCommentInfoDbDao();
         datas = new ArrayList<>();
         initRecyclerView();
         initData();
@@ -326,6 +331,16 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
                                             commentTypeInfoDb.setIsShow(false);
                                             mCommentTypeInfoDbDao
                                                     .update(commentTypeInfoDb);
+                                            
+                                            // 进行数据库操作，把类型为这个的typeId都变为-1
+                                            List<CommentInfoDb> commentInfoDbs = commentTypeInfoDb
+                                                    .getCommentInfoDbs();
+                                            for (CommentInfoDb db : commentInfoDbs)
+                                            {
+                                                db.setTypeId(-1);
+                                                mCommentInfoDbDao.update(db);
+                                            }
+                                            
                                             datas.get(event.getPosition())
                                                     .setShow(false);
                                             adapter.notifyDataSetChanged();
@@ -334,6 +349,8 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
                             .create()
                             .show();
                     
+                    break;
+                default:
                     break;
             }
         }

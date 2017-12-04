@@ -297,6 +297,7 @@ public class DateCommentFragment extends BaseFragment
                     model.setPath(commentInfoDb.getPath());
                     model.setTime(commentInfoDb.getTime());
                     model.setTypeId(commentInfoDb.getTypeId());
+                    model.setTrueDelete(commentInfoDb.isTrueDelete());
                     datas.add(model);
                 }
             }

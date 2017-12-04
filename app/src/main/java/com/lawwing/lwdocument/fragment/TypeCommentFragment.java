@@ -223,6 +223,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                 model.setPath(commentInfoDb.getPath());
                 model.setTime(commentInfoDb.getTime());
                 model.setTypeId(commentInfoDb.getTypeId());
+                model.setTrueDelete(commentInfoDb.isTrueDelete());
                 listDatas.add(model);
             }
         }
@@ -272,6 +273,7 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                 model.setTime(comment.getTime());
                 model.setTypeId(comment.getTypeId());
                 model.setDateId(comment.getDateId());
+                model.setTrueDelete(comment.isTrueDelete());
                 listDatas.add(model);
             }
         }

@@ -24,6 +24,8 @@ public class CommentInfoModel extends HomeBaseModel
     
     private String typeName;
     
+    private boolean isTrueDelete = false;
+    
     public CommentInfoModel(String typeName)
     {
         this.typeName = typeName;
@@ -117,5 +119,15 @@ public class CommentInfoModel extends HomeBaseModel
     public void setTypeName(String typeName)
     {
         this.typeName = typeName;
+    }
+    
+    public boolean isTrueDelete()
+    {
+        return isTrueDelete;
+    }
+    
+    public void setTrueDelete(boolean trueDelete)
+    {
+        isTrueDelete = trueDelete;
     }
 }

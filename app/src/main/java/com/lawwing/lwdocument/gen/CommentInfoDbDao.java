@@ -33,6 +33,7 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         public final static Property TypeId = new Property(5, long.class, "typeId", false, "TYPE_ID");
         public final static Property Time = new Property(6, long.class, "time", false, "TIME");
         public final static Property DateId = new Property(7, long.class, "dateId", false, "DATE_ID");
+        public final static Property IsTrueDelete = new Property(8, boolean.class, "isTrueDelete", false, "IS_TRUE_DELETE");
     };
 
     private Query<CommentInfoDb> commentTypeInfoDb_CommentInfoDbsQuery;
@@ -57,7 +58,8 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
                 "\"DOCPATH\" TEXT," + // 4: docpath
                 "\"TYPE_ID\" INTEGER NOT NULL ," + // 5: typeId
                 "\"TIME\" INTEGER NOT NULL ," + // 6: time
-                "\"DATE_ID\" INTEGER NOT NULL );"); // 7: dateId
+                "\"DATE_ID\" INTEGER NOT NULL ," + // 7: dateId
+                "\"IS_TRUE_DELETE\" INTEGER NOT NULL );"); // 8: isTrueDelete
     }
 
     /** Drops the underlying database table. */
@@ -97,6 +99,7 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         stmt.bindLong(6, entity.getTypeId());
         stmt.bindLong(7, entity.getTime());
         stmt.bindLong(8, entity.getDateId());
+        stmt.bindLong(9, entity.getIsTrueDelete() ? 1L: 0L);
     }
 
     @Override
@@ -130,6 +133,7 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         stmt.bindLong(6, entity.getTypeId());
         stmt.bindLong(7, entity.getTime());
         stmt.bindLong(8, entity.getDateId());
+        stmt.bindLong(9, entity.getIsTrueDelete() ? 1L: 0L);
     }
 
     @Override
@@ -147,7 +151,8 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // docpath
             cursor.getLong(offset + 5), // typeId
             cursor.getLong(offset + 6), // time
-            cursor.getLong(offset + 7) // dateId
+            cursor.getLong(offset + 7), // dateId
+            cursor.getShort(offset + 8) != 0 // isTrueDelete
         );
         return entity;
     }
@@ -162,6 +167,7 @@ public class CommentInfoDbDao extends AbstractDao<CommentInfoDb, Long> {
         entity.setTypeId(cursor.getLong(offset + 5));
         entity.setTime(cursor.getLong(offset + 6));
         entity.setDateId(cursor.getLong(offset + 7));
+        entity.setIsTrueDelete(cursor.getShort(offset + 8) != 0);
      }
     
     @Override
