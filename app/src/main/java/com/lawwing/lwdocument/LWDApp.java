@@ -94,7 +94,11 @@ public class LWDApp extends Application
     {
         return mDaoSession;
     }
-    
+
+    public void setmDaoSession(DaoSession mDaoSession) {
+        this.mDaoSession = mDaoSession;
+    }
+
     public SQLiteDatabase getDb()
     {
         return db;

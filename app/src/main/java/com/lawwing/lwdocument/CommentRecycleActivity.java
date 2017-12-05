@@ -216,6 +216,7 @@ public class CommentRecycleActivity extends BaseActivity
                 mCommentInfoDbDao.update(db);
             }
             
+            LWDApp.get().setmDaoSession(LWDApp.get().getDaoSession());
             mCommentInfoDbDao = LWDApp.get()
                     .getDaoSession()
                     .getCommentInfoDbDao();

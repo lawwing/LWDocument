@@ -249,32 +249,36 @@ public class TypeCommentFragment extends BaseFragment implements ScreenShotable
                 .list();
         for (CommentInfoDb comment : dbs)
         {
-            CommentTypeInfoDb typeInfoDb = mCommentTypeInfoDbDao.queryBuilder()
-                    .where(CommentTypeInfoDbDao.Properties.Id
-                            .eq(comment.getTypeId()))
-                    .list()
-                    .get(0);
-            if (typeInfoDb.getIsShow())
+            if (comment.getTypeId() != -1)
             {
-                CommentInfoModel model;
-                if (typeInfoDb != null)
+                CommentTypeInfoDb typeInfoDb = mCommentTypeInfoDbDao
+                        .queryBuilder()
+                        .where(CommentTypeInfoDbDao.Properties.Id
+                                .eq(comment.getTypeId()))
+                        .list()
+                        .get(0);
+                if (typeInfoDb.getIsShow())
                 {
-                    model = new CommentInfoModel(typeInfoDb.getTypeName());
+                    CommentInfoModel model;
+                    if (typeInfoDb != null)
+                    {
+                        model = new CommentInfoModel(typeInfoDb.getTypeName());
+                    }
+                    else
+                    {
+                        model = new CommentInfoModel("Unknow");
+                    }
+                    model.setName(comment.getName());
+                    model.setPath(comment.getPath());
+                    model.setDocpath(comment.getDocpath());
+                    model.setDocname(comment.getDocname());
+                    model.setId(comment.getId());
+                    model.setTime(comment.getTime());
+                    model.setTypeId(comment.getTypeId());
+                    model.setDateId(comment.getDateId());
+                    model.setTrueDelete(comment.isTrueDelete());
+                    listDatas.add(model);
                 }
-                else
-                {
-                    model = new CommentInfoModel("Unknow");
-                }
-                model.setName(comment.getName());
-                model.setPath(comment.getPath());
-                model.setDocpath(comment.getDocpath());
-                model.setDocname(comment.getDocname());
-                model.setId(comment.getId());
-                model.setTime(comment.getTime());
-                model.setTypeId(comment.getTypeId());
-                model.setDateId(comment.getDateId());
-                model.setTrueDelete(comment.isTrueDelete());
-                listDatas.add(model);
             }
         }
     }

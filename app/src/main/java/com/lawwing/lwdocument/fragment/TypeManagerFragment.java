@@ -362,7 +362,12 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
     {
         if (event != null)
         {
-            mCommentTypeInfoDbDao = LWDApp.get().getDaoSession().getCommentTypeInfoDbDao();
+            
+            LWDApp.get().setmDaoSession(LWDApp.get().getDaoSession());
+            
+            mCommentInfoDbDao = LWDApp.get()
+                    .getDaoSession()
+                    .getCommentInfoDbDao();
             initData();
             adapter.notifyDataSetChanged();
         }

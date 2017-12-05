@@ -151,7 +151,18 @@ public class DateCommentFragment extends BaseFragment
             if (temp.getCommentInfoDbs() != null
                     && temp.getCommentInfoDbs().size() != 0)
             {
-                dates.add(temp.getDay());
+                boolean hasCount = false;
+                for (CommentInfoDb cominfo : temp.getCommentInfoDbs())
+                {
+                    if (cominfo.getTypeId() != -1)
+                    {
+                        hasCount = true;
+                    }
+                }
+                if (hasCount)
+                {
+                    dates.add(temp.getDay());
+                }
             }
         }
         mcvCalendar.getCurrentMonthView().addTaskHints(dates);
@@ -273,32 +284,36 @@ public class DateCommentFragment extends BaseFragment
             List<CommentInfoDb> commentInfoDbs = db.getCommentInfoDbs();
             for (CommentInfoDb commentInfoDb : commentInfoDbs)
             {
-                CommentTypeInfoDb typeInfoDb = mCommentTypeInfoDbDao
-                        .queryBuilder()
-                        .where(CommentTypeInfoDbDao.Properties.Id
-                                .eq(commentInfoDb.getTypeId()))
-                        .list()
-                        .get(0);
-                if (typeInfoDb.getIsShow())
+                if (commentInfoDb.getTypeId() != -1)
                 {
-                    CommentInfoModel model;
-                    if (typeInfoDb != null)
+                    CommentTypeInfoDb typeInfoDb = mCommentTypeInfoDbDao
+                            .queryBuilder()
+                            .where(CommentTypeInfoDbDao.Properties.Id
+                                    .eq(commentInfoDb.getTypeId()))
+                            .list()
+                            .get(0);
+                    if (typeInfoDb.getIsShow())
                     {
-                        model = new CommentInfoModel(typeInfoDb.getTypeName());
+                        CommentInfoModel model;
+                        if (typeInfoDb != null)
+                        {
+                            model = new CommentInfoModel(
+                                    typeInfoDb.getTypeName());
+                        }
+                        else
+                        {
+                            model = new CommentInfoModel("Unknow");
+                        }
+                        model.setDocname(commentInfoDb.getDocname());
+                        model.setDocpath(commentInfoDb.getDocpath());
+                        model.setId(commentInfoDb.getId());
+                        model.setName(commentInfoDb.getName());
+                        model.setPath(commentInfoDb.getPath());
+                        model.setTime(commentInfoDb.getTime());
+                        model.setTypeId(commentInfoDb.getTypeId());
+                        model.setTrueDelete(commentInfoDb.isTrueDelete());
+                        datas.add(model);
                     }
-                    else
-                    {
-                        model = new CommentInfoModel("Unknow");
-                    }
-                    model.setDocname(commentInfoDb.getDocname());
-                    model.setDocpath(commentInfoDb.getDocpath());
-                    model.setId(commentInfoDb.getId());
-                    model.setName(commentInfoDb.getName());
-                    model.setPath(commentInfoDb.getPath());
-                    model.setTime(commentInfoDb.getTime());
-                    model.setTypeId(commentInfoDb.getTypeId());
-                    model.setTrueDelete(commentInfoDb.isTrueDelete());
-                    datas.add(model);
                 }
             }
         }
