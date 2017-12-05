@@ -11,6 +11,7 @@ import com.lawwing.lwdocument.adapter.CommentTypeManagerAdapter;
 import com.lawwing.lwdocument.base.BaseFragment;
 import com.lawwing.lwdocument.event.AddTypeEvent;
 import com.lawwing.lwdocument.event.CommentTypeChangeEvent;
+import com.lawwing.lwdocument.event.RecycleCommentTransTypeEvent;
 import com.lawwing.lwdocument.gen.CommentInfoDb;
 import com.lawwing.lwdocument.gen.CommentInfoDbDao;
 import com.lawwing.lwdocument.gen.CommentTypeInfoDb;
@@ -353,6 +354,17 @@ public class TypeManagerFragment extends BaseFragment implements ScreenShotable
                 default:
                     break;
             }
+        }
+    }
+    
+    @Subscribe
+    public void transComment(RecycleCommentTransTypeEvent event)
+    {
+        if (event != null)
+        {
+            mCommentTypeInfoDbDao = LWDApp.get().getDaoSession().getCommentTypeInfoDbDao();
+            initData();
+            adapter.notifyDataSetChanged();
         }
     }
 }

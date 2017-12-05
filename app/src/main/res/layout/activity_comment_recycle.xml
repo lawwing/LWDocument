@@ -45,13 +45,14 @@
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:weightSum="2">
 
         <TextView
+            android:id="@+id/deleteCommentBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -66,6 +67,7 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/transTypeBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -89,6 +91,7 @@
         android:layout_below="@id/toolbar">
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
     </LinearLayout>

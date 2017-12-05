@@ -26,6 +26,8 @@ public class CommentInfoModel extends HomeBaseModel
     
     private boolean isTrueDelete = false;
     
+    private boolean isSelect = false;
+    
     public CommentInfoModel(String typeName)
     {
         this.typeName = typeName;
@@ -129,5 +131,26 @@ public class CommentInfoModel extends HomeBaseModel
     public void setTrueDelete(boolean trueDelete)
     {
         isTrueDelete = trueDelete;
+    }
+    
+    public boolean isSelect()
+    {
+        return isSelect;
+    }
+    
+    public void setSelect(boolean select)
+    {
+        isSelect = select;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "CommentInfoModel{" + "id=" + id + ", name='" + name + '\''
+                + ", docname='" + docname + '\'' + ", path='" + path + '\''
+                + ", docpath='" + docpath + '\'' + ", time=" + time
+                + ", typeId=" + typeId + ", dateId=" + dateId + ", typeName='"
+                + typeName + '\'' + ", isTrueDelete=" + isTrueDelete
+                + ", isSelect=" + isSelect + '}';
     }
 }
